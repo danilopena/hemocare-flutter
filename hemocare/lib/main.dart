@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:hemocare/sreens/login/login.dart';
+import 'package:hemocare/sreens/login/use-terms.dart';
+import 'package:hemocare/sreens/login/register.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,9 +46,7 @@ class _InitialState extends State<Initial> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-        ),
+        appBar: null,
         body: Stack(
           children: <Widget>[
             Column(
@@ -75,6 +77,8 @@ class _InitialState extends State<Initial> {
                 ),
                 SizedBox(height: 26),
                 createButtonRegister(),
+                SizedBox(height: 10),
+                createButtonLogin(),
                 SizedBox(height: 40),
               ],
             ),
@@ -93,7 +97,9 @@ class _InitialState extends State<Initial> {
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF8EA1F0)),
                     ),
-                    onTap: presentTerms(),
+                    onTap: () => Navigator.of(context).push(CupertinoPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => UseTerms())),
                   ),
                 ),
                 SizedBox(height: 30),
@@ -105,11 +111,12 @@ class _InitialState extends State<Initial> {
     );
   }
 
-  presentTerms() {}
-
   Widget createButtonRegister() {
     return RaisedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).push(CupertinoPageRoute(
+            fullscreenDialog: true, builder: (context) => Register()));
+      },
       padding: const EdgeInsets.all(0.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       child: Container(
@@ -124,6 +131,31 @@ class _InitialState extends State<Initial> {
           'Criar conta',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget createButtonLogin() {
+    return RaisedButton(
+      onPressed: () {
+        Navigator.of(context).push(CupertinoPageRoute(
+            fullscreenDialog: true, builder: (context) => Login()));
+      },
+      color: Colors.white,
+      padding: const EdgeInsets.all(0.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: 50,
+        padding: const EdgeInsets.fromLTRB(12.5, 12.5, 12.5, 12.5),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            border: Border.all(width: 1, color: Color(0xFF8EA1F0))),
+        child: Text(
+          'Já possuo login',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, color: Color(0xFF8EA1F0)),
         ),
       ),
     );
