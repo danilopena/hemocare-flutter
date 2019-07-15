@@ -4,9 +4,27 @@ import 'package:hemocare/sreens/layout-utils/app-bar.dart';
 import 'package:hemocare/sreens/ColorTheme.dart';
 import 'package:hemocare/sreens/login/login.dart';
 import 'package:hemocare/utils/utils.dart';
+import 'package:flutter/gestures.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
+  @override
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
   TextEditingController _textFieldController = TextEditingController();
+  TapGestureRecognizer _loginTapRecognizer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loginTapRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        Navigator.of(context).push(CupertinoPageRoute(
+            fullscreenDialog: true, builder: (context) => Login()));
+      };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,19 +113,24 @@ class Register extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Align(
-                alignment: Alignment.bottomCenter,
-                child: InkWell(
-                  child: Text(
-                    'Já possui cadastro? Entre agora',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorTheme.lightPurple),
-                  ),
-                  onTap: () => Navigator.of(context).push(CupertinoPageRoute(
-                      fullscreenDialog: true, builder: (context) => Login())),
-                ),
-              ),
+                  alignment: Alignment.bottomCenter,
+                  child: InkWell(
+                      child: RichText(
+                    text: TextSpan(
+                      text: 'Já possui cadastro? ',
+                      style: TextStyle(color: ColorTheme.lightPurple),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Entre agora',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: ColorTheme.lightPurple),
+                          recognizer: _loginTapRecognizer,
+                        ),
+                      ],
+                    ),
+                  ))),
               SizedBox(
                 height: 30,
               )
