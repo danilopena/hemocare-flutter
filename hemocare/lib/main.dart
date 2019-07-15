@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:hemocare/sreens/ColorTheme.dart';
 import 'package:hemocare/sreens/login/login.dart';
 import 'package:hemocare/sreens/login/use-terms.dart';
 import 'package:hemocare/sreens/login/register.dart';
+import 'package:hemocare/utils/utils.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -43,6 +46,10 @@ class _InitialState extends State<Initial> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.blue, //or set color with: Color(0xFF0000FF)
+    ));
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -76,7 +83,11 @@ class _InitialState extends State<Initial> {
                   ),
                 ),
                 SizedBox(height: 26),
-                createButtonRegister(),
+                Utils.gradientPatternButton('Criar conta', () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      fullscreenDialog: true,
+                      builder: (context) => Register()));
+                }, context),
                 SizedBox(height: 10),
                 createButtonLogin(),
                 SizedBox(height: 40),
@@ -95,7 +106,7 @@ class _InitialState extends State<Initial> {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF8EA1F0)),
+                          color: ColorTheme.lightPurple),
                     ),
                     onTap: () => Navigator.of(context).push(CupertinoPageRoute(
                         fullscreenDialog: true,
@@ -106,31 +117,6 @@ class _InitialState extends State<Initial> {
               ],
             )
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget createButtonRegister() {
-    return RaisedButton(
-      onPressed: () {
-        Navigator.of(context).push(CupertinoPageRoute(
-            fullscreenDialog: true, builder: (context) => Register()));
-      },
-      padding: const EdgeInsets.all(0.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: 50,
-        padding: const EdgeInsets.fromLTRB(12.5, 12.5, 12.5, 12.5),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            gradient: LinearGradient(
-                colors: <Color>[Color(0xFF64D7EB), Color(0xFF8EA1F0)])),
-        child: Text(
-          'Criar conta',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
     );
@@ -151,11 +137,11 @@ class _InitialState extends State<Initial> {
         padding: const EdgeInsets.fromLTRB(12.5, 12.5, 12.5, 12.5),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            border: Border.all(width: 1, color: Color(0xFF8EA1F0))),
+            border: Border.all(width: 1, color: ColorTheme.lightPurple)),
         child: Text(
           'Já possuo login',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20, color: Color(0xFF8EA1F0)),
+          style: TextStyle(fontSize: 20, color: ColorTheme.lightPurple),
         ),
       ),
     );
@@ -176,7 +162,8 @@ class _InitialState extends State<Initial> {
                 width: 30,
                 height: 30,
               ),
-              shape: StadiumBorder(side: BorderSide(color: Color(0xFF8EA1F0))),
+              shape: StadiumBorder(
+                  side: BorderSide(color: ColorTheme.lightPurple)),
               color: Colors.white,
               onPressed: () {},
             ),
@@ -194,7 +181,8 @@ class _InitialState extends State<Initial> {
                 width: 30,
                 height: 30,
               ),
-              shape: StadiumBorder(side: BorderSide(color: Color(0xFF8EA1F0))),
+              shape: StadiumBorder(
+                  side: BorderSide(color: ColorTheme.lightPurple)),
               color: Colors.white,
               onPressed: () {},
             ),
