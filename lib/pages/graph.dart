@@ -18,107 +18,116 @@ class _GraphState extends State<Graph> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(8),
-          child: Column(children: <Widget>[
-            Container(
-                // blue: '#64D7EB',
-                //green: '#55D0B2',
-                height: (MediaQuery.of(context).size.height) / 2,
-                width: (MediaQuery.of(context).size.width) - 40,
-                padding: EdgeInsets.all(16),
-                child: Column(
+      child: Flex(
+        direction: Axis.vertical,
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: EdgeInsets.all(8),
+              child: Column(children: <Widget>[
+                Container(
+                    // blue: '#64D7EB',
+                    //green: '#55D0B2',
+                    height: (MediaQuery.of(context).size.height) / 2,
+                    width: (MediaQuery.of(context).size.width) - 40,
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Seu Estoque",
+                          style: GoogleFonts.raleway(
+                              fontSize: 32, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        FutureBuilder(
+                          future: stockHandler.getStock(),
+                          builder: (context, snapshot) {
+                            print(snapshot.data);
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return Column(
+                                children: <Widget>[
+                                  Text(
+                                    "Você já usou ${snapshot.data["percentageUsed"]}% do seu estoque",
+                                    style: GoogleFonts.raleway(fontSize: 24),
+                                  ),
+                                  CircularPercentIndicator(
+                                    radius: 270.0,
+                                    animation: true,
+                                    animationDuration: 2000,
+                                    lineWidth: 40.0,
+                                    percent:
+                                        snapshot.data["percentageUsed"] / 100,
+                                    arcBackgroundColor: ColorTheme.lightPurple,
+                                    arcType: ArcType.FULL,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    animateFromLastPercent: true,
+                                    backgroundColor: Colors.transparent,
+                                    progressColor: ColorTheme.blue,
+                                    footer: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          "Seu estoque atual:",
+                                          style: GoogleFonts.raleway(
+                                            fontSize: 24,
+                                          ),
+                                        ),
+                                        Text(
+                                          " ${snapshot.data["quantity"]}UI",
+                                          style: GoogleFonts.raleway(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+//blur
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Container(
+                                height: 100,
+                                width: 100,
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    )),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      "Seu Estoque",
-                      style: GoogleFonts.raleway(
-                          fontSize: 32, fontWeight: FontWeight.bold),
-                    ),
+                    Utils.gradientPatternButton("Nova infusão", () {
+                      //abrir novo alert
+                      _showDialog(context, _quantityController, _quantity)
+                          .show();
+                    }, context),
                     SizedBox(
                       height: 20,
                     ),
-                    FutureBuilder(
-                      future: stockHandler.getStock(),
-                      builder: (context, snapshot) {
-                        print(snapshot.data);
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return Column(
-                            children: <Widget>[
-                              Text(
-                                "Você já usou ${snapshot.data["percentageUsed"]}% do seu estoque",
-                                style: GoogleFonts.raleway(fontSize: 24),
-                              ),
-                              CircularPercentIndicator(
-                                radius: 270.0,
-                                animation: true,
-                                animationDuration: 2000,
-                                lineWidth: 40.0,
-                                percent: snapshot.data["percentageUsed"] / 100,
-                                arcBackgroundColor: ColorTheme.lightPurple,
-                                arcType: ArcType.FULL,
-                                circularStrokeCap: CircularStrokeCap.round,
-                                animateFromLastPercent: true,
-                                backgroundColor: Colors.transparent,
-                                progressColor: ColorTheme.blue,
-                                footer: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Seu estoque atual:",
-                                      style: GoogleFonts.raleway(
-                                        fontSize: 24,
-                                      ),
-                                    ),
-                                    Text(
-                                      " ${snapshot.data["quantity"]}UI",
-                                      style: GoogleFonts.raleway(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-//blur
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Container(
-                            height: 100,
-                            width: 100,
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
+                    Utils.gradientPatternButton("Profilaxia", () {}, context),
+                    SizedBox(
+                      height: 20,
                     ),
+                    Utils.gradientPatternButton(
+                        "Entrega/Busca de Fator", () {}, context),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Utils.gradientPatternButton(
+                        "Retirada Automática", () {}, context),
                   ],
-                )),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Utils.gradientPatternButton("Nova infusão", () {
-                  //abrir novo alert
-                  _showDialog(context, _quantityController, _quantity).show();
-                }, context),
-                SizedBox(
-                  height: 20,
-                ),
-                Utils.gradientPatternButton("Profilaxia", () {}, context),
-                SizedBox(
-                  height: 20,
-                ),
-                Utils.gradientPatternButton(
-                    "Entrega/Busca de Fator", () {}, context),
-                SizedBox(
-                  height: 20,
-                ),
-                Utils.gradientPatternButton(
-                    "Retirada Automática", () {}, context),
-              ],
-            )
-          ]),
-        ),
+                )
+              ]),
+            ),
+          ),
+        ],
       ),
     );
   }

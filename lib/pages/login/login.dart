@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
   var _passwordController = TextEditingController();
   String _email;
   String _password;
-  bool _selfValidate = true;
+  bool _selfValidate = false;
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBarTheme(title: "Registro"),
+        appBar: MyAppBarTheme(title: "Login"),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 20, left: 16, right: 16),

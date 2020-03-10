@@ -10,7 +10,7 @@ class StockHandler {
       "https://hemocare-backend.herokuapp.com/api/stock/getStock",
       queryParameters: {"userId": id},
     );
-    return response.data;
+    return response;
   }
 
   Future createStock(String initialStock, String commonDosage) async {
