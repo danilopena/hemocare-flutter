@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/pages/home.dart';
+import 'package:hemocare/pages/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
@@ -230,7 +230,8 @@ void register(String email, String name, String password, String pathology,
       // setLocalStorage o ID e push route
       ls.save("logged_id", response.data["id"]);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => InitialStockRegister()));
     }
   } catch (e) {
     print(e);

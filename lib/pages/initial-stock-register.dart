@@ -6,12 +6,12 @@ import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class Home extends StatefulWidget {
+class InitialStockRegister extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _InitialStockRegisterState createState() => _InitialStockRegisterState();
 }
 
-class _HomeState extends State<Home> {
+class _InitialStockRegisterState extends State<InitialStockRegister> {
   double percent = 0.5;
   String initialStock;
   var _initialStockFocus = FocusNode();

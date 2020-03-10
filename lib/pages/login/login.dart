@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:hemocare/pages/home.dart';
+import 'package:hemocare/pages/graph.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -139,7 +139,7 @@ void login(String email, String password, BuildContext context) async {
     if (response.data["id"] != null) {
       // setLocalStorage o ID e push route
       ls.save("logged_id", response.data["id"]);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Graph()));
     }
   } catch (e) {
     print(e);
