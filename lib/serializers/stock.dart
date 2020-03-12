@@ -1,7 +1,7 @@
 class Stock {
   final String quantity;
   final String infusions;
-  final String percentageUsed;
+  final double percentageUsed;
 
   Stock(this.infusions, this.percentageUsed, this.quantity);
 

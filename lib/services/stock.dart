@@ -21,4 +21,22 @@ class StockHandler {
         data: {"initialStock": initialStock, "dosage": commonDosage});
     return response;
   }
+
+  Future addStock(double value) async {
+    String id = localStorage.retrieve("logged_id");
+    Response response = await Dio().post(
+        "https://hemocare-backend.herokuapp.com/api/stock/add",
+        queryParameters: {"userId": id},
+        data: {"quantity": value});
+    return response;
+  }
+
+  Future removeStock(double value) async {
+    String id = localStorage.retrieve("logged_id");
+    Response response = await Dio().post(
+        "https://hemocare-backend.herokuapp.com/api/stock/subtract",
+        queryParameters: {"userId": id},
+        data: {"quantity": value});
+    return response;
+  }
 }
