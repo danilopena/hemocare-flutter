@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hemocare/pages/forgot-password.dart';
 import 'package:hemocare/pages/graph.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/utils.dart';
 
@@ -41,7 +43,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBarTheme(title: "Login"),
+        appBar: MyAppBarTheme(title: "Faça seu login"),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
@@ -50,7 +52,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: <Widget>[
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   TextFormField(
                     focusNode: _emailFocus,
@@ -86,15 +88,28 @@ class _LoginState extends State<Login> {
                     onSaved: (value) => _password = value,
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 30,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: InkWell(
+                      child: Text(
+                        'Esqueci minha senha',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: ColorTheme.lightPurple),
+                      ),
+                      onTap: () => Navigator.of(context).push(
+                          CupertinoPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => ForgotPassword())),
+                    ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Utils.gradientPatternButton("Logar", () {
+                  Utils.gradientPatternButton("Pronto", () {
                     _submit(_formKey, _email, _password, context);
                   }, context)
                 ],
