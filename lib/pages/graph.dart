@@ -66,7 +66,7 @@ class _GraphState extends State<Graph> {
                                       animation: true,
                                       animationDuration: 2000,
                                       lineWidth: 40.0,
-                                      percent: snapshot.data["percentageUsed"]/100.0,
+                                      percent: snapshot.data["percentageUsed"]/100.0 ,
 
                                       arcBackgroundColor: ColorTheme.lightPurple,
                                       arcType: ArcType.FULL,
@@ -117,7 +117,7 @@ class _GraphState extends State<Graph> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Ações",
+                        "Gatilhos para te ajudar",
                         style: GoogleFonts.raleway(
                             fontSize: 28, fontWeight: FontWeight.bold),
                       )
@@ -127,7 +127,7 @@ class _GraphState extends State<Graph> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Utils.gradientPatternButton("Nova infusão", () {
+                      Utils.gradientPatternButton("Manter Estoque", () {
                         //abrir novo alert
                         _showDialog(context, _quantityController, _quantity).show();
                       }, context),
@@ -158,9 +158,26 @@ String validateQuantity(String value) {
 Alert _showDialog(
     BuildContext context, TextEditingController controller, String quantity) {
   bool add;
+  var alertStyle = AlertStyle(
+    animationType: AnimationType.fromBottom,
+    isCloseButton: false,
+    isOverlayTapDismiss: false,
+    descStyle: TextStyle(fontWeight: FontWeight.bold),
+    animationDuration: Duration(milliseconds: 400),
+    alertBorder: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+      side: BorderSide(
+        color: ColorTheme.darkGray,
+      )
+    ),
+    titleStyle: TextStyle(
+      color: ColorTheme.lightPurple
+    )
+  );
   return Alert(
       title: "Nova infusão",
       context: context,
+      style: alertStyle,
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -206,8 +223,6 @@ Alert _showDialog(
             style: GoogleFonts.raleway(color: Colors.white),
           ),
           onPressed: () {
-            String operation = add ? "Adicionar" : "Remover";
-            print("Operação É: $operation");
             double quantityDouble = double.parse(quantity);
             add ? addStock(quantityDouble) : removeStock(quantityDouble);
             Navigator.of(context).pop();
