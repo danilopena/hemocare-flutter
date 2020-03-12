@@ -52,12 +52,12 @@ class _GraphState extends State<Graph> {
                               print(snapshot.data);
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
-                                double endPercentage = snapshot.data["percentageUsed"];
+                                double endPercentage = double.parse(snapshot.data["percentageUsed"].toString()) ;
                                 return Column(
                                   children: <Widget>[
                                     Center(
                                       child: Text(
-                                        "Você já usou ${endPercentage.truncate()}% do seu estoque",
+                                        "Você já usou ${endPercentage}% do seu estoque",
                                         style: GoogleFonts.raleway(fontSize: 20),
                                       ),
                                     ),
@@ -177,6 +177,7 @@ Alert _showDialog(
       title: "Nova infusão",
       context: context,
       style: alertStyle,
+
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -196,6 +197,7 @@ Alert _showDialog(
               InkWell(
                   onTap: () {
                     add = true;
+                    addStock(double.parse(quantity));
                   },
                   child: Text(
                     "+",
@@ -204,7 +206,7 @@ Alert _showDialog(
                   )),
               InkWell(
                   onTap: () {
-                    add = false;
+                    removeStock(double.parse(quantity));
                   },
                   child: Text(
                     "-",
@@ -213,34 +215,23 @@ Alert _showDialog(
                   )),
             ],
           )
-        ],
+        ]
+        ,
       ),
-      buttons: [
-        DialogButton(
-          child: Text(
-            "Salvar",
-            style: GoogleFonts.raleway(color: Colors.white),
-          ),
-          onPressed: () {
-            double quantityDouble = double.parse(quantity);
-            add ? addStock(quantityDouble) : removeStock(quantityDouble);
-            Navigator.of(context).pop();
-          },
-          gradient:
-              LinearGradient(colors: [ColorTheme.lightPurple, ColorTheme.blue]),
+    buttons: [
+      DialogButton(
+        child: Text("VOLTAR", style: TextStyle(color: Colors.white, fontSize: 20),),
+        onPressed: ()=> Navigator.pop(context),
+        gradient: LinearGradient(
+          colors: [
+            ColorTheme.lightPurple,
+            ColorTheme.blue
+          ]
         ),
-        DialogButton(
-          child: Text(
-            "Cancelar",
-            style: GoogleFonts.raleway(color: Colors.white),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          gradient:
-              LinearGradient(colors: [ColorTheme.lightPurple, ColorTheme.blue]),
-        )
-      ]);
+
+      )
+    ]
+      );
 }
 
 void addStock(double quantityInt) async {
