@@ -1,4 +1,3 @@
-import 'package:custom_switch/custom_switch.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +30,7 @@ class _RegisterState extends State<Register> {
   String _email;
   String _password;
   String _pathology;
-  bool _selfValidate = true;
+  bool _selfValidate = false;
   bool _agreeToTerms = false;
 
   @override
@@ -115,33 +114,35 @@ class _RegisterState extends State<Register> {
                   SizedBox(
                     height: 20,
                   ),
-                  DropDownFormField(
-                    titleText: 'Coagulopatia',
-                    hintText: "Escolha a sua coagulopatia",
-                    value: _pathology,
-                    onSaved: (value) {
-                      setState(() {
-                        _pathology = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        _pathology = value;
-                      });
-                    },
-                    dataSource: [
-                      {
-                        "display": "Hemofilia A",
-                        "value": "Hemofilia A",
-                      },
-                      {
-                        "display": "Hemofilia B",
-                        "value": "Hemofilia B",
-                      },
-                    ],
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
+                  Container(
+                      color: Colors.white,
+                      child: DropDownFormField(
+                        titleText: 'Coagulopatia',
+                        hintText: "Escolha a sua coagulopatia",
+                        value: _pathology,
+                        onSaved: (value) {
+                          setState(() {
+                            _pathology = value;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _pathology = value;
+                          });
+                        },
+                        dataSource: [
+                          {
+                            "display": "Hemofilia A",
+                            "value": "Hemofilia A",
+                          },
+                          {
+                            "display": "Hemofilia B",
+                            "value": "Hemofilia B",
+                          },
+                        ],
+                        textField: 'display',
+                        valueField: 'value',
+                      )),
                   SizedBox(
                     height: 10,
                   ),
@@ -153,14 +154,10 @@ class _RegisterState extends State<Register> {
                         style: GoogleFonts.raleway(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      CustomSwitch(
-                        activeColor: ColorTheme.green,
+                      Switch.adaptive(
                         value: _agreeToTerms,
-                        onChanged: (value) {
-                          setState(() {
-                            _agreeToTerms = value;
-                          });
-                        },
+                        onChanged: (newValue) =>
+                            setState(() => _agreeToTerms = newValue),
                       )
                     ],
                   ),
