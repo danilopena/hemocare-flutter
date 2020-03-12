@@ -52,12 +52,12 @@ class _GraphState extends State<Graph> {
                               print(snapshot.data);
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
-
+                                double endPercentage = snapshot.data["percentageUsed"];
                                 return Column(
                                   children: <Widget>[
                                     Center(
                                       child: Text(
-                                        "Você já usou ${snapshot.data["percentageUsed"]}% do seu estoque",
+                                        "Você já usou ${endPercentage.truncate()}% do seu estoque",
                                         style: GoogleFonts.raleway(fontSize: 20),
                                       ),
                                     ),
@@ -66,8 +66,7 @@ class _GraphState extends State<Graph> {
                                       animation: true,
                                       animationDuration: 2000,
                                       lineWidth: 40.0,
-                                      percent: snapshot.data["percentageUsed"]/100.0 ,
-
+                                      percent: endPercentage/100.0 ,
                                       arcBackgroundColor: ColorTheme.lightPurple,
                                       arcType: ArcType.FULL,
                                       circularStrokeCap: CircularStrokeCap.round,
