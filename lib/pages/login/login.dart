@@ -15,8 +15,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController _textFieldController = TextEditingController();
-  TapGestureRecognizer _loginTapRecognizer;
   final _formKey = GlobalKey<FormState>();
   var _emailFocus = FocusNode();
   var _passwordFocus = FocusNode();

@@ -51,3 +51,4 @@ pubspec.lock
 # If you don't generate documentation locally you can remove this line.
 doc/api/
 >>>>>>> cb4b056fcb074489b5fb0266a630f7775694858f
+/.dart_tool
