@@ -237,6 +237,7 @@ void register(String email, String name, String password, String pathology,
         .document(loggedUser)
         .setData({'email': email, 'name': name, 'pathology': pathology});
     ls.save("logged_id", loggedUser);
+    print(loggedUser);
   } catch (e) {
     print(e);
   }
