@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -53,7 +52,6 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: MyAppBarTheme(title: "Faça seu cadastro"),
         body: SafeArea(
@@ -229,19 +227,21 @@ void register(String email, String name, String password, String pathology,
     bool agreeToTerms, BuildContext context) async {
   LocalStorageWrapper ls = LocalStorageWrapper();
   // register com o firebase
-  Auth auth  = new Auth();
+  Auth auth = new Auth();
   final databaseReference = Firestore.instance;
-  String loggedUser = await auth.signUp(email, password);
-  // gravar info do usuario no DB  {firebase.uid && pathology}
-  await databaseReference.collection("users").document(loggedUser).setData({
-    'email': email,
-    'name': name,
-    'pathology': pathology
+  try {
+    String loggedUser = await auth.signUp(email, password);
+    // gravar info do usuario no DB  {firebase.uid && pathology}
+    await databaseReference
+        .collection("users")
+        .document(loggedUser)
+        .setData({'email': email, 'name': name, 'pathology': pathology});
+    ls.save("logged_id", loggedUser);
+  } catch (e) {
+    print(e);
+  }
 
-  });
-    // setLocalStorage o ID e push route
-    //ls.save("logged_id", response.data["id"]);
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => InitialStockRegister()));
-
+  // setLocalStorage o ID e push route
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => InitialStockRegister()));
 }
