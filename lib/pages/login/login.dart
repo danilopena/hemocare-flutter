@@ -1,9 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hemocare/pages/forgot-password.dart';
 import 'package:hemocare/pages/graph.dart';
+import 'package:hemocare/services/authentication.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
@@ -140,22 +139,13 @@ String validatePassword(String value) {
 
 void login(String email, String password, BuildContext context) async {
   LocalStorageWrapper ls = new LocalStorageWrapper();
-  try {
-    Response response = await Dio().post(
-        "https://hemocare-backend.herokuapp.com/api/user/login",
-        data: {"email": email, "password": password});
-    /**
-     * Retorno response OK: {"jwt_Token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGQ1YTRiMDIxNTE2NjA2YTZkZTAwMzIiLCJpYXQiOjE1ODE1NDY1NDYsImV4cCI6MTU4MTkwNjU0Nn0.PAng-tkoOI_mZ-mYpfdhEr_wMhPu6z4VeVIQ_7czrBU","id":"5dd5a4b021516606a6de0032"}
-     * Forma de handle os retornos: response.data["nomePropriedade"]
-     */
-    print(response.data["id"]);
-    if (response.data["id"] != null) {
-      // setLocalStorage o ID e push route
-      ls.save("logged_id", response.data["id"]);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Graph()));
-    }
-  } catch (e) {
-    print(e);
+  Auth auth = new Auth();
+  String loggedUser = await auth.signIn(email.trim(), password);
+  if (loggedUser != null) {
+    ls.save("logged_id", loggedUser);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Graph()));
+  } else {
+    print("Erro no login");
   }
 }
 

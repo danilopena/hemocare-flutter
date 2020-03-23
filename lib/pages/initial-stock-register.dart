@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/graph.dart';
+import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -43,56 +45,54 @@ class _InitialStockRegisterState extends State<InitialStockRegister> {
         ),
         // TODO remover o futurebuilder. Não permite push de tela.
 
-        body: 1 > 0
-            ? Text("Cunt bitch")
-            : Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      TextFormField(
-                        focusNode: _initialStockFocus,
-                        controller: _initialStockController,
-                        decoration: InputDecoration(
-                            labelText: "Qual seu estoque atual?",
-                            hintText: "Ex.: 20000 UI",
-                            labelStyle: GoogleFonts.raleway(fontSize: 28),
-                            fillColor: Colors.white,
-                            prefixIcon: Icon(Icons.local_hospital),
-                            border: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
-                        keyboardType: TextInputType.number,
-                        validator: stockValidator,
-                        autovalidate: _selfValidate,
-                        onSaved: (value) => initialStock = value,
-                      ),
-                      TextFormField(
-                        focusNode: _commonDosageFocus,
-                        controller: _commonDosageController,
-                        decoration: InputDecoration(
-                            labelText: "Qual a sua dosagem padrão?",
-                            hintText: "Ex.: 3000 UI",
-                            labelStyle: GoogleFonts.raleway(fontSize: 28),
-                            fillColor: Colors.white,
-                            prefixIcon: Icon(Icons.healing),
-                            border: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
-                        keyboardType: TextInputType.number,
-                        validator: dosageValidator,
-                        autovalidate: _selfValidate,
-                        onSaved: (value) => _commonDosage = value,
-                      ),
-                      Utils.gradientPatternButton("Pronto!", () {
-                        _submit(_formKey, initialStock, _commonDosage, context);
-                      }, context)
-                    ],
-                  ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                TextFormField(
+                  focusNode: _initialStockFocus,
+                  controller: _initialStockController,
+                  decoration: InputDecoration(
+                      labelText: "Qual seu estoque atual?",
+                      hintText: "Ex.: 20000 UI",
+                      labelStyle: GoogleFonts.raleway(fontSize: 28),
+                      fillColor: Colors.white,
+                      prefixIcon: Icon(Icons.local_hospital),
+                      border: UnderlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      )),
+                  keyboardType: TextInputType.number,
+                  validator: stockValidator,
+                  autovalidate: _selfValidate,
+                  onSaved: (value) => initialStock = value,
                 ),
-              ));
+                TextFormField(
+                  focusNode: _commonDosageFocus,
+                  controller: _commonDosageController,
+                  decoration: InputDecoration(
+                      labelText: "Qual a sua dosagem padrão?",
+                      hintText: "Ex.: 3000 UI",
+                      labelStyle: GoogleFonts.raleway(fontSize: 28),
+                      fillColor: Colors.white,
+                      prefixIcon: Icon(Icons.healing),
+                      border: UnderlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      )),
+                  keyboardType: TextInputType.number,
+                  validator: dosageValidator,
+                  autovalidate: _selfValidate,
+                  onSaved: (value) => _commonDosage = value,
+                ),
+                Utils.gradientPatternButton("Pronto!", () {
+                  _submit(_formKey, initialStock, _commonDosage, context);
+                }, context)
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -122,10 +122,15 @@ void _submit(GlobalKey<FormState> _formKey, String _initialStock,
 void fillStock(
     String initialStock, String commonDosage, BuildContext context) async {
   StockHandler sh = new StockHandler();
-  Response response = await sh.createStock(initialStock, commonDosage);
-  if (response.data != null) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Graph()));
-  }
+  LocalStorageWrapper ls = LocalStorageWrapper();
+  String userKey = ls.retrieve("logged_id");
+  final databaseReference = Firestore.instance;
+  await databaseReference.collection("users").document(userKey).updateData({
+    "initialStock": int.parse(initialStock),
+    "dosage": int.parse(commonDosage),
+    "percentageUsed": 0
+  }).then((success) => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => Graph())));
 }
 
 Future _hasStock() async {

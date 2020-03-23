@@ -212,7 +212,8 @@ void _submit(
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
 
-    register(_email, _name, _password, _pathology, _agreeToTerms, context);
+    register(
+        _email.trim(), _name, _password, _pathology, _agreeToTerms, context);
   }
 }
 
@@ -229,8 +230,9 @@ void register(String email, String name, String password, String pathology,
   // register com o firebase
   Auth auth = new Auth();
   final databaseReference = Firestore.instance;
+  String loggedUser = "";
   try {
-    String loggedUser = await auth.signUp(email, password);
+    loggedUser = await auth.signUp(email, password);
     // gravar info do usuario no DB  {firebase.uid && pathology}
     await databaseReference
         .collection("users")
@@ -241,8 +243,12 @@ void register(String email, String name, String password, String pathology,
   } catch (e) {
     print(e);
   }
+  if (loggedUser != null && !loggedUser.isEmpty) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => InitialStockRegister()));
+  } else {
+    //notify user
+  }
 
   // setLocalStorage o ID e push route
-  Navigator.push(
-      context, MaterialPageRoute(builder: (context) => InitialStockRegister()));
 }
