@@ -31,6 +31,9 @@ dependencies:
   localstorage: ^3.0.1+4
   percent_indicator: ^2.1.1+1
   rflutter_alert: ^1.0.3
+  firebase_auth:
+  firebase_database:
+  cloud_firestore:
 
 
 dev_dependencies:

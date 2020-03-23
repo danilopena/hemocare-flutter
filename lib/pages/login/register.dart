@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
+import 'package:hemocare/services/authentication.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
@@ -51,6 +53,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: MyAppBarTheme(title: "Faça seu cadastro"),
         body: SafeArea(
@@ -225,32 +228,20 @@ String validatePassword(String value) {
 void register(String email, String name, String password, String pathology,
     bool agreeToTerms, BuildContext context) async {
   LocalStorageWrapper ls = LocalStorageWrapper();
-  try {
-    Response response = await Dio().post(
-        "https://hemocare-backend.herokuapp.com/api/user/register",
-        data: {
-          "name": name,
-          "email": email,
-          "password": password,
-          "pathology": pathology,
-          "agreeToTerms": agreeToTerms
-        });
-    /**
-     * user: willian@dev.com
-     * pass: 123456
-     * response: {jwt_Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTY0ZmRlZDI1YWU4NTAwMjQ3MWU4NmUiLCJpYXQiOjE1ODM2NzY5MDksImV4cCI6MTU4NDAzNjkwOX0.NAbdXVEkj1hg-AGOKeYwMz9fle8lFZgJ-Ki24JEU8U0, id: 5e64fded25ae85002471e86e}
-     * Retorno response OK: {"jwt_Token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGQ1YTRiMDIxNTE2NjA2YTZkZTAwMzIiLCJpYXQiOjE1ODE1NDY1NDYsImV4cCI6MTU4MTkwNjU0Nn0.PAng-tkoOI_mZ-mYpfdhEr_wMhPu6z4VeVIQ_7czrBU","id":"5dd5a4b021516606a6de0032"}
-     * Forma de handle os retornos: response.data["nomePropriedade"]
-     */
-    print(response.data);
-    if (response != null) {
-      // setLocalStorage o ID e push route
-      ls.save("logged_id", response.data["id"]);
+  // register com o firebase
+  Auth auth  = new Auth();
+  final databaseReference = Firestore.instance;
+  String loggedUser = await auth.signUp(email, password);
+  // gravar info do usuario no DB  {firebase.uid && pathology}
+  await databaseReference.collection("users").document(loggedUser).setData({
+    'email': email,
+    'name': name,
+    'pathology': pathology
 
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => InitialStockRegister()));
-    }
-  } catch (e) {
-    print(e);
-  }
+  });
+    // setLocalStorage o ID e push route
+    //ls.save("logged_id", response.data["id"]);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => InitialStockRegister()));
+
 }

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "583637459650",
+    "firebase_url": "https://hemocare-d88b2.firebaseio.com",
+    "project_id": "hemocare-d88b2",
+    "storage_bucket": "hemocare-d88b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583637459650:android:998ea81cc1e12b0e5fd15b",
+        "android_client_info": {
+          "package_name": "com.example.hemocare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "583637459650-bkshrd2psu52dlk008aiutpf0e6gcvcl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hemocare",
+            "certificate_hash": "0affa9655467290055e0ff6ce90574e2f3b183ea"
+          }
+        },
+        {
+          "client_id": "583637459650-c2b3kntcdlgvctjs6jsf3r35ros0n0o5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDglNB3ho1UbJVOl15KoaOo8Hne-uQcJcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "583637459650-c2b3kntcdlgvctjs6jsf3r35ros0n0o5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
