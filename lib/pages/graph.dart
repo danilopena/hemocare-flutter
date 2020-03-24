@@ -50,7 +50,9 @@ class _GraphState extends State<Graph> {
                             ),
                             StreamBuilder<QuerySnapshot>(
                               stream: Firestore.instance
-                                  .collection("users").where("userId", isEqualTo: uid).snapshots(),
+                                  .collection("users")
+                                  .where("userId", isEqualTo: uid)
+                                  .snapshots(),
 
                               // ignore: missing_return
                               builder: (context,
@@ -105,7 +107,7 @@ class _GraphState extends State<Graph> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    " ${document.data["initialStock"]} UI",
+                                                    " ${double.parse(document.data["initialStock"].toString()).truncate()} UI",
                                                     style: GoogleFonts.raleway(
                                                         fontSize: 28,
                                                         fontWeight:
@@ -185,6 +187,7 @@ String validateQuantity(String value) {
 Alert _showDialog(
     BuildContext context, TextEditingController controller, String quantity) {
   bool add;
+  controller.clear();
   var alertStyle = AlertStyle(
       animationType: AnimationType.fromBottom,
       isCloseButton: false,
@@ -211,6 +214,7 @@ Alert _showDialog(
                   border: InputBorder.none, hintText: "Quantidade"),
               controller: controller,
               onChanged: (value) => quantity = value,
+              onSubmitted: (value) => quantity = value,
               keyboardType: TextInputType.number,
             ),
           ),
@@ -221,6 +225,7 @@ Alert _showDialog(
                   onTap: () {
                     add = true;
                     addStock(double.parse(quantity));
+                    controller.clear();
                   },
                   child: Text(
                     "+",
@@ -230,6 +235,7 @@ Alert _showDialog(
               InkWell(
                   onTap: () {
                     removeStock(double.parse(quantity));
+                    controller.clear();
                   },
                   child: Text(
                     "-",
@@ -255,7 +261,12 @@ Alert _showDialog(
 
 void addStock(double quantityInt) async {
   StockHandler sh = new StockHandler();
-  DocumentSnapshot response = await sh.addStock(quantityInt);
+  DocumentSnapshot response;
+  if (quantityInt != 0) {
+    response = await sh.addStock(quantityInt);
+  } else {
+    print("Adicao 0");
+  }
   print("Response add: ${response.data}");
 }
 
