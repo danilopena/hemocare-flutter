@@ -125,9 +125,8 @@ void _submit(GlobalKey<FormState> _formKey, String _email, String _password,
     BuildContext context) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
-
-    login(_email, _password, context);
   }
+  login(_email, _password, context);
 }
 
 String validatePassword(String value) {
@@ -140,7 +139,7 @@ String validatePassword(String value) {
 void login(String email, String password, BuildContext context) async {
   LocalStorageWrapper ls = new LocalStorageWrapper();
   Auth auth = new Auth();
-  String loggedUser = await auth.signIn(email.trim(), password);
+  String loggedUser = await auth.signIn(email, password);
   if (loggedUser != null) {
     ls.save("logged_id", loggedUser);
     Navigator.push(context, MaterialPageRoute(builder: (context) => Graph()));

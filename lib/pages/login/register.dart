@@ -234,10 +234,12 @@ void register(String email, String name, String password, String pathology,
   try {
     loggedUser = await auth.signUp(email, password);
     // gravar info do usuario no DB  {firebase.uid && pathology}
-    await databaseReference
-        .collection("users")
-        .document(loggedUser)
-        .setData({'email': email, 'name': name, 'pathology': pathology});
+    await databaseReference.collection("users").document(loggedUser).setData({
+      'email': email,
+      'name': name,
+      'pathology': pathology,
+      'userId': loggedUser
+    });
     ls.save("logged_id", loggedUser);
     print(loggedUser);
   } catch (e) {

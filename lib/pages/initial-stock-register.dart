@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/graph.dart';
@@ -135,7 +134,7 @@ void fillStock(
 
 Future _hasStock() async {
   StockHandler sh = new StockHandler();
-  Response response = await sh.getStock();
+  DocumentSnapshot response = await sh.getStock();
   print("Minha fodendo response: $response");
 
   return response;

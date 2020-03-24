@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -16,8 +17,11 @@ class _GraphState extends State<Graph> {
   StockHandler stockHandler = new StockHandler();
   String _quantity = "0";
   var _quantityController = TextEditingController();
+  String uid;
+
   @override
   Widget build(BuildContext context) {
+    uid = new LocalStorageWrapper().retrieve("logged_id");
     return Scaffold(
         resizeToAvoidBottomPadding: true,
         body: ListView(
@@ -44,75 +48,84 @@ class _GraphState extends State<Graph> {
                             SizedBox(
                               height: 10,
                             ),
-                            FutureBuilder(
-                              future: stockHandler.getStock(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  double endPercentage = double.parse(snapshot
-                                      .data["percentageUsed"]
-                                      .toString());
-                                  return Column(
-                                    children: <Widget>[
-                                      Center(
-                                        child: Text(
-                                          "Você já usou ${endPercentage}% do seu estoque",
-                                          style:
-                                              GoogleFonts.raleway(fontSize: 20),
-                                        ),
-                                      ),
-                                      CircularPercentIndicator(
-                                        radius: 270.0,
-                                        animation: true,
-                                        animationDuration: 2000,
-                                        lineWidth: 40.0,
-                                        percent: endPercentage / 100.0,
-                                        arcBackgroundColor:
-                                            ColorTheme.lightPurple,
-                                        arcType: ArcType.FULL,
-                                        circularStrokeCap:
-                                            CircularStrokeCap.round,
-                                        animateFromLastPercent: true,
-                                        backgroundColor: Colors.transparent,
-                                        progressColor: ColorTheme.blue,
+                            StreamBuilder<QuerySnapshot>(
+                              stream: Firestore.instance
+                                  .collection("users").where("userId", isEqualTo: uid).snapshots(),
 
-                                        footer: Column(
-                                          children: <Widget>[
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Seu estoque atual:",
-                                                  style: GoogleFonts.raleway(
-                                                    fontSize: 24,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  " ${snapshot.data["initialStock"]} UI",
-                                                  style: GoogleFonts.raleway(
-                                                      fontSize: 28,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
-                                            ),
-                                          ],
+                              // ignore: missing_return
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return CircularProgressIndicator();
+                                }
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                    return Text("No connection found");
+                                  case ConnectionState.active:
+                                    final DocumentSnapshot document =
+                                        snapshot.data.documents[0];
+                                    print(document.data);
+                                    return Column(
+                                      children: <Widget>[
+                                        Center(
+                                          child: Text(
+                                            "Você já usou ${document.data["percentageUsed"]}% do seu estoque",
+                                            style: GoogleFonts.raleway(
+                                                fontSize: 20),
+                                          ),
                                         ),
+                                        CircularPercentIndicator(
+                                          radius: 270.0,
+                                          animation: true,
+                                          animationDuration: 2000,
+                                          lineWidth: 40.0,
+                                          percent:
+                                              document.data["percentageUsed"] /
+                                                  100,
+                                          arcBackgroundColor:
+                                              ColorTheme.lightPurple,
+                                          arcType: ArcType.FULL,
+                                          circularStrokeCap:
+                                              CircularStrokeCap.round,
+                                          animateFromLastPercent: true,
+                                          backgroundColor: Colors.transparent,
+                                          progressColor: ColorTheme.blue,
+
+                                          footer: Column(
+                                            children: <Widget>[
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Seu estoque atual:",
+                                                    style: GoogleFonts.raleway(
+                                                      fontSize: 24,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    " ${document.data["initialStock"]} UI",
+                                                    style: GoogleFonts.raleway(
+                                                        fontSize: 28,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
 //blur
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: CircularProgressIndicator(),
-                                  );
+                                        ),
+                                      ],
+                                    );
+                                  default:
+                                    return Center(
+                                        child: Text(
+                                            "Tivemos problemas ao buscar seus dados. Tentando novamente..."));
                                 }
                               },
-                            ),
+                            )
                           ],
                         )),
                     SizedBox(
