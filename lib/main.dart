@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/register.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
+import 'package:hemocare/pages/main-screen.dart';
+import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
 
@@ -24,11 +26,26 @@ class Initial extends StatefulWidget {
 
 class _InitialState extends State<Initial> {
   var currentPage = 0;
+  var loggedUser;
 
   @override
   void initState() {
     currentPage = 0;
     super.initState();
+    try {
+      LocalStorageWrapper ls = new LocalStorageWrapper();
+      loggedUser = ls.retrieve("logged_id");
+      print(
+          "Logged user no init state: ${loggedUser ? loggedUser : 'Deu ruim'}");
+      if (loggedUser != null) {
+        Navigator.of(context).push(CupertinoPageRoute(
+            fullscreenDialog: true, builder: (context) => MainScreen()));
+      } else {
+        return;
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   final imgs = ['doctor', 'doctor-man', 'hemophilia'];

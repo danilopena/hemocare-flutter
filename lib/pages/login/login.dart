@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hemocare/pages/forgot-password.dart';
-import 'package:hemocare/pages/graph.dart';
+import 'package:hemocare/pages/main-screen.dart';
 import 'package:hemocare/services/authentication.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
@@ -64,7 +64,8 @@ class _LoginState extends State<Login> {
                     keyboardType: TextInputType.emailAddress,
                     validator: validateMail,
                     autovalidate: _selfValidate,
-                    onSaved: (value) => _email = value,
+                    onChanged: (value) => _email = value,
+                    onFieldSubmitted: (value) => _email = value,
                   ),
                   SizedBox(
                     height: 10,
@@ -142,7 +143,8 @@ void login(String email, String password, BuildContext context) async {
   String loggedUser = await auth.signIn(email, password);
   if (loggedUser != null) {
     ls.save("logged_id", loggedUser);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Graph()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MainScreen()));
   } else {
     print("Erro no login");
   }
