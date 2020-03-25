@@ -62,15 +62,11 @@ class _InfusionsState extends State<Infusions> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    SizedBox(
-                      height: 20,
-                    ),
                     Text(
                       "Adicionar infusão",
                       style: GoogleFonts.raleway(
                           fontSize: 40, fontWeight: FontWeight.bold),
                     ),
-                    Divider(),
                     Center(
                       child: Text(
                         "Registre rapidamente sua infusão para análises futuras",
@@ -98,6 +94,13 @@ class _InfusionsState extends State<Infusions> {
                           titleText: 'Selecione uma opção',
                           hintText: "Selecione o tipo de infusão",
                           value: _infusionType,
+                          autovalidate: true,
+                          validator: (value) {
+                            if (value == null) {
+                              return "Escolha um tipo de infusao ";
+                            }
+                            return null;
+                          },
                           required: true,
                           onSaved: (value) {
                             setState(() {
@@ -122,7 +125,9 @@ class _InfusionsState extends State<Infusions> {
                           textField: 'display',
                           valueField: 'value',
                         )),
-                    Divider(),
+                    SizedBox(
+                      height: 20,
+                    ),
                     TextFormField(
                       focusNode: _dosageFocus,
                       controller: _dosageController,
@@ -235,9 +240,25 @@ void _submit(
     BuildContext context) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
-
-    createInfusion(
-        infusionType, dosage, recurring, description, datetime, context);
+    if (infusionType == null ||
+        dosage == null ||
+        recurring == null ||
+        datetime == null) {
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: "AVISO!",
+          desc: 'POR FAVOR INFORME TODOS OS CAMPOS',
+          btnOkOnPress: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Infusions()));
+          }).show();
+      return;
+    } else {
+      createInfusion(
+          infusionType, dosage, recurring, description, datetime, context);
+    }
   }
 }
 

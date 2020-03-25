@@ -1,9 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hemocare/pages/forgot-password.dart';
 import 'package:hemocare/pages/main-screen.dart';
 import 'package:hemocare/services/authentication.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/utils/AuthErrors.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -140,11 +143,24 @@ String validatePassword(String value) {
 void login(String email, String password, BuildContext context) async {
   LocalStorageWrapper ls = new LocalStorageWrapper();
   Auth auth = new Auth();
-  String loggedUser = await auth.signIn(email, password);
-  if (loggedUser != null) {
+  String loggedUser;
+  try {
+    await auth.signIn(email, password).then((value) => loggedUser = value);
     ls.save("logged_id", loggedUser);
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MainScreen()));
+  } on PlatformException catch (e) {
+    AwesomeDialog(
+            context: context,
+            dialogType: DialogType.WARNING,
+            animType: AnimType.BOTTOMSLIDE,
+            tittle: "AVISO!",
+            desc: '${AuthErrors.show(e.code)}',
+            btnOkOnPress: () {})
+        .show();
+  }
+
+  if (loggedUser != null) {
   } else {
     print("Erro no login");
   }

@@ -37,7 +37,7 @@ dependencies:
   fancy_bottom_navigation: ^0.3.2
   datetime_picker_formfield: ^1.0.0
   awesome_dialog: ^0.1.3
-  printing: ^3.1.0
+  printing: any
   pdf: ^1.5.0
   html: ^0.14.0+3
   font_awesome_flutter:
