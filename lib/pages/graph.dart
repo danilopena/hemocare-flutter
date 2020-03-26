@@ -84,6 +84,7 @@ class _GraphState extends State<Graph> {
                                           percent:
                                               document.data["percentageUsed"] /
                                                   100,
+
                                           arcBackgroundColor:
                                               ColorTheme.lightPurple,
                                           arcType: ArcType.FULL,

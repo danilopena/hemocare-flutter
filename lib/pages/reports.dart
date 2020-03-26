@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/services/pdf_generator.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -28,17 +30,30 @@ class _ReportsState extends State<Reports> {
     return Scaffold(
       body: SafeArea(
         child: Column(children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Center(
-                  child: Text(
-                "Relatório",
-                style: GoogleFonts.raleway(
-                    fontSize: 36, fontWeight: FontWeight.bold),
-              )),
-              Text("Botão"),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Center(
+                    child: Text(
+                  "Relatório",
+                  style: GoogleFonts.raleway(
+                      fontSize: 36, fontWeight: FontWeight.bold),
+                )),
+                IconButton(
+                  icon: Icon(FontAwesomeIcons.filePdf),
+                  tooltip: "Gerar PDF",
+                  iconSize: 32,
+                  color: ColorTheme.green,
+                  onPressed: () {
+                    _generatePDF(userId);
+                    print("Invoke PDF Routine");
+                  },
+                )
+              ],
+            ),
           ),
           SizedBox(
             height: 20,
@@ -87,6 +102,20 @@ class _ReportsState extends State<Reports> {
       ),
     );
   }
+}
+
+void _generatePDF(String userId) async {
+  //pegar os dados das infusoes
+  List<DocumentSnapshot> histories;
+  await Firestore.instance
+      .collection("histories")
+      .where("userId", isEqualTo: userId)
+      .where("dateTime",
+          isGreaterThan: DateTime.now().subtract(Duration(days: 30)))
+      .snapshots()
+      .first
+      .then((docs) => histories = docs.documents);
+  new PDFGenerator().generate(histories);
 }
 
 Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,

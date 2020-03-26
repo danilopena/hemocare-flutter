@@ -132,7 +132,7 @@ class _InfusionsState extends State<Infusions> {
                       focusNode: _dosageFocus,
                       controller: _dosageController,
                       decoration: InputDecoration(
-                          labelText: "Dosagem",
+                          labelText: "Ex: 2000UI",
                           hintText: "Dosagem utilizada",
                           fillColor: Colors.white,
                           prefixIcon: Icon(Icons.healing),
