@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/pages/main-screen.dart';
+import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -129,7 +129,7 @@ void fillStock(
     "dosage": int.parse(commonDosage),
     "percentageUsed": 0
   }).then((success) => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => MainScreen())));
+      context, MaterialPageRoute(builder: (context) => TabBarController())));
 }
 
 Future _hasStock() async {

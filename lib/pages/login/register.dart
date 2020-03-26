@@ -6,7 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/pages/initial-stock-register.dart';
+import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
 import 'package:hemocare/services/authentication.dart';

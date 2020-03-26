@@ -1,10 +1,10 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/register.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
-import 'package:hemocare/pages/main-screen.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -39,7 +39,7 @@ class _InitialState extends State<Initial> {
           "Logged user no init state: ${loggedUser ? loggedUser : 'Deu ruim'}");
       if (loggedUser != null) {
         Navigator.of(context).push(CupertinoPageRoute(
-            fullscreenDialog: true, builder: (context) => MainScreen()));
+            fullscreenDialog: true, builder: (context) => TabBarController()));
       } else {
         return;
       }

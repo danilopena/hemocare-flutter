@@ -5,7 +5,7 @@ import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/pages/main-screen.dart';
+import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:intl/intl.dart';
@@ -280,8 +280,8 @@ void createInfusion(String infusionType, int dosage, bool recurring,
       tittle: 'Sucesso',
       desc: 'Novo registro adicionado com sucesso',
       btnOkOnPress: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => TabBarController()));
       }).show());
 }
 
