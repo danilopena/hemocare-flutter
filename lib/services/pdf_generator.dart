@@ -22,7 +22,7 @@ class PDFGenerator {
                 return _buildHistoryCard(history);
               }))
         });
-
+    print("Finished");
     await Printing.sharePdf(
         bytes: pdf.save(), filename: "Relatorio Infusoes.pdf");
   }
