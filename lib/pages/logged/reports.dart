@@ -67,7 +67,49 @@ class _ReportsState extends State<Reports> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return CircularProgressIndicator();
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          height: MediaQuery.of(context).size.height / 2,
+                          width: MediaQuery.of(context).size.width - 50,
+                          decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              image: DecorationImage(
+                                  image: AssetImage('assets/empty.png'))),
+                        ),
+                        FittedBox(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Você ainda não tem infusões cadastradas! Que tal fazer a ",
+                                style: GoogleFonts.raleway(fontSize: 24),
+                                textAlign: TextAlign.center,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  print("Primeira");
+                                },
+                                child: Text(
+                                  "primeira?",
+                                  style: GoogleFonts.raleway(
+                                      color: ColorTheme.lightPurple,
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
               }
               return Expanded(
                 child: ListView.builder(
