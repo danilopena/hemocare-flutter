@@ -1,16 +1,16 @@
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:hemocare/pages/graph.dart';
-import 'package:hemocare/pages/new-infusion.dart';
-import 'package:hemocare/pages/reports.dart';
+import 'package:hemocare/pages/logged/graph.dart';
+import 'package:hemocare/pages/logged/new-infusion.dart';
+import 'package:hemocare/pages/logged/reports.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 
-class MainScreen extends StatefulWidget {
+class TabBarController extends StatefulWidget {
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _TabBarControllerState createState() => _TabBarControllerState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _TabBarControllerState extends State<TabBarController> {
   int currentPage = 0;
   GlobalKey bottomNavigationKey = GlobalKey();
 

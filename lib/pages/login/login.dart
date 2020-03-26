@@ -2,8 +2,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hemocare/pages/forgot-password.dart';
-import 'package:hemocare/pages/main-screen.dart';
+import 'package:hemocare/pages/login/forgot-password.dart';
+import 'package:hemocare/pages/tab-bar-controller.dart';
 import 'package:hemocare/services/authentication.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/AuthErrors.dart';
@@ -148,7 +148,7 @@ void login(String email, String password, BuildContext context) async {
     await auth.signIn(email, password).then((value) => loggedUser = value);
     ls.save("logged_id", loggedUser);
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MainScreen()));
+        context, MaterialPageRoute(builder: (context) => TabBarController()));
   } on PlatformException catch (e) {
     AwesomeDialog(
             context: context,
