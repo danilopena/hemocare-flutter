@@ -1,14 +1,17 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
 import 'package:hemocare/services/authentication.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/utils/AuthErrors.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -212,8 +215,20 @@ void _submit(
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
 
-    register(
-        _email.trim(), _name, _password, _pathology, _agreeToTerms, context);
+    if (_agreeToTerms == false) {
+      AwesomeDialog(
+              context: context,
+              dialogType: DialogType.WARNING,
+              animType: AnimType.BOTTOMSLIDE,
+              tittle: "AVISO!",
+              desc:
+                  'Para criar sua conta, deve concordar com os termos de uso!',
+              btnOkOnPress: () {})
+          .show();
+      return;
+    } else {
+      register(_email, _name, _password, _pathology, _agreeToTerms, context);
+    }
   }
 }
 
@@ -241,15 +256,17 @@ void register(String email, String name, String password, String pathology,
       'userId': loggedUser
     });
     ls.save("logged_id", loggedUser);
-    print(loggedUser);
-  } catch (e) {
-    print(e);
-  }
-  if (loggedUser != null && !loggedUser.isEmpty) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => InitialStockRegister()));
-  } else {
-    //notify user
+  } on PlatformException catch (e) {
+    AwesomeDialog(
+            context: context,
+            dialogType: DialogType.WARNING,
+            animType: AnimType.BOTTOMSLIDE,
+            tittle: "AVISO!",
+            desc: '${AuthErrors.show(e.code)}',
+            btnOkOnPress: () {})
+        .show();
   }
 
   // setLocalStorage o ID e push route
