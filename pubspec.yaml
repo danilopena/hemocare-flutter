@@ -41,6 +41,9 @@ dependencies:
   pdf: ^1.5.0
   html: ^0.14.0+3
   font_awesome_flutter:
+  flutter_native_html_view: ^1.0.1
+  webview_flutter:
+  flutter_svg:
 dev_dependencies:
   flutter_test:
     sdk: flutter

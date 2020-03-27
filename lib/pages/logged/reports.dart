@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/services/local_storage.dart';
@@ -75,10 +76,7 @@ class _ReportsState extends State<Reports> {
                         Container(
                           height: MediaQuery.of(context).size.height / 2,
                           width: MediaQuery.of(context).size.width - 50,
-                          decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              image: DecorationImage(
-                                  image: AssetImage('assets/empty.png'))),
+                          child: SvgPicture.asset("assets/empty.svg"),
                         ),
                         FittedBox(
                           child: Column(
