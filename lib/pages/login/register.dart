@@ -65,6 +65,7 @@ class _RegisterState extends State<Register> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                    autofocus: true,
                     focusNode: _nameFocus,
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -79,11 +80,14 @@ class _RegisterState extends State<Register> {
                     validator: nameValidator,
                     autovalidate: _selfValidate,
                     onSaved: (value) => _name = value,
+                    onChanged: (value) => _name = value,
+                    onFieldSubmitted: (value) => _emailFocus.requestFocus(),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   TextFormField(
+                    onTap: () => _emailFocus.requestFocus(),
                     focusNode: _emailFocus,
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -97,6 +101,8 @@ class _RegisterState extends State<Register> {
                     validator: validateMail,
                     autovalidate: _selfValidate,
                     onSaved: (value) => _email = value,
+                    onChanged: (value) => _email = value,
+                    onFieldSubmitted: (value) => _passwordFocus.requestFocus(),
                   ),
                   SizedBox(
                     height: 10,
@@ -115,6 +121,7 @@ class _RegisterState extends State<Register> {
                     validator: validatePassword,
                     autovalidate: _selfValidate,
                     onSaved: (value) => _password = value,
+                    onChanged: (value) => _password = value,
                   ),
                   SizedBox(
                     height: 30,
@@ -235,6 +242,8 @@ void _submit(
 String validatePassword(String value) {
   if (value.length < 5)
     return 'Por favor insira uma senha mais forte';
+  else if (value.length == 0)
+    return "Insira uma senha";
   else
     return null;
 }

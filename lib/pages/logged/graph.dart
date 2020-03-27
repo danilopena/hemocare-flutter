@@ -66,7 +66,11 @@ class _GraphState extends State<Graph> {
                                   case ConnectionState.active:
                                     final DocumentSnapshot document =
                                         snapshot.data.documents[0];
-                                    print(document.data);
+                                    var percent =
+                                        document.data["percentageUsed"] != null
+                                            ? document.data["percentageUsed"]
+                                            : 0.0;
+
                                     return Column(
                                       children: <Widget>[
                                         Center(
@@ -81,10 +85,7 @@ class _GraphState extends State<Graph> {
                                           animation: true,
                                           animationDuration: 2000,
                                           lineWidth: 40.0,
-                                          percent:
-                                              document.data["percentageUsed"] /
-                                                  100,
-
+                                          percent: percent / 100,
                                           arcBackgroundColor:
                                               ColorTheme.lightPurple,
                                           arcType: ArcType.FULL,

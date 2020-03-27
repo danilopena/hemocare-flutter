@@ -37,6 +37,7 @@ class _InitialStockRegisterState extends State<InitialStockRegister> {
 
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             "Informações iniciais",
             style: GoogleFonts.raleway(fontSize: 24),

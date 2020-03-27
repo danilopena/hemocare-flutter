@@ -55,6 +55,7 @@ class _LoginState extends State<Login> {
                     height: 20,
                   ),
                   TextFormField(
+                    autofocus: true,
                     focusNode: _emailFocus,
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -68,7 +69,10 @@ class _LoginState extends State<Login> {
                     validator: validateMail,
                     autovalidate: _selfValidate,
                     onChanged: (value) => _email = value,
-                    onFieldSubmitted: (value) => _email = value,
+                    onFieldSubmitted: (value) {
+                      _email = value;
+                      _passwordFocus.requestFocus();
+                    },
                   ),
                   SizedBox(
                     height: 10,
@@ -86,7 +90,7 @@ class _LoginState extends State<Login> {
                     obscureText: true,
                     validator: validatePassword,
                     autovalidate: _selfValidate,
-                    onSaved: (value) => _password = value,
+                    onChanged: (value) => _password = value,
                   ),
                   SizedBox(
                     height: 30,
@@ -129,6 +133,20 @@ void _submit(GlobalKey<FormState> _formKey, String _email, String _password,
     BuildContext context) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
+    print(_email);
+    print(_password);
+  }
+  if (_email == null || _password == null) {
+    AwesomeDialog(
+            context: context,
+            dialogType: DialogType.ERROR,
+            animType: AnimType.BOTTOMSLIDE,
+            tittle: "AVISO!",
+            desc: 'Informe todos os dados, por gentileza!',
+            btnOkOnPress: () {})
+        .show();
+
+    return;
   }
   login(_email, _password, context);
 }
@@ -150,6 +168,7 @@ void login(String email, String password, BuildContext context) async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => TabBarController()));
   } on PlatformException catch (e) {
+    print(e.code);
     AwesomeDialog(
             context: context,
             dialogType: DialogType.WARNING,
