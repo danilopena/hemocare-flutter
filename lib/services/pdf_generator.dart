@@ -11,18 +11,16 @@ class PDFGenerator {
     initializeDateFormatting("pt_BR", null)
         .then((_) => print("Data inicializada"));
     if (histories != null) {
-      print(histories[0]);
     } else {
       print("No PDFGen, histories is null!");
     }
     histories.forEach((history) => {
           pdf.addPage(Page(
-              pageFormat: PdfPageFormat.a4,
+              pageFormat: PdfPageFormat.a5,
               build: (Context context) {
                 return _buildHistoryCard(history);
               }))
         });
-    print("Finished");
     await Printing.sharePdf(
         bytes: pdf.save(), filename: "Relatorio Infusoes.pdf");
   }
@@ -33,7 +31,7 @@ class PDFGenerator {
     Timestamp date = history.data["dateTime"];
     bool recurring = history.data["recurring"];
     String description = history.data["description"];
-    var format = new DateFormat("d MMM, hh:mm a");
+    var format = new DateFormat("d MMMM y, 'às' H:mm ", "pt_BR");
     var dateFormatted =
         new DateTime.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
     return Container(
@@ -43,7 +41,7 @@ class PDFGenerator {
           color: PdfColors.white,
           borderRadius: 4,
         ),
-        width: PdfPageFormat.a4.width - 20,
+        width: PdfPageFormat.a5.width - 20,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +54,7 @@ class PDFGenerator {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
-                    Text("$infusionType", style: TextStyle(fontSize: 18))
+                    Text("$infusionType", style: TextStyle(fontSize: 20))
                   ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,12 +65,12 @@ class PDFGenerator {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
                     Text(
-                      "$dosage",
+                      "$dosage UI",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: 20,
                           color:
-                              dosage > 4000 ? PdfColors.red : PdfColors.black),
+                              dosage > 2000 ? PdfColors.red : PdfColors.black),
                     )
                   ]),
               Row(
@@ -87,7 +85,7 @@ class PDFGenerator {
                       "${format.format(dateFormatted)}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 20,
                       ),
                     )
                   ]),
@@ -95,29 +93,30 @@ class PDFGenerator {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "Recorrencia: ",
+                      "Recorrência: ",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
                     Text(
-                      "${recurring ? "SIM" : "NAO"}",
+                      "${recurring ? "SIM" : "NÃO"}",
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color:
+                              recurring ? PdfColors.red : PdfColors.blueAccent),
                     )
                   ]),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "Descricao: ",
+                      "Descrição: ",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
                     Flexible(
                         child: Text(
-                      "$description",
+                      "${description != null ? description : "Descrição não informada pelo paciente."}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,

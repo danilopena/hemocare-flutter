@@ -46,7 +46,6 @@ class _ReportsState extends State<Reports> {
                   icon: Icon(FontAwesomeIcons.filePdf),
                   tooltip: "Gerar PDF",
                   iconSize: 32,
-                  color: ColorTheme.green,
                   onPressed: () {
                     _generatePDF(userId);
                     print("Invoke PDF Routine");
@@ -86,7 +85,7 @@ class _ReportsState extends State<Reports> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                "Você ainda não tem infusões cadastradas! Que tal fazer a ",
+                                "Você ainda não tem infusões cadastradas! Que tal registrar a ",
                                 style: GoogleFonts.raleway(fontSize: 24),
                                 textAlign: TextAlign.center,
                               ),

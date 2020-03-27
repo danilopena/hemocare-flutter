@@ -1,5 +1,6 @@
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hemocare/pages/logged/graph.dart';
 import 'package:hemocare/pages/logged/new-infusion.dart';
 import 'package:hemocare/pages/logged/reports.dart';
@@ -27,7 +28,7 @@ class _TabBarControllerState extends State<TabBarController> {
         inactiveIconColor: Colors.grey,
         tabs: [
           TabData(
-              iconData: Icons.graphic_eq,
+              iconData: FontAwesomeIcons.home,
               title: "Início",
               onclick: () {
                 final FancyBottomNavigationState fState =
@@ -35,7 +36,7 @@ class _TabBarControllerState extends State<TabBarController> {
                 fState.setPage(0);
               }),
           TabData(
-              iconData: Icons.add,
+              iconData: FontAwesomeIcons.syringe,
               title: "Infusões",
               onclick: () {
                 final FancyBottomNavigationState fState =
@@ -43,7 +44,7 @@ class _TabBarControllerState extends State<TabBarController> {
                 fState.setPage(1);
               }),
           TabData(
-              iconData: Icons.report,
+              iconData: FontAwesomeIcons.fileMedicalAlt,
               title: "Relatórios",
               onclick: () {
                 final FancyBottomNavigationState fState =
@@ -54,7 +55,6 @@ class _TabBarControllerState extends State<TabBarController> {
         initialSelection: 0,
         key: bottomNavigationKey,
         onTabChangedListener: (position) {
-          print("Position $position");
           setState(() {
             currentPage = position;
           });
@@ -64,7 +64,6 @@ class _TabBarControllerState extends State<TabBarController> {
   }
 
   _getPage(int page) {
-    print("I`m in page $page");
     switch (page) {
       case 0:
         return Graph();
