@@ -96,16 +96,30 @@ class _InitialStockRegisterState extends State<InitialStockRegister> {
 }
 
 String stockValidator(String value) {
-  double stockValue = double.parse(value);
+  double stockValue;
+  try {
+    stockValue = double.parse(value);
+  } on Exception catch (e) {
+    return "Por gentileza, insira um valor";
+  }
   if (stockValue < 0) {
     return "Estoque inicial não pode ser negativo";
+  } else if (stockValue == null) {
+    return "Não é possível submeter o campo vazio";
   }
 }
 
 String dosageValidator(String value) {
-  double stockValue = double.parse(value);
-  if (stockValue < 100) {
-    return "Dosagem padrão não pode ser menor que 100";
+  double dosageValue;
+  try {
+    dosageValue = double.parse(value);
+  } on Exception catch (e) {
+    return "Por gentileza, insira um valor";
+  }
+  if (dosageValue < 0) {
+    return "Estoque inicial não pode ser negativo";
+  } else if (dosageValue == null) {
+    return "Não é possível submeter o campo vazio";
   }
 }
 
@@ -113,9 +127,8 @@ void _submit(GlobalKey<FormState> _formKey, String _initialStock,
     String _commonDosage, BuildContext context) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
-
-    fillStock(_initialStock, _commonDosage, context);
   }
+  fillStock(_initialStock, _commonDosage, context);
 }
 
 void fillStock(
