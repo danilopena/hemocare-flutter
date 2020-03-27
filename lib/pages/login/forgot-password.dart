@@ -41,9 +41,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       cursorColor: ColorTheme.blue,
                       autovalidate: false,
                       textAlign: TextAlign.center,
-                      onFieldSubmitted: (value) {
-                        //Fazer trocar o foco do campo para o abaixo.
-                      },
                       decoration: InputDecoration(
                           hintText: "Seu nome de usuário ou e-mail",
                           icon: Icon(

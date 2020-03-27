@@ -208,7 +208,7 @@ class _RegisterState extends State<Register> {
 }
 
 String nameValidator(String value) {
-  return value.length < 2 ? "Nome muito curto. Inválido" : null;
+  return value.length < 2 ? "Nome muito curto." : null;
 }
 
 void _submit(
@@ -228,8 +228,7 @@ void _submit(
               dialogType: DialogType.WARNING,
               animType: AnimType.BOTTOMSLIDE,
               tittle: "AVISO!",
-              desc:
-                  'Para criar sua conta, deve concordar com os termos de uso!',
+              desc: 'Para criar sua conta, concorde com os termos de uso',
               btnOkOnPress: () {})
           .show();
       return;

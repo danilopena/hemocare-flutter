@@ -50,35 +50,42 @@ class _InitialStockRegisterState extends State<InitialStockRegister> {
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                SizedBox(
+                  height: 30,
+                ),
                 TextFormField(
                   focusNode: _initialStockFocus,
                   controller: _initialStockController,
                   decoration: InputDecoration(
                       labelText: "Qual seu estoque atual?",
-                      hintText: "Ex.: 20000 UI",
-                      labelStyle: GoogleFonts.raleway(fontSize: 28),
+                      hintText: "Ex: 2000",
                       fillColor: Colors.white,
-                      prefixIcon: Icon(Icons.local_hospital),
-                      border: UnderlineInputBorder(
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       )),
                   keyboardType: TextInputType.number,
+                  onFieldSubmitted: (value) {
+                    _commonDosageFocus.requestFocus();
+                  },
                   validator: stockValidator,
                   autovalidate: _selfValidate,
                   onSaved: (value) => initialStock = value,
+                ),
+                SizedBox(
+                  height: 30,
                 ),
                 TextFormField(
                   focusNode: _commonDosageFocus,
                   controller: _commonDosageController,
                   decoration: InputDecoration(
                       labelText: "Qual a sua dosagem padrão?",
-                      hintText: "Ex.: 3000 UI",
-                      labelStyle: GoogleFonts.raleway(fontSize: 28),
+                      hintText: "Ex: 3000",
                       fillColor: Colors.white,
-                      prefixIcon: Icon(Icons.healing),
-                      border: UnderlineInputBorder(
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       )),
                   keyboardType: TextInputType.number,
@@ -86,7 +93,10 @@ class _InitialStockRegisterState extends State<InitialStockRegister> {
                   autovalidate: _selfValidate,
                   onSaved: (value) => _commonDosage = value,
                 ),
-                Utils.gradientPatternButton("Pronto!", () {
+                SizedBox(
+                  height: 30,
+                ),
+                Utils.gradientPatternButton("Pronto", () {
                   _submit(_formKey, initialStock, _commonDosage, context);
                 }, context)
               ],
