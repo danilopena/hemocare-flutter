@@ -223,6 +223,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_native_html_view:
+    dependency: "direct main"
+    description:
+      name: flutter_native_html_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  flutter_svg:
+    dependency: "direct main"
+    description:
+      name: flutter_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.3+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -317,6 +331,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   path_provider:
     dependency: transitive
     description:
@@ -483,6 +511,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.19+9"
   xml:
     dependency: transitive
     description:
@@ -492,4 +527,4 @@ packages:
     version: "3.5.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"
