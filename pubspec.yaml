@@ -44,6 +44,8 @@ dependencies:
   flutter_native_html_view: ^1.0.1
   webview_flutter:
   flutter_svg:
+  google_sign_in:
+  circular_bottom_navigation:
 dev_dependencies:
   flutter_test:
     sdk: flutter
