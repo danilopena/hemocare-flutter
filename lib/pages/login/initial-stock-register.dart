@@ -159,7 +159,6 @@ void fillStock(
 Future _hasStock() async {
   StockHandler sh = new StockHandler();
   DocumentSnapshot response = await sh.getStock();
-  print("Minha fodendo response: $response");
 
   return response;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/pages/logged/new-infusion.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/pdf_generator.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
@@ -21,7 +22,7 @@ class _ReportsState extends State<Reports> {
     // TODO: implement initState
     super.initState();
     initializeDateFormatting("pt_BR", null)
-        .then((_) => print("Data inicializada"));
+        .then((_) => print("Data inicializada no Report"));
   }
 
   @override
@@ -49,7 +50,6 @@ class _ReportsState extends State<Reports> {
                   iconSize: 32,
                   onPressed: () {
                     _generatePDF(userId);
-                    print("Invoke PDF Routine");
                   },
                 )
               ],
@@ -89,7 +89,9 @@ class _ReportsState extends State<Reports> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print("Primeira");
+                                  Navigator.of(context).push(CupertinoPageRoute(
+                                      fullscreenDialog: true,
+                                      builder: (context) => Infusions()));
                                 },
                                 child: Text(
                                   "primeira?",
@@ -122,7 +124,6 @@ class _ReportsState extends State<Reports> {
                           snapshot.data.documents[index]["recurring"];
                       String description =
                           snapshot.data.documents[index]["description"];
-                      var format = new DateFormat("d MMM, hh:mm a");
                       var dateFormatted =
                           new DateTime.fromMillisecondsSinceEpoch(
                               date.millisecondsSinceEpoch);
