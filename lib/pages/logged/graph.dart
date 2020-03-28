@@ -275,5 +275,4 @@ void addStock(double quantityInt) async {
 void removeStock(double quantityInt) async {
   StockHandler sh = new StockHandler();
   DocumentSnapshot response = await sh.removeStock(quantityInt);
-  print("Response remove: ${response.data}");
 }
