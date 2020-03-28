@@ -94,7 +94,7 @@ class _InfusionsState extends State<Infusions> {
                           titleText: 'Selecione uma opção',
                           hintText: "Selecione o tipo de infusão",
                           value: _infusionType,
-                          autovalidate: true,
+                          autovalidate: false,
                           validator: (value) {
                             if (value == null) {
                               return "Escolha um tipo de infusao ";
@@ -132,7 +132,7 @@ class _InfusionsState extends State<Infusions> {
                       focusNode: _dosageFocus,
                       controller: _dosageController,
                       decoration: InputDecoration(
-                          labelText: "Ex: 2000UI",
+                          labelText: "Ex: 2000",
                           hintText: "Dosagem utilizada",
                           fillColor: Colors.white,
                           prefixIcon: Icon(Icons.healing),
@@ -160,24 +160,34 @@ class _InfusionsState extends State<Infusions> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      focusNode: _descriptionFocus,
-                      controller: _descriptionController,
-                      decoration: InputDecoration(
-                        hintText: "Caso deseje, informe uma descrição",
-                        labelText: "Descrição",
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.healing),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+
+                    Visibility(
+                      visible: _recurring,
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                            focusNode: _descriptionFocus,
+                            controller: _descriptionController,
+                            decoration: InputDecoration(
+                              hintText:
+                                  "Ex: Ao jogar futebol, torci o tornozelo.",
+                              labelText: "Coloque uma descrição do fato",
+                              fillColor: Colors.white,
+                              prefixIcon: Icon(Icons.description),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) => description = value,
+                            onSaved: (value) => description = value,
+                          )
+                        ],
                       ),
-                      keyboardType: TextInputType.text,
-                      onChanged: (value) => description = value,
-                      onSaved: (value) => description = value,
                     ),
+
                     SizedBox(
                       height: 20,
                     ),
@@ -185,9 +195,12 @@ class _InfusionsState extends State<Infusions> {
                     DateTimeField(
                       format: format,
                       decoration: InputDecoration(
-                          labelText: "Escolher a data e horario",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5))),
+                        hintText: "Escolha a hora que você aplicou o fator",
+                        fillColor: Colors.white,
+                        prefixIcon: Icon(Icons.perm_contact_calendar),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                       onShowPicker: (context, currentValue) async {
                         final date = await showDatePicker(
                             context: context,
