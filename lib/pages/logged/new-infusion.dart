@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/utils/ColorTheme.dart';
+import 'package:hemocare/utils/my-dropdown.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:intl/intl.dart';
 
@@ -91,43 +93,41 @@ class _InfusionsState extends State<Infusions> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Container(
-                          decoration: BoxDecoration(color: Colors.transparent),
-                          child: DropDownFormField(
-                            titleText: 'Selecione uma opção',
-                            hintText: "Selecione o tipo de infusão",
-                            value: _infusionType,
-                            autovalidate: false,
-                            validator: (value) {
-                              if (value == null) {
-                                return "Escolha um tipo de infusao ";
-                              }
-                              return null;
-                            },
-                            required: true,
-                            onSaved: (value) {
-                              setState(() {
-                                _infusionType = value;
-                              });
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                _infusionType = value;
-                              });
-                            },
-                            dataSource: [
-                              {
-                                "display": "Profilaxia ",
-                                "value": "Profilaxia",
-                              },
-                              {
-                                "display": "Sob demanda",
-                                "value": "Sob demanda",
-                              },
-                            ],
-                            textField: 'display',
-                            valueField: 'value',
-                          )),
+                      MyDropDown(
+                        titleText: 'Selecione uma opção',
+                        hintText: "Selecione o tipo de infusão",
+                        value: _infusionType,
+                        autovalidate: false,
+                        validator: (value) {
+                          if (value == null) {
+                            return "Escolha um tipo de infusao ";
+                          }
+                          return null;
+                        },
+                        required: true,
+                        onSaved: (value) {
+                          setState(() {
+                            _infusionType = value;
+                          });
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _infusionType = value;
+                          });
+                        },
+                        dataSource: [
+                          {
+                            "display": "Profilaxia ",
+                            "value": "Profilaxia",
+                          },
+                          {
+                            "display": "Sob demanda",
+                            "value": "Sob demanda",
+                          },
+                        ],
+                        textField: 'display',
+                        valueField: 'value',
+                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -227,7 +227,9 @@ class _InfusionsState extends State<Infusions> {
                   ),
                 ),
               ),
-
+              SizedBox(
+                height: 20,
+              ),
               Utils.gradientPatternButton("Pronto!", () {
                 _submit(_formKey, _infusionType, dosage, _recurring,
                     description, dateTime, context);

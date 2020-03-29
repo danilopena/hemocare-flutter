@@ -14,6 +14,7 @@ import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/utils/AuthErrors.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
+import 'package:hemocare/utils/my-dropdown.dart';
 import 'package:hemocare/utils/utils.dart';
 
 class Register extends StatefulWidget {
@@ -126,35 +127,33 @@ class _RegisterState extends State<Register> {
                   SizedBox(
                     height: 30,
                   ),
-                  Container(
-                      color: Colors.white,
-                      child: DropDownFormField(
-                        titleText: 'Coagulopatia',
-                        hintText: "Selecione sua coagulopatia",
-                        value: _pathology,
-                        onSaved: (value) {
-                          setState(() {
-                            _pathology = value;
-                          });
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            _pathology = value;
-                          });
-                        },
-                        dataSource: [
-                          {
-                            "display": "Hemofilia A",
-                            "value": "Hemofilia A",
-                          },
-                          {
-                            "display": "Hemofilia B",
-                            "value": "Hemofilia B",
-                          },
-                        ],
-                        textField: 'display',
-                        valueField: 'value',
-                      )),
+                  MyDropDown(
+                    titleText: 'Coagulopatia',
+                    hintText: "Selecione sua coagulopatia",
+                    value: _pathology,
+                    onSaved: (value) {
+                      setState(() {
+                        _pathology = value;
+                      });
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _pathology = value;
+                      });
+                    },
+                    dataSource: [
+                      {
+                        "display": "Hemofilia A",
+                        "value": "Hemofilia A",
+                      },
+                      {
+                        "display": "Hemofilia B",
+                        "value": "Hemofilia B",
+                      },
+                    ],
+                    textField: 'display',
+                    valueField: 'value',
+                  ),
                   SizedBox(
                     height: 10,
                   ),
