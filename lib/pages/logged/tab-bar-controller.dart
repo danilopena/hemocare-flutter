@@ -1,4 +1,5 @@
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
+import 'package:circular_bottom_navigation/tab_item.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hemocare/pages/logged/graph.dart';
@@ -13,52 +14,44 @@ class TabBarController extends StatefulWidget {
 
 class _TabBarControllerState extends State<TabBarController> {
   int currentPage = 0;
+  int selectedPos;
   GlobalKey bottomNavigationKey = GlobalKey();
+  CircularBottomNavigationController _navigationController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedPos = 0;
+    _navigationController = new CircularBottomNavigationController(selectedPos);
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<TabItem> tabItems = List.of([
+      TabItem(FontAwesomeIcons.home, "Início", ColorTheme.lightPurple),
+      TabItem(FontAwesomeIcons.syringe, "Infusoes", ColorTheme.lightPurple),
+      TabItem(
+          FontAwesomeIcons.fileMedicalAlt, "Relatorio", ColorTheme.lightPurple),
+    ]);
+
     return Scaffold(
       body: Container(
         child: Center(
-          child: _getPage(currentPage),
+          child: _getPage(selectedPos),
         ),
       ),
-      bottomNavigationBar: FancyBottomNavigation(
-        circleColor: ColorTheme.lightPurple,
-        inactiveIconColor: Colors.grey,
-        tabs: [
-          TabData(
-              iconData: FontAwesomeIcons.home,
-              title: "Início",
-              onclick: () {
-                final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
-                fState.setPage(0);
-              }),
-          TabData(
-              iconData: FontAwesomeIcons.syringe,
-              title: "Infusões",
-              onclick: () {
-                final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
-                fState.setPage(1);
-              }),
-          TabData(
-              iconData: FontAwesomeIcons.fileMedicalAlt,
-              title: "Relatórios",
-              onclick: () {
-                final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
-                fState.setPage(2);
-              })
-        ],
-        initialSelection: 0,
-        key: bottomNavigationKey,
-        onTabChangedListener: (position) {
-          setState(() {
-            currentPage = position;
-          });
-        },
+      bottomNavigationBar: SafeArea(
+        child: CircularBottomNavigation(
+          tabItems,
+          iconsSize: 18,
+          controller: _navigationController,
+          selectedCallback: (int selected) {
+            setState(() {
+              selectedPos = selected;
+              print(_navigationController.value);
+            });
+          },
+        ),
       ),
     );
   }
@@ -73,4 +66,12 @@ class _TabBarControllerState extends State<TabBarController> {
         return Reports();
     }
   }
+}
+
+class _Clipper extends CustomClipper<Rect> {
+  @override
+  Rect getClip(Size size) =>
+      Rect.fromLTRB(0, -size.height, size.width, size.height * 2);
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) => false;
 }

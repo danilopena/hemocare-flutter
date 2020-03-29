@@ -1,11 +1,14 @@
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
+import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/register.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/services/social-authentication.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
 
@@ -66,10 +69,9 @@ class _InitialState extends State<Initial> {
 //    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
 //      statusBarColor: Colors.blue, //or set color with: Color(0xFF0000FF)
 //    ));
-
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: true,
         appBar: null,
         body: Stack(
           children: <Widget>[
@@ -182,7 +184,15 @@ class _InitialState extends State<Initial> {
               shape: StadiumBorder(
                   side: BorderSide(color: ColorTheme.lightPurple)),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () {
+                AuthResult authResult;
+                try {
+                  new SocialAuth().loginWithGoogle();
+                  _redirect();
+                } catch (e) {
+                  print("e $e");
+                }
+              },
             ),
           ),
         ),
@@ -243,4 +253,26 @@ class _InitialState extends State<Initial> {
       ],
     );
   }
+}
+
+Widget _redirect() {
+  print("Has been called! ");
+  return StreamBuilder(
+    stream: FirebaseAuth.instance.onAuthStateChanged,
+    builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+      print("Snapshot ${snapshot.data}");
+      if (snapshot.connectionState == ConnectionState.done) {
+        print("Snapshot in redirect done> ${snapshot.data}");
+
+        if (!snapshot.hasData) return CircularProgressIndicator();
+        if (snapshot.hasData) {
+          print("Snapshot in redirect> ${snapshot.data}");
+          LocalStorageWrapper ls = new LocalStorageWrapper();
+          ls.save("logged_id", snapshot.data.uid);
+          return InitialStockRegister();
+        }
+      }
+      return Login();
+    },
+  );
 }

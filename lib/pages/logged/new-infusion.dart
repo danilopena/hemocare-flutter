@@ -52,195 +52,200 @@ class _InfusionsState extends State<Infusions> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "Adicionar infusão",
-                      style: GoogleFonts.raleway(
-                          fontSize: 40, fontWeight: FontWeight.bold),
-                    ),
-                    Center(
-                      child: Text(
-                        "Registre rapidamente sua infusão para análises futuras",
+          child: ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Adicionar infusão",
                         style: GoogleFonts.raleway(
-                          fontSize: 28,
-                        ),
-                        textAlign: TextAlign.center,
+                            fontSize: 40, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
+                      Center(
+                        child: Text(
+                          "Registre rapidamente sua infusão para análises futuras",
+                          style: GoogleFonts.raleway(
+                            fontSize: 28,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            // container de tipo de infusao
-            Form(
-              key: _formKey,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                        decoration: BoxDecoration(color: Colors.transparent),
-                        child: DropDownFormField(
-                          titleText: 'Selecione uma opção',
-                          hintText: "Selecione o tipo de infusão",
-                          value: _infusionType,
-                          autovalidate: false,
-                          validator: (value) {
-                            if (value == null) {
-                              return "Escolha um tipo de infusao ";
-                            }
-                            return null;
-                          },
-                          required: true,
-                          onSaved: (value) {
-                            setState(() {
-                              _infusionType = value;
-                            });
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _infusionType = value;
-                            });
-                          },
-                          dataSource: [
-                            {
-                              "display": "Profilaxia ",
-                              "value": "Profilaxia",
+              // container de tipo de infusao
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                          decoration: BoxDecoration(color: Colors.transparent),
+                          child: DropDownFormField(
+                            titleText: 'Selecione uma opção',
+                            hintText: "Selecione o tipo de infusão",
+                            value: _infusionType,
+                            autovalidate: false,
+                            validator: (value) {
+                              if (value == null) {
+                                return "Escolha um tipo de infusao ";
+                              }
+                              return null;
                             },
-                            {
-                              "display": "Sob demanda",
-                              "value": "Sob demanda",
+                            required: true,
+                            onSaved: (value) {
+                              setState(() {
+                                _infusionType = value;
+                              });
                             },
-                          ],
-                          textField: 'display',
-                          valueField: 'value',
-                        )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      focusNode: _dosageFocus,
-                      controller: _dosageController,
-                      decoration: InputDecoration(
-                          labelText: "Ex: 2000",
-                          hintText: "Dosagem utilizada",
-                          fillColor: Colors.white,
-                          prefixIcon: Icon(Icons.healing),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      keyboardType: TextInputType.number,
-                      validator: validateDosage,
-                      onChanged: (value) => dosage = int.parse(value),
-                      onSaved: (value) => dosage = int.parse(value),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Essa queixa é recorrente?",
-                          style: GoogleFonts.raleway(fontSize: 18),
-                        ),
-                        Switch.adaptive(
-                          value: _recurring,
-                          onChanged: (newValue) =>
-                              setState(() => _recurring = newValue),
-                        )
-                      ],
-                    ),
-
-                    Visibility(
-                      visible: _recurring,
-                      child: Column(
+                            onChanged: (value) {
+                              setState(() {
+                                _infusionType = value;
+                              });
+                            },
+                            dataSource: [
+                              {
+                                "display": "Profilaxia ",
+                                "value": "Profilaxia",
+                              },
+                              {
+                                "display": "Sob demanda",
+                                "value": "Sob demanda",
+                              },
+                            ],
+                            textField: 'display',
+                            valueField: 'value',
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        focusNode: _dosageFocus,
+                        controller: _dosageController,
+                        decoration: InputDecoration(
+                            labelText: "Ex: 2000",
+                            hintText: "Dosagem utilizada",
+                            fillColor: Colors.white,
+                            prefixIcon: Icon(Icons.healing),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                        keyboardType: TextInputType.number,
+                        validator: validateDosage,
+                        onChanged: (value) => dosage = int.parse(value),
+                        onSaved: (value) => dosage = int.parse(value),
+                        onFieldSubmitted: (value) => dosage = int.parse(value),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          SizedBox(
-                            height: 20,
+                          Text(
+                            "Essa queixa é recorrente?",
+                            style: GoogleFonts.raleway(fontSize: 18),
                           ),
-                          TextFormField(
-                            focusNode: _descriptionFocus,
-                            controller: _descriptionController,
-                            decoration: InputDecoration(
-                              hintText:
-                                  "Ex: Ao jogar futebol, torci o tornozelo.",
-                              labelText: "Coloque uma descrição do fato",
-                              fillColor: Colors.white,
-                              prefixIcon: Icon(Icons.description),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            keyboardType: TextInputType.text,
-                            onChanged: (value) => description = value,
-                            onSaved: (value) => description = value,
+                          Switch.adaptive(
+                            value: _recurring,
+                            onChanged: (newValue) => _recurring = newValue,
                           )
                         ],
                       ),
-                    ),
 
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //datepicker
-                    DateTimeField(
-                      format: format,
-                      decoration: InputDecoration(
-                        hintText: "Escolha a hora que você aplicou o fator",
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.perm_contact_calendar),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                      Visibility(
+                        visible: _recurring,
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 20,
+                            ),
+                            TextFormField(
+                              focusNode: _descriptionFocus,
+                              controller: _descriptionController,
+                              decoration: InputDecoration(
+                                hintText:
+                                    "Ex: Ao jogar futebol, torci o tornozelo.",
+                                labelText: "Coloque uma descrição do fato",
+                                fillColor: Colors.white,
+                                prefixIcon: Icon(Icons.description),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              keyboardType: TextInputType.text,
+                              onChanged: (value) => description = value,
+                              onSaved: (value) => description = value,
+                            )
+                          ],
+                        ),
                       ),
-                      onShowPicker: (context, currentValue) async {
-                        final date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate: currentValue ?? DateTime.now(),
-                            lastDate: DateTime(2100));
-                        if (date != null) {
-                          final time = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.fromDateTime(
-                                currentValue ?? DateTime.now()),
-                          );
-                          dateTime = DateTimeField.combine(date, time);
-                          return dateTime;
-                        } else {
-                          return currentValue;
-                        }
-                      },
-                    ),
-                  ],
+
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //datepicker
+                      DateTimeField(
+                        format: format,
+                        decoration: InputDecoration(
+                          hintText: "Escolha a hora que você aplicou o fator",
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.perm_contact_calendar),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        onShowPicker: (context, currentValue) async {
+                          final date = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate: currentValue ?? DateTime.now(),
+                              lastDate: DateTime(2100));
+                          if (date != null) {
+                            final time = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.fromDateTime(
+                                  currentValue ?? DateTime.now()),
+                            );
+                            dateTime = DateTimeField.combine(date, time);
+                            return dateTime;
+                          } else {
+                            return currentValue;
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            Utils.gradientPatternButton("Pronto!", () {
-              _submit(_formKey, _infusionType, dosage, _recurring, description,
-                  dateTime, context);
-            }, context)
-          ],
-        ),
-      ),
+              Utils.gradientPatternButton("Pronto!", () {
+                _submit(_formKey, _infusionType, dosage, _recurring,
+                    description, dateTime, context);
+              }, context)
+            ],
+          ),
+        ],
+      )),
     );
   }
 }
 
 String validateDosage(String value) {
-  if (int.parse(value) < 0)
+  if (int.parse(value) <= 0)
     return 'Por favor insira valores positivos na dosagem';
-  else
-    return null;
+  if (int.parse(value) == null) return 'Informe a dosagem';
+  if (value.isEmpty) return 'Informe a dosagem';
+  return null;
 }
 
 void _submit(
@@ -253,25 +258,23 @@ void _submit(
     BuildContext context) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
-    if (infusionType == null ||
-        dosage == null ||
-        recurring == null ||
-        datetime == null) {
-      AwesomeDialog(
-          context: context,
-          dialogType: DialogType.WARNING,
-          animType: AnimType.BOTTOMSLIDE,
-          tittle: "AVISO!",
-          desc: 'POR FAVOR INFORME TODOS OS CAMPOS',
-          btnOkOnPress: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Infusions()));
-          }).show();
-      return;
-    } else {
-      createInfusion(
-          infusionType, dosage, recurring, description, datetime, context);
-    }
+  }
+  if (infusionType == null ||
+      dosage == null ||
+      recurring == null ||
+      description == null ||
+      datetime == null) {
+    AwesomeDialog(
+            context: context,
+            dialogType: DialogType.WARNING,
+            animType: AnimType.BOTTOMSLIDE,
+            tittle: "AVISO!",
+            desc: 'POR FAVOR INFORME TODOS OS CAMPOS',
+            btnOkOnPress: () {})
+        .show();
+  } else {
+    createInfusion(
+        infusionType, dosage, recurring, description, datetime, context);
   }
 }
 
@@ -286,7 +289,7 @@ void createInfusion(String infusionType, int dosage, bool recurring,
     "recurring": recurring,
     "description": description,
     "dateTime": datetime,
-  }).then((sucess) => AwesomeDialog(
+  }).then((success) => AwesomeDialog(
       context: context,
       dialogType: DialogType.SUCCES,
       animType: AnimType.BOTTOMSLIDE,
@@ -302,5 +305,5 @@ String validateInfusionType(String _infusionType) {
   if (_infusionType == null || _infusionType.isEmpty) {
     return "O tipo de infusão deve ser informado";
   }
-  return "Sem erros";
+  return null;
 }

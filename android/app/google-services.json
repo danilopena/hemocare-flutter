@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "583637459650-cqa7s569oi9t4idp5r461at92l6mn5v6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hemocare",
+            "certificate_hash": "c63c46fd78eaa3e189548632a31f65554c1d7f73"
+          }
+        },
+        {
           "client_id": "583637459650-bkshrd2psu52dlk008aiutpf0e6gcvcl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,6 +46,13 @@
             {
               "client_id": "583637459650-c2b3kntcdlgvctjs6jsf3r35ros0n0o5.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "583637459650-dk8g19f4oahpqadr9ot0jv2a5pj1bm11.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hemocare"
+              }
             }
           ]
         }
