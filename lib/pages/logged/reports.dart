@@ -164,7 +164,7 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
   var date = new DateTime.fromMillisecondsSinceEpoch(
       dateFormatted.millisecondsSinceEpoch);
   return Container(
-      height: 220,
+      height: 180,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -184,7 +184,7 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
               Text(
                 "Procedimento: ",
                 style: GoogleFonts.raleway(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+                    fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 "$infusionType",
@@ -198,12 +198,12 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
               Text(
                 "Dosagem: ",
                 style: GoogleFonts.raleway(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+                    fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 "$dosage",
                 style: GoogleFonts.raleway(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: dosage > 4000 ? Colors.red : Colors.black),
               )
@@ -215,7 +215,7 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
               Text(
                 "Data: ",
                 style: GoogleFonts.raleway(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+                    fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 "${format.format(date)}",
@@ -229,12 +229,12 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
               Text(
                 "Recorrência: ",
                 style: GoogleFonts.raleway(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+                    fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 "${recurring ? "SIM" : "NÃO"}",
                 style: GoogleFonts.raleway(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color:
                         recurring ? ColorTheme.blue : ColorTheme.lightPurple),
@@ -247,12 +247,12 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
               Text(
                 "Descrição: ",
                 style: GoogleFonts.raleway(
-                    fontSize: 24, fontWeight: FontWeight.bold),
+                    fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Flexible(
                 child: Text(
                   "${description != null ? description : "Não informada pelo paciente"}",
-                  style: GoogleFonts.raleway(fontSize: 18),
+                  style: GoogleFonts.raleway(fontSize: 16),
                   textAlign: TextAlign.start,
                 ),
               )
