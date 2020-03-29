@@ -32,15 +32,15 @@ class MyDropDown extends FormField<dynamic> {
           builder: (FormFieldState<dynamic> state) {
             return Container(
               decoration: BoxDecoration(
-                  color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  border: Border.all(width: 1, color: ColorTheme.darkGray)),
+                  border: Border.all(width: 1, color: ColorTheme.borderField)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   InputDecorator(
                     decoration: InputDecoration(
                       border: InputBorder.none,
+                      fillColor: Colors.transparent,
                       contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
                       labelText: titleText,
                       filled: true,
