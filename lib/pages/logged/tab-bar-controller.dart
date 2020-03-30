@@ -40,17 +40,19 @@ class _TabBarControllerState extends State<TabBarController> {
           child: _getPage(selectedPos),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: CircularBottomNavigation(
-          tabItems,
-          iconsSize: 18,
-          controller: _navigationController,
-          selectedCallback: (int selected) {
-            setState(() {
-              selectedPos = selected;
-              print(_navigationController.value);
-            });
-          },
+      bottomNavigationBar: Container(
+        child: SafeArea(
+          child: CircularBottomNavigation(
+            tabItems,
+            iconsSize: 24,
+            controller: _navigationController,
+            selectedCallback: (int selected) {
+              setState(() {
+                selectedPos = selected;
+                print(_navigationController.value);
+              });
+            },
+          ),
         ),
       ),
     );
@@ -66,12 +68,4 @@ class _TabBarControllerState extends State<TabBarController> {
         return Reports();
     }
   }
-}
-
-class _Clipper extends CustomClipper<Rect> {
-  @override
-  Rect getClip(Size size) =>
-      Rect.fromLTRB(0, -size.height, size.width, size.height * 2);
-  @override
-  bool shouldReclip(CustomClipper<Rect> oldClipper) => false;
 }
