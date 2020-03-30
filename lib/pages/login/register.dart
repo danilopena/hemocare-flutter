@@ -65,6 +65,7 @@ class _RegisterState extends State<Register> {
       ),
       color: Colors.white,
       child: Scaffold(
+          resizeToAvoidBottomPadding: false,
           appBar: MyAppBarTheme(title: "Faça seu cadastro"),
           body: SafeArea(
             child: Padding(
