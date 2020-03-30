@@ -112,7 +112,7 @@ class _ReportsState extends State<Reports> {
               }
               return Expanded(
                 child: ListView.builder(
-                    itemExtent: 230,
+                    itemExtent: 200,
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
                       String infusionType =
