@@ -132,6 +132,7 @@ class _InfusionsState extends State<Infusions> {
                       TextFormField(
                         focusNode: _dosageFocus,
                         controller: _dosageController,
+                        initialValue: "0",
                         decoration: InputDecoration(
                             labelText: "Ex: 2000",
                             hintText: "Dosagem utilizada",
@@ -244,6 +245,7 @@ class _InfusionsState extends State<Infusions> {
 }
 
 String validateDosage(String value) {
+  print("Dosage on validator: $value");
   if (int.parse(value) <= 0)
     return 'Por favor insira valores positivos na dosagem';
   if (int.parse(value) == null) return 'Informe a dosagem';
