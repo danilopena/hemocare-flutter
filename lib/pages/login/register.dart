@@ -63,7 +63,7 @@ class _RegisterState extends State<Register> {
         indicator: BallSpinFadeLoaderIndicator(),
         color: ColorTheme.lightPurple,
       ),
-      color: ColorTheme.lightPurple,
+      color: Colors.white,
       child: Scaffold(
           appBar: MyAppBarTheme(title: "Faça seu cadastro"),
           body: SafeArea(
@@ -236,18 +236,35 @@ void _submit(
     bool _agreeToTerms,
     BuildContext context,
     Function _switchVisibility) {
+  if (_name == null ||
+      _email == null ||
+      _password == null ||
+      _pathology == null ||
+      _agreeToTerms == null) {
+    AwesomeDialog(
+        context: context,
+        dialogType: DialogType.WARNING,
+        animType: AnimType.BOTTOMSLIDE,
+        tittle: "Aviso!",
+        desc: 'Todos os campos sao obrigatorios',
+        btnOkOnPress: () {
+          _switchVisibility();
+        }).show();
+    return;
+  }
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
 
     if (_agreeToTerms == false) {
       AwesomeDialog(
-              context: context,
-              dialogType: DialogType.WARNING,
-              animType: AnimType.BOTTOMSLIDE,
-              tittle: "AVISO!",
-              desc: 'Para criar sua conta, concorde com os termos de uso',
-              btnOkOnPress: () {})
-          .show();
+          context: context,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: "AVISO!",
+          desc: 'Para criar sua conta, concorde com os termos de uso',
+          btnOkOnPress: () {
+            _switchVisibility();
+          }).show();
       return;
     } else {
       register(_email, _name, _password, _pathology, _agreeToTerms, context,

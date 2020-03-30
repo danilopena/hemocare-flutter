@@ -47,16 +47,16 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: MyAppBarTheme(title: "Faça seu login"),
-        body: SafeArea(
-          child: LoadingOverlay(
-            isLoading: _isLoading,
-            color: Colors.white,
-            progressIndicator: Loading(
-              indicator: BallSpinFadeLoaderIndicator(),
-              color: ColorTheme.lightPurple,
-            ),
+    return LoadingOverlay(
+      isLoading: _isLoading,
+      color: Colors.white,
+      progressIndicator: Loading(
+        indicator: BallSpinFadeLoaderIndicator(),
+        color: ColorTheme.lightPurple,
+      ),
+      child: Scaffold(
+          appBar: MyAppBarTheme(title: "Faça seu login"),
+          body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
               child: Form(
@@ -127,17 +127,22 @@ class _LoginState extends State<Login> {
                       height: 30,
                     ),
                     Utils.gradientPatternButton("Pronto", () {
-                      _submit(_formKey, _email, _password, context, _isLoading);
-                      setState(() {
-                        _isLoading = true;
-                      });
+                      _submit(_formKey, _email, _password, context,
+                          _switchVisibility);
+                      _switchVisibility();
                     }, context)
                   ],
                 ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
+  }
+
+  _switchVisibility() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
   }
 }
 
@@ -146,22 +151,23 @@ String nameValidator(String value) {
 }
 
 void _submit(GlobalKey<FormState> _formKey, String _email, String _password,
-    BuildContext context, bool _isLoading) {
+    BuildContext context, Function _switchVisibility) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
+    if (_email == null || _password == null) {
+      AwesomeDialog(
+              context: context,
+              dialogType: DialogType.ERROR,
+              animType: AnimType.BOTTOMSLIDE,
+              tittle: "Erro!",
+              desc: 'Informe todos os dados, por gentileza!',
+              btnOkOnPress: () {})
+          .show();
+      return;
+    } else {
+      login(_email, _password, context, _switchVisibility);
+    }
   }
-  if (_email == null || _password == null) {
-    AwesomeDialog(
-            context: context,
-            dialogType: DialogType.ERROR,
-            animType: AnimType.BOTTOMSLIDE,
-            tittle: "Erro!",
-            desc: 'Informe todos os dados, por gentileza!',
-            btnOkOnPress: () {})
-        .show();
-  }
-
-  login(_email, _password, context, _isLoading);
 }
 
 String validatePassword(String value) {
@@ -173,7 +179,7 @@ String validatePassword(String value) {
 }
 
 void login(String email, String password, BuildContext context,
-    bool _isLoading) async {
+    Function _switchVisibility) async {
   LocalStorageWrapper ls = new LocalStorageWrapper();
   Auth auth = new Auth();
   String loggedUser = "";
@@ -181,27 +187,22 @@ void login(String email, String password, BuildContext context,
   try {
     await auth.signIn(email, password).then((value) {
       loggedUser = value;
-      _isLoading = false;
+      ls.save("logged_id", loggedUser);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => TabBarController()));
     });
-
-    ls.save("logged_id", loggedUser);
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => TabBarController()));
   } on PlatformException catch (e) {
     print(e.code);
     AwesomeDialog(
-            context: context,
-            dialogType: DialogType.WARNING,
-            animType: AnimType.BOTTOMSLIDE,
-            tittle: "AVISO!",
-            desc: '${AuthErrors.show(e.code)}',
-            btnOkOnPress: () {})
-        .show();
-  }
-
-  if (loggedUser != null) {
-  } else {
-    print("Erro no login");
+        context: context,
+        dialogType: DialogType.WARNING,
+        animType: AnimType.BOTTOMSLIDE,
+        tittle: "AVISO!",
+        desc: '${AuthErrors.show(e.code)}',
+        btnOkOnPress: () {
+          _switchVisibility();
+        }).show();
+    return;
   }
 }
 
