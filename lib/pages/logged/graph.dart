@@ -275,7 +275,13 @@ Alert _showDialog(BuildContext context, TextEditingController controller,
                   )),
               InkWell(
                   onTap: () {
-                    removeStock(double.parse(quantity), context);
+                    removeStock(double.parse(quantity), context)
+                        .then((success) {
+                      DocumentSnapshot ds = success;
+                      if (ds.data.length != null) {
+                        Navigator.of(context).pop();
+                      }
+                    });
                     controller.clear();
                   },
                   child: Text(
