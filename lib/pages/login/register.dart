@@ -14,6 +14,8 @@ import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/my-dropdown.dart';
 import 'package:hemocare/utils/utils.dart';
+import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
+import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
 class Register extends StatefulWidget {
@@ -55,11 +57,16 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: MyAppBarTheme(title: "Faça seu cadastro"),
-        body: SafeArea(
-          child: LoadingOverlay(
-            isLoading: _isLoading,
+    return LoadingOverlay(
+      isLoading: _isLoading,
+      progressIndicator: Loading(
+        indicator: BallSpinFadeLoaderIndicator(),
+        color: ColorTheme.lightPurple,
+      ),
+      color: ColorTheme.lightPurple,
+      child: Scaffold(
+          appBar: MyAppBarTheme(title: "Faça seu cadastro"),
+          body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
               child: Form(
@@ -205,8 +212,8 @@ class _RegisterState extends State<Register> {
                 ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   _switchVisibility() {
