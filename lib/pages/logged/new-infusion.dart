@@ -1,13 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/services/local_storage.dart';
-import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/my-dropdown.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:intl/intl.dart';
@@ -134,6 +132,7 @@ class _InfusionsState extends State<Infusions> {
                       TextFormField(
                         focusNode: _dosageFocus,
                         controller: _dosageController,
+                        initialValue: "0",
                         decoration: InputDecoration(
                             labelText: "Ex: 2000",
                             hintText: "Dosagem utilizada",
@@ -159,11 +158,14 @@ class _InfusionsState extends State<Infusions> {
                           ),
                           Switch.adaptive(
                             value: _recurring,
-                            onChanged: (newValue) => _recurring = newValue,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _recurring = newValue;
+                              });
+                            },
                           )
                         ],
                       ),
-
                       Visibility(
                         visible: _recurring,
                         child: Column(
@@ -243,6 +245,7 @@ class _InfusionsState extends State<Infusions> {
 }
 
 String validateDosage(String value) {
+  print("Dosage on validator: $value");
   if (int.parse(value) <= 0)
     return 'Por favor insira valores positivos na dosagem';
   if (int.parse(value) == null) return 'Informe a dosagem';

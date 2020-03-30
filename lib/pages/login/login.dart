@@ -10,6 +10,9 @@ import 'package:hemocare/utils/AuthErrors.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/utils.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/loading.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -25,11 +28,13 @@ class _LoginState extends State<Login> {
   String _email;
   String _password;
   bool _selfValidate = false;
+  bool _isLoading;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _isLoading = false;
   }
 
   @override
@@ -45,79 +50,90 @@ class _LoginState extends State<Login> {
     return Scaffold(
         appBar: MyAppBarTheme(title: "Faça seu login"),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                  ),
-                  TextFormField(
-                    autofocus: true,
-                    focusNode: _emailFocus,
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                        labelText: "Email",
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.email),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: validateMail,
-                    autovalidate: _selfValidate,
-                    onChanged: (value) => _email = value,
-                    onFieldSubmitted: (value) {
-                      _email = value;
-                      _passwordFocus.requestFocus();
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    focusNode: _passwordFocus,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                        labelText: "Senha",
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.lock_outline),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    keyboardType: TextInputType.text,
-                    obscureText: true,
-                    validator: validatePassword,
-                    autovalidate: _selfValidate,
-                    onChanged: (value) => _password = value,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: InkWell(
-                      child: Text(
-                        'Esqueci minha senha',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: ColorTheme.lightPurple),
-                      ),
-                      onTap: () => Navigator.of(context).push(
-                          CupertinoPageRoute(
-                              fullscreenDialog: true,
-                              builder: (context) => ForgotPassword())),
+          child: LoadingOverlay(
+            isLoading: _isLoading,
+            color: Colors.white,
+            progressIndicator: Loading(
+              indicator: BallPulseIndicator(),
+              color: ColorTheme.lightPurple,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Utils.gradientPatternButton("Pronto", () {
-                    _submit(_formKey, _email, _password, context);
-                  }, context)
-                ],
+                    TextFormField(
+                      autofocus: true,
+                      focusNode: _emailFocus,
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                          labelText: "Email",
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.email),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: validateMail,
+                      autovalidate: _selfValidate,
+                      onChanged: (value) => _email = value,
+                      onFieldSubmitted: (value) {
+                        _email = value;
+                        _passwordFocus.requestFocus();
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      focusNode: _passwordFocus,
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                          labelText: "Senha",
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.lock_outline),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      keyboardType: TextInputType.text,
+                      obscureText: true,
+                      validator: validatePassword,
+                      autovalidate: _selfValidate,
+                      onChanged: (value) => _password = value,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: InkWell(
+                        child: Text(
+                          'Esqueci minha senha',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: ColorTheme.lightPurple),
+                        ),
+                        onTap: () => Navigator.of(context).push(
+                            CupertinoPageRoute(
+                                fullscreenDialog: true,
+                                builder: (context) => ForgotPassword())),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Utils.gradientPatternButton("Pronto", () {
+                      _submit(_formKey, _email, _password, context, _isLoading);
+                      setState(() {
+                        _isLoading = true;
+                      });
+                    }, context)
+                  ],
+                ),
               ),
             ),
           ),
@@ -130,40 +146,44 @@ String nameValidator(String value) {
 }
 
 void _submit(GlobalKey<FormState> _formKey, String _email, String _password,
-    BuildContext context) {
+    BuildContext context, bool _isLoading) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
-    print(_email);
-    print(_password);
   }
   if (_email == null || _password == null) {
     AwesomeDialog(
             context: context,
             dialogType: DialogType.ERROR,
             animType: AnimType.BOTTOMSLIDE,
-            tittle: "AVISO!",
+            tittle: "Erro!",
             desc: 'Informe todos os dados, por gentileza!',
             btnOkOnPress: () {})
         .show();
-
-    return;
   }
-  login(_email, _password, context);
+
+  login(_email, _password, context, _isLoading);
 }
 
 String validatePassword(String value) {
+  if (value.length == 0) return "Senha não pode ser vazia";
   if (value.length < 5)
     return 'Por favor insira uma senha mais forte';
   else
     return null;
 }
 
-void login(String email, String password, BuildContext context) async {
+void login(String email, String password, BuildContext context,
+    bool _isLoading) async {
   LocalStorageWrapper ls = new LocalStorageWrapper();
   Auth auth = new Auth();
-  String loggedUser;
+  String loggedUser = "";
+
   try {
-    await auth.signIn(email, password).then((value) => loggedUser = value);
+    await auth.signIn(email, password).then((value) {
+      loggedUser = value;
+      _isLoading = false;
+    });
+
     ls.save("logged_id", loggedUser);
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => TabBarController()));

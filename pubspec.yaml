@@ -46,6 +46,8 @@ dependencies:
   flutter_svg:
   google_sign_in:
   circular_bottom_navigation:
+  loading:
+  loading_overlay:
 dev_dependencies:
   flutter_test:
     sdk: flutter
