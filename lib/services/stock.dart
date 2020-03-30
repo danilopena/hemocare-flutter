@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:hemocare/services/local_storage.dart';
 
 class StockHandler {
@@ -20,12 +19,13 @@ class StockHandler {
   }
 
   Future createStock(String initialStock, String commonDosage) async {
-    String id = localStorage.retrieve("logged_id");
-    Response response = await Dio().post(
-        "https://hemocare-backend.herokuapp.com/api/stock/create",
-        queryParameters: {"userId": id},
-        data: {"initialStock": initialStock, "dosage": commonDosage});
-    return response;
+    String userKey = localStorage.retrieve("logged_id");
+    final databaseReference = Firestore.instance;
+    await databaseReference.collection("users").document(userKey).updateData({
+      "initialStock": int.parse(initialStock),
+      "dosage": int.parse(commonDosage),
+      "percentageUsed": 0,
+    });
   }
 
   Future addStock(double value) async {
