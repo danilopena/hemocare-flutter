@@ -10,7 +10,6 @@ class LocalStorageWrapper {
 
   String retrieve(String key) {
     String data = localStorage.getItem(key);
-    print("Meu data ${data}");
     return data;
   }
 }
