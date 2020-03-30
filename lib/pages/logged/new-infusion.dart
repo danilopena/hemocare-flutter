@@ -132,7 +132,6 @@ class _InfusionsState extends State<Infusions> {
                       TextFormField(
                         focusNode: _dosageFocus,
                         controller: _dosageController,
-                        initialValue: "0",
                         decoration: InputDecoration(
                             labelText: "Ex: 2000",
                             hintText: "Dosagem utilizada",
