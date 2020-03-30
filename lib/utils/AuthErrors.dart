@@ -8,7 +8,7 @@ class AuthErrors {
       case 'ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL':
         return "The e-mail address in your Facebook account has been registered in the system before. Please login by trying other methods with this e-mail address.";
       case 'ERROR_NETWORK_REQUEST_FAILED':
-        return "Por gentileza, verifique sua conexão de rede";
+        return "Por gentileza, verifique sua conexão de rede.";
       case 'ERROR_WRONG_PASSWORD':
         return "Sua senha está incorreta";
       case 'ERROR_USER_NOT_FOUND':

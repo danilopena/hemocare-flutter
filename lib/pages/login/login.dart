@@ -10,7 +10,7 @@ import 'package:hemocare/utils/AuthErrors.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/utils.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
             isLoading: _isLoading,
             color: Colors.white,
             progressIndicator: Loading(
-              indicator: BallPulseIndicator(),
+              indicator: BallSpinFadeLoaderIndicator(),
               color: ColorTheme.lightPurple,
             ),
             child: Padding(
