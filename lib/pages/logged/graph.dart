@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,7 @@ class _GraphState extends State<Graph> {
   var _quantityController = TextEditingController();
   String uid;
   bool _isLoading;
+  FirebaseUser _currentUser;
 
   @override
   void initState() {
@@ -43,6 +45,37 @@ class _GraphState extends State<Graph> {
         color: ColorTheme.lightPurple,
       ),
       child: Scaffold(
+          appBar: AppBar(
+              title: FutureBuilder(
+            future: FirebaseAuth.instance.currentUser(),
+            builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.done:
+                  {
+                    if (snapshot.hasData) {
+                      String name;
+                      Firestore.instance
+                          .collection("users")
+                          .document("${snapshot.data.uid}")
+                          .get()
+                          .then((DocumentSnapshot ds) {
+                        name = ds["name"];
+                        print(name);
+                      });
+                      return Text("Bem vindo aqui, $name");
+                    }
+                    break;
+                  }
+                case ConnectionState.waiting:
+                  return CircularProgressIndicator();
+                case ConnectionState.active:
+                  return Text("Buscando");
+                case ConnectionState.none:
+                  return Text("Falha na conexao");
+              }
+              return Text("Erro desconhecido");
+            },
+          )),
           resizeToAvoidBottomPadding: true,
           body: SafeArea(
             child: ListView(
@@ -222,7 +255,6 @@ String validateQuantity(String value) {
 
 Alert _showDialog(BuildContext context, TextEditingController controller,
     String quantity, Function _switchVisibility) {
-  bool add;
   controller.clear();
   var alertStyle = AlertStyle(
       animationType: AnimationType.fromBottom,

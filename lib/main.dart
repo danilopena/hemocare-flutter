@@ -35,20 +35,6 @@ class _InitialState extends State<Initial> {
   void initState() {
     currentPage = 0;
     super.initState();
-    try {
-      LocalStorageWrapper ls = new LocalStorageWrapper();
-      loggedUser = ls.retrieve("logged_id");
-      print(
-          "Logged user no init state: ${loggedUser ? loggedUser : 'Deu ruim'}");
-      if (loggedUser != null) {
-        Navigator.of(context).push(CupertinoPageRoute(
-            fullscreenDialog: true, builder: (context) => TabBarController()));
-      } else {
-        return;
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 
   final imgs = ['doctor', 'doctor-man', 'hemophilia'];
@@ -69,76 +55,95 @@ class _InitialState extends State<Initial> {
 //    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
 //      statusBarColor: Colors.blue, //or set color with: Color(0xFF0000FF)
 //    ));
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomPadding: true,
-        appBar: null,
-        body: Stack(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.40,
-                  child: PageView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      onPageChanged: (index) {
-                        setState(() => currentPage = index);
-                      },
-                      itemBuilder: (context, position) {
-                        return createTopScrollableElement(
-                            context,
-                            imgs[position],
-                            titles[position],
-                            subtitles[position]);
-                      }),
-                ),
-                DotsIndicator(
-                  dotsCount: 3,
-                  position: currentPage.roundToDouble(),
-                  decorator: DotsDecorator(
-                    color: Colors.black87,
-                    activeColor: Colors.blueAccent,
-                  ),
-                ),
-                SizedBox(height: 26),
-                Utils.gradientPatternButton('Criar conta', () {
-                  Navigator.of(context).push(CupertinoPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) => Register()));
-                }, context),
-                SizedBox(height: 10),
-                createButtonLogin(),
-                SizedBox(height: 40),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                createSocialMediaButtons(),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: InkWell(
-                    child: Text(
-                      'Termos de uso',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: ColorTheme.lightPurple),
+    return StreamBuilder<FirebaseUser>(
+        stream: FirebaseAuth.instance.onAuthStateChanged,
+        builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Center(
+                  child: Text("Nao foi possivel conectar ao banco de dados"));
+            case ConnectionState.waiting:
+              return CircularProgressIndicator();
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (snapshot.hasData) {
+                return TabBarController();
+              } else {
+                return SafeArea(
+                  child: Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    appBar: null,
+                    body: Stack(
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              height: MediaQuery.of(context).size.height * 0.40,
+                              child: PageView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 3,
+                                  onPageChanged: (index) {
+                                    setState(() => currentPage = index);
+                                  },
+                                  itemBuilder: (context, position) {
+                                    return createTopScrollableElement(
+                                        context,
+                                        imgs[position],
+                                        titles[position],
+                                        subtitles[position]);
+                                  }),
+                            ),
+                            DotsIndicator(
+                              dotsCount: 3,
+                              position: currentPage.roundToDouble(),
+                              decorator: DotsDecorator(
+                                color: Colors.black87,
+                                activeColor: Colors.blueAccent,
+                              ),
+                            ),
+                            SizedBox(height: 26),
+                            Utils.gradientPatternButton('Criar conta', () {
+                              Navigator.of(context).push(CupertinoPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (context) => Register()));
+                            }, context),
+                            SizedBox(height: 10),
+                            createButtonLogin(),
+                            SizedBox(height: 40),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            createSocialMediaButtons(),
+                            SizedBox(height: 20),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: InkWell(
+                                child: Text(
+                                  'Termos de uso',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorTheme.lightPurple),
+                                ),
+                                onTap: () => Navigator.of(context).push(
+                                    CupertinoPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) => UseTerms())),
+                              ),
+                            ),
+                            SizedBox(height: 30),
+                          ],
+                        )
+                      ],
                     ),
-                    onTap: () => Navigator.of(context).push(CupertinoPageRoute(
-                        fullscreenDialog: true,
-                        builder: (context) => UseTerms())),
                   ),
-                ),
-                SizedBox(height: 30),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+                );
+              }
+          }
+          return null;
+        });
   }
 
   Widget createButtonLogin() {
@@ -185,7 +190,6 @@ class _InitialState extends State<Initial> {
                   side: BorderSide(color: ColorTheme.lightPurple)),
               color: Colors.white,
               onPressed: () {
-                AuthResult authResult;
                 try {
                   new SocialAuth().loginWithGoogle();
                   _redirect();

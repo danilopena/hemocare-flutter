@@ -48,6 +48,7 @@ dependencies:
   circular_bottom_navigation:
   loading:
   loading_overlay:
+  shared_preferences:
 dev_dependencies:
   flutter_test:
     sdk: flutter

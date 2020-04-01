@@ -55,6 +55,7 @@ class _LoginState extends State<Login> {
         color: ColorTheme.lightPurple,
       ),
       child: Scaffold(
+          resizeToAvoidBottomInset: true,
           appBar: MyAppBarTheme(title: "Faça seu login"),
           body: SafeArea(
             child: Padding(

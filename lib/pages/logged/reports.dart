@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/main.dart';
 import 'package:hemocare/pages/logged/new-infusion.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/pdf_generator.dart';
@@ -30,6 +32,20 @@ class _ReportsState extends State<Reports> {
     LocalStorageWrapper ls = new LocalStorageWrapper();
     String userId = ls.retrieve("logged_id");
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(FontAwesomeIcons.powerOff),
+            color: Colors.white,
+            tooltip: "Deslogar",
+            onPressed: () {
+              FirebaseAuth.instance.signOut().then((onLogoff) {
+                MaterialPageRoute(builder: (context) => Initial());
+              });
+            },
+          )
+        ],
+      ),
       body: SafeArea(
         child: Column(children: <Widget>[
           Padding(
