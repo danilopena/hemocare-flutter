@@ -53,16 +53,18 @@ class _GraphState extends State<Graph> {
                 case ConnectionState.done:
                   {
                     if (snapshot.hasData) {
-                      String name;
-                      Firestore.instance
-                          .collection("users")
-                          .document("${snapshot.data.uid}")
-                          .get()
-                          .then((DocumentSnapshot ds) {
-                        name = ds["name"];
-                        print(name);
-                      });
-                      return Text("Bem vindo aqui, $name");
+                      return FutureBuilder(
+                          future: Firestore.instance
+                              .collection("users")
+                              .document("${snapshot.data.uid}")
+                              .get(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
+                              String name =
+                                  snapshot.data.data["name"].toString();
+                              return Text("Bem vindo, $name");
+                            }
+                          });
                     }
                     break;
                   }
@@ -291,7 +293,6 @@ Alert _showDialog(BuildContext context, TextEditingController controller,
             children: <Widget>[
               InkWell(
                   onTap: () {
-                    add = true;
                     addStock(double.parse(quantity), context).then((success) {
                       DocumentSnapshot ds = success;
                       if (ds.data.length != null) {
