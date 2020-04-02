@@ -1,6 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +25,6 @@ class _GraphState extends State<Graph> {
   var _quantityController = TextEditingController();
   String uid;
   bool _isLoading;
-  FirebaseUser _currentUser;
 
   @override
   void initState() {
@@ -36,7 +35,6 @@ class _GraphState extends State<Graph> {
 
   @override
   Widget build(BuildContext context) {
-    uid = new LocalStorageWrapper().retrieve("logged_id");
     return LoadingOverlay(
       isLoading: _isLoading,
       color: Colors.white,
@@ -45,39 +43,6 @@ class _GraphState extends State<Graph> {
         color: ColorTheme.lightPurple,
       ),
       child: Scaffold(
-          appBar: AppBar(
-              title: FutureBuilder(
-            future: FirebaseAuth.instance.currentUser(),
-            builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.done:
-                  {
-                    if (snapshot.hasData) {
-                      return FutureBuilder(
-                          future: Firestore.instance
-                              .collection("users")
-                              .document("${snapshot.data.uid}")
-                              .get(),
-                          builder: (context, AsyncSnapshot snapshot) {
-                            if (snapshot.hasData) {
-                              String name =
-                                  snapshot.data.data["name"].toString();
-                              return Text("Bem vindo, $name");
-                            }
-                          });
-                    }
-                    break;
-                  }
-                case ConnectionState.waiting:
-                  return CircularProgressIndicator();
-                case ConnectionState.active:
-                  return Text("Buscando");
-                case ConnectionState.none:
-                  return Text("Falha na conexao");
-              }
-              return Text("Erro desconhecido");
-            },
-          )),
           resizeToAvoidBottomPadding: true,
           body: SafeArea(
             child: ListView(
@@ -105,89 +70,102 @@ class _GraphState extends State<Graph> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                StreamBuilder<QuerySnapshot>(
-                                  stream: Firestore.instance
-                                      .collection("users")
-                                      .where("userId", isEqualTo: uid)
-                                      .snapshots(),
+                                StreamBuilder(
+                                  stream: _loadGraphData(),
                                   builder: (context,
                                       AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return CircularProgressIndicator();
-                                    }
                                     switch (snapshot.connectionState) {
-                                      case ConnectionState.none:
-                                        return Text("No connection found");
+                                      case ConnectionState.waiting:
+                                        return CircularProgressIndicator();
+                                        break;
                                       case ConnectionState.active:
-                                        final DocumentSnapshot document =
-                                            snapshot.data.documents[0];
-                                        var percent = document
-                                                    .data["percentageUsed"] !=
-                                                null
-                                            ? document.data["percentageUsed"]
-                                            : 0.0;
-
-                                        return Column(
-                                          children: <Widget>[
-                                            Center(
-                                              child: Text(
-                                                "Você já usou ${document.data["percentageUsed"]}% do seu estoque",
-                                                style: GoogleFonts.raleway(
-                                                    fontSize: 20),
-                                              ),
-                                            ),
-                                            CircularPercentIndicator(
-                                              radius: 270.0,
-                                              animation: true,
-                                              animationDuration: 2000,
-                                              lineWidth: 40.0,
-                                              percent: percent / 100,
-                                              arcBackgroundColor:
-                                                  ColorTheme.lightPurple,
-                                              arcType: ArcType.FULL,
-                                              circularStrokeCap:
-                                                  CircularStrokeCap.round,
-                                              animateFromLastPercent: true,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              progressColor: ColorTheme.blue,
-
-                                              footer: Column(
+                                        {
+                                          print(
+                                              "Snap data ${snapshot.data.documents[0]["name"]}");
+                                          DocumentSnapshot ds =
+                                              snapshot.data.documents[0];
+                                          if (ds != null) {
+                                            if (ds["percentageUsed"] != null &&
+                                                ds["initialStock"] != null) {
+                                              return Column(
                                                 children: <Widget>[
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "Seu estoque atual:",
-                                                        style:
-                                                            GoogleFonts.raleway(
-                                                          fontSize: 24,
+                                                  Center(
+                                                    child: Text(
+                                                      "Você já usou ${ds["percentageUsed"]}% do seu estoque",
+                                                      style:
+                                                          GoogleFonts.raleway(
+                                                              fontSize: 20),
+                                                    ),
+                                                  ),
+                                                  CircularPercentIndicator(
+                                                    radius: 270.0,
+                                                    animation: true,
+                                                    animationDuration: 1000,
+                                                    lineWidth: 40.0,
+                                                    percent: ds["percentageUsed"] !=
+                                                            null
+                                                        ? ds["percentageUsed"] /
+                                                            100
+                                                        : 0,
+                                                    arcBackgroundColor:
+                                                        ColorTheme.lightPurple,
+                                                    arcType: ArcType.FULL,
+                                                    circularStrokeCap:
+                                                        CircularStrokeCap.round,
+                                                    animateFromLastPercent:
+                                                        true,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    progressColor:
+                                                        ColorTheme.blue,
+                                                    footer: Column(
+                                                      children: <Widget>[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: <Widget>[
+                                                            Text(
+                                                              "Seu estoque atual:",
+                                                              style: GoogleFonts
+                                                                  .raleway(
+                                                                fontSize: 24,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              " ${double.parse(ds["initialStock"].toString()).truncate()} UI",
+                                                              style: GoogleFonts.raleway(
+                                                                  fontSize: 28,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        " ${double.parse(document.data["initialStock"].toString()).truncate()} UI",
-                                                        style:
-                                                            GoogleFonts.raleway(
-                                                                fontSize: 28,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                      )
-                                                    ],
+                                                      ],
+                                                    ),
+//blur
                                                   ),
                                                 ],
-                                              ),
-//blur
-                                            ),
-                                          ],
-                                        );
-                                      default:
-                                        return Center(
-                                            child: Text(
-                                                "Tivemos problemas ao buscar seus dados. Tentando novamente..."));
+                                              );
+                                            } else {
+                                              return CircularProgressIndicator();
+                                            }
+                                          } else {
+                                            return Text(
+                                                "Conexao terminou mas nao tem data");
+                                          }
+                                        }
+                                        break;
+                                      case ConnectionState.none:
+                                        return Text(
+                                            "Sem conexao com a rede. Reveja sua conexao");
+                                        break;
+                                      case ConnectionState.done:
+                                        return Text("Computacao terminada");
+                                        break;
                                     }
+                                    return Text("Nao eh possivel");
                                   },
                                 )
                               ],
@@ -212,7 +190,6 @@ class _GraphState extends State<Graph> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Utils.gradientPatternButton("Manter Estoque", () {
-                              //abrir novo alert
                               _showDialog(context, _quantityController,
                                       _quantity, _switchVisibility)
                                   .show();
@@ -247,16 +224,27 @@ class _GraphState extends State<Graph> {
       _isLoading = !_isLoading;
     });
   }
+
+  Stream<QuerySnapshot> _loadGraphData() {
+    uid = new LocalStorageWrapper().retrieve("logged_id");
+    print("UID no load $uid");
+    return Firestore.instance
+        .collection("users")
+        .where("userId", isEqualTo: uid)
+        .snapshots();
+  }
 }
 
 String validateQuantity(String value) {
   if (double.parse(value) < 0) {
     return "Por favor, informe valores maior que 0";
   }
+  return null;
 }
 
 Alert _showDialog(BuildContext context, TextEditingController controller,
     String quantity, Function _switchVisibility) {
+  bool add;
   controller.clear();
   var alertStyle = AlertStyle(
       animationType: AnimationType.fromBottom,
@@ -293,6 +281,7 @@ Alert _showDialog(BuildContext context, TextEditingController controller,
             children: <Widget>[
               InkWell(
                   onTap: () {
+                    add = true;
                     addStock(double.parse(quantity), context).then((success) {
                       DocumentSnapshot ds = success;
                       if (ds.data.length != null) {
