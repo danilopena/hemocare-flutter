@@ -80,8 +80,6 @@ class _GraphState extends State<Graph> {
                                         break;
                                       case ConnectionState.active:
                                         {
-                                          print(
-                                              "Snap data ${snapshot.data.documents[0]["name"]}");
                                           DocumentSnapshot ds =
                                               snapshot.data.documents[0];
                                           if (ds != null) {
@@ -227,7 +225,6 @@ class _GraphState extends State<Graph> {
 
   Stream<QuerySnapshot> _loadGraphData() {
     uid = new LocalStorageWrapper().retrieve("logged_id");
-    print("UID no load $uid");
     return Firestore.instance
         .collection("users")
         .where("userId", isEqualTo: uid)
