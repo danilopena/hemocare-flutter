@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -27,6 +26,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   String uid;
   bool _isLoading;
   Stream stream;
+  Future<FirebaseUser> userFuture;
   final LocalStorage localStorage = new LocalStorage('hemocare');
 
   @override
@@ -35,19 +35,16 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     print("Iniciado ou reattached");
     _isLoading = false;
-
-    getUserId();
+    userFuture = FirebaseAuth.instance.currentUser();
+    userFuture.then((user) => uid = user.uid);
+    stream =
+        Firestore.instance.collection("users").document(uid).get().asStream();
   }
 
   void getUserId() async {
     _isLoading = false;
 
     await localStorage.ready;
-
-    uid = localStorage.getItem("logged_id");
-
-    stream =
-        Firestore.instance.collection("users").document(uid).get().asStream();
   }
 
   @override
@@ -63,16 +60,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
-      stream = Firestore.instance
-          .collection("users")
-          .where("userId", isEqualTo: uid)
-          .snapshots();
+      stream =
+          Firestore.instance.collection("users").document(uid).get().asStream();
     }
     if (state == AppLifecycleState.detached) {
-      stream = Firestore.instance
-          .collection("users")
-          .where("userId", isEqualTo: uid)
-          .snapshots();
+      stream =
+          Firestore.instance.collection("users").document(uid).get().asStream();
     }
   }
 
@@ -114,7 +107,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                   height: 10,
                                 ),
                                 FutureBuilder<FirebaseUser>(
-                                  future: FirebaseAuth.instance.currentUser(),
+                                  future: userFuture,
                                   builder: (context,
                                       AsyncSnapshot<FirebaseUser>
                                           futureSnapshot) {
