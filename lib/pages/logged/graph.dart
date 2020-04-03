@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -35,8 +34,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     print("Iniciado ou reattached");
     _isLoading = false;
-
-    getUserId();
   }
 
   void getUserId() async {
@@ -78,6 +75,8 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    getUserId();
+
     return LoadingOverlay(
       isLoading: _isLoading,
       color: Colors.white,
@@ -97,10 +96,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                            // blue: '#64D7EB',
-                            //green: '#55D0B2',
-//                      height: (MediaQuery.of(context).size.height) / 2,
-//                      width: (MediaQuery.of(context).size.width) - 40,
                             padding: EdgeInsets.all(16),
                             child: Column(
                               children: <Widget>[
@@ -123,6 +118,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                         if (futureSnapshot.data != null) {
                                           print(
                                               "FirebaseUser ${futureSnapshot.data.uid}");
+                                          stream = Firestore.instance
+                                              .collection("users")
+                                              .document(futureSnapshot.data.uid)
+                                              .get()
+                                              .asStream();
+
                                           return StreamBuilder<
                                               DocumentSnapshot>(
                                             stream: stream,
