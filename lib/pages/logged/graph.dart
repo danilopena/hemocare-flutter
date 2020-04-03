@@ -33,10 +33,8 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _isLoading = false;
     uid = new LocalStorageWrapper().retrieve("logged_id");
-    stream = Firestore.instance
-        .collection("users")
-        .where("userId", isEqualTo: uid)
-        .snapshots();
+    stream =
+        Firestore.instance.collection("users").document(uid).get().asStream();
   }
 
   @override
@@ -102,10 +100,11 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                StreamBuilder<QuerySnapshot>(
+                                StreamBuilder<DocumentSnapshot>(
                                   stream: stream,
                                   builder: (context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          snapshot) {
                                     if (!snapshot.hasData) {
                                       return CircularProgressIndicator();
                                     }
@@ -113,24 +112,22 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                       case ConnectionState.none:
                                         return Text("No connection found");
                                         break;
-                                      case ConnectionState.active:
-                                        final DocumentSnapshot document =
-                                            snapshot.data.documents[0];
-                                        if (document.data["percentageUsed"] !=
+                                      case ConnectionState.done:
+                                        if (snapshot?.data["percentageUsed"] !=
                                                 null &&
-                                            document.data["initialStock"] !=
+                                            snapshot?.data["initialStock"] !=
                                                 null) {
-                                          var percent = document?.data[
+                                          var percent = snapshot?.data[
                                                       "percentageUsed"] !=
                                                   null
-                                              ? document?.data["percentageUsed"]
+                                              ? snapshot?.data["percentageUsed"]
                                               : 0.0;
 
                                           return Column(
                                             children: <Widget>[
                                               Center(
                                                 child: Text(
-                                                  "Você já usou ${document.data["percentageUsed"]}% do seu estoque",
+                                                  "Você já usou ${snapshot.data["percentageUsed"]}% do seu estoque",
                                                   style: GoogleFonts.raleway(
                                                       fontSize: 20),
                                                 ),
@@ -166,7 +163,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                           ),
                                                         ),
                                                         Text(
-                                                          " ${double.parse(document?.data["initialStock"].toString()).truncate()} UI",
+                                                          " ${double.parse(snapshot?.data["initialStock"].toString()).truncate()} UI",
                                                           style: GoogleFonts
                                                               .raleway(
                                                                   fontSize: 28,
@@ -190,7 +187,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                       case ConnectionState.waiting:
                                         return CircularProgressIndicator();
                                         break;
-                                      case ConnectionState.done:
+                                      case ConnectionState.active:
                                         return Text("Actuive00");
                                         break;
                                     }
