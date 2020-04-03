@@ -11,6 +11,7 @@ import 'package:hemocare/utils/utils.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -26,15 +27,25 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   String uid;
   bool _isLoading;
   Stream stream;
+  final LocalStorage localStorage = new LocalStorage('hemocare');
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _isLoading = false;
     print("Iniciado ou reattached");
-    uid = new LocalStorageWrapper().retrieve("logged_id");
+    _isLoading = false;
+
+    getUserId();
+  }
+
+  void getUserId() async {
+    _isLoading = false;
+
+    await localStorage.ready;
+
+    uid = localStorage.getItem("logged_id");
+
     stream =
         Firestore.instance.collection("users").document(uid).get().asStream();
   }
@@ -114,11 +125,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                               "FirebaseUser ${futureSnapshot.data.uid}");
                                           return StreamBuilder<
                                               DocumentSnapshot>(
-                                            stream: Firestore.instance
-                                                .collection("users")
-                                                .document(uid)
-                                                .get()
-                                                .asStream(),
+                                            stream: stream,
                                             builder: (context,
                                                 AsyncSnapshot<DocumentSnapshot>
                                                     documentSnapshot) {
