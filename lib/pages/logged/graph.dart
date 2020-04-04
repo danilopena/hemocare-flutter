@@ -1,18 +1,22 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
+import 'package:intl/intl.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:weekday_selector_formfield/weekday_selector_formfield.dart';
 
 class Graph extends StatefulWidget {
   @override
@@ -272,8 +276,9 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                             SizedBox(
                               height: 10,
                             ),
-                            Utils.gradientPatternButton(
-                                "Profilaxia", () {}, context),
+                            Utils.gradientPatternButton("Profilaxia", () {
+                              _showCalendar(context).show();
+                            }, context),
                             SizedBox(
                               height: 10,
                             ),
@@ -299,6 +304,91 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
       _isLoading = !_isLoading;
     });
   }
+}
+
+Alert _showCalendar(BuildContext context) {
+  DateTime dateTime;
+  List<days> selectedDays;
+  final format = DateFormat("dd HH:mm");
+  var alertStyle = AlertStyle(
+      animationType: AnimationType.fromBottom,
+      isCloseButton: false,
+      isOverlayTapDismiss: false,
+      descStyle: TextStyle(fontWeight: FontWeight.bold),
+      animationDuration: Duration(milliseconds: 400),
+      alertBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(
+            color: ColorTheme.darkGray,
+          )),
+      titleStyle: TextStyle(color: ColorTheme.lightPurple));
+  final values = List.filled(7, true);
+  return Alert(
+      title: "PROFILAXIA",
+      context: context,
+      style: alertStyle,
+      content: Column(
+        children: <Widget>[
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.all(8),
+            child: WeekDaySelectorFormField(
+              initialValue: [],
+              borderRadius: 20,
+              fillColor: Colors.white,
+              selectedFillColor: ColorTheme.blue,
+              borderSide: BorderSide(color: ColorTheme.lightPurple, width: 2),
+              language: lang.pt,
+              onChange: (days) {
+                selectedDays = days;
+              },
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          DateTimeField(
+            format: format,
+            decoration: InputDecoration(
+              hintText: "Escolha o horário",
+              fillColor: Colors.white,
+              prefixIcon: Icon(Icons.watch),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onShowPicker: (context, currentValue) async {
+              final time = await showTimePicker(
+                context: context,
+                initialTime:
+                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+              );
+              if (time != null) {
+                dateTime = DateTimeField.convert(time);
+              }
+              return currentValue;
+            },
+          ),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+          child: Text(
+            "AGENDAR",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () async {
+            String formattedDate = new DateFormat.Hm().format(dateTime);
+            print(formattedDate);
+            await LocalStorage("hemocare")
+                .setItem("notification_days", selectedDays.toList().toString());
+            await LocalStorage("hemocare")
+                .setItem("notification_hour", dateTime.toString());
+            Navigator.pop(context);
+          },
+          gradient:
+              LinearGradient(colors: [ColorTheme.lightPurple, ColorTheme.blue]),
+        )
+      ]);
 }
 
 String validateQuantity(String value) {

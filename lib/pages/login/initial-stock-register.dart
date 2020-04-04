@@ -11,7 +11,6 @@ import 'package:hemocare/utils/utils.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class InitialStockRegister extends StatefulWidget {
   @override
@@ -206,23 +205,4 @@ Future _hasStock() async {
   DocumentSnapshot response = await sh.getStock();
 
   return response;
-}
-
-Widget showDialog(BuildContext context) {
-  Alert(
-    context: context,
-    type: AlertType.error,
-    title: "RFLUTTER ALERT",
-    desc: "Flutter is more awesome with RFlutter Alert.",
-    buttons: [
-      DialogButton(
-        child: Text(
-          "COOL",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        onPressed: () => Navigator.pop(context),
-        width: 120,
-      )
-    ],
-  ).show();
 }

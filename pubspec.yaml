@@ -52,6 +52,9 @@ dependencies:
   sleek_circular_slider:
   mobx:
   flutter_mobx:
+  weekday_selector_formfield:
+  flutter_local_notifications:
+  permission_handler:
 dev_dependencies:
   flutter_test:
     sdk: flutter
