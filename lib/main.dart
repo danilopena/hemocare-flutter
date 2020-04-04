@@ -48,7 +48,10 @@ class _InitialState extends State<Initial> {
     await LocalStorage("hemocare").ready.then((ready) {
       days = LocalStorage("hemocare").getItem("notification_days");
       hour = LocalStorage("hemocare").getItem("notification_hour");
+      print("D $days");
+      print("H $hour");
     });
+    print("Dias e hora: ${days} ]] $hour");
     var day1 = days.split(",")[0].replaceAll("[", "");
     var day2 = days.split(",")[1].replaceAll("]", "");
     //hour  0001-01-01 11:30:00.000
@@ -113,9 +116,12 @@ class _InitialState extends State<Initial> {
         break;
     }
     // mesmo dia e mesmo horario - notifica once
-    if (secondDay == firstDay) {
+    if (secondDay == null) {
+      print("First ${new Day(firstDay)}");
+
       await _notificate(firstDay, parsedDate.hour, parsedDate.minute);
     } else {
+      print("First ${new Day(firstDay)} && second: ${new Day(secondDay)}");
       await _notificate(
           firstDay, parsedDate.hour, parsedDate.minute, secondDay);
     }
@@ -142,7 +148,7 @@ class _InitialState extends State<Initial> {
       await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
           0,
           "Profilaxia",
-          "Hoje e dia de realizar a sua profilaxia ",
+          "Hoje é dia de realizar a sua profilaxia! Vamos lá?",
           new Day(secondDay),
           new Time(hour, minute),
           platformChannelSpecifics);
@@ -150,7 +156,7 @@ class _InitialState extends State<Initial> {
       await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
           0,
           "Profilaxia",
-          "Hoje e dia de realizar a sua profilaxia ",
+          "Hoje é dia de realizar a sua profilaxia! Vamos lá?",
           new Day(firstDay),
           new Time(hour, minute),
           platformChannelSpecifics);
@@ -169,8 +175,9 @@ class _InitialState extends State<Initial> {
         initializationSettingsAndroid, initializationSettingsIOS);
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-
-    _showNotification();
+    if (_flutterLocalNotificationsPlugin.pendingNotificationRequests != null) {
+      _showNotification();
+    }
   }
 
   Future onSelectNotification(String payload) async {

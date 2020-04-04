@@ -378,7 +378,6 @@ Alert _showCalendar(BuildContext context) {
           ),
           onPressed: () async {
             String formattedDate = new DateFormat.Hm().format(dateTime);
-            print(formattedDate);
             await LocalStorage("hemocare")
                 .setItem("notification_days", selectedDays.toList().toString());
             await LocalStorage("hemocare")
