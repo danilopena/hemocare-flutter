@@ -83,15 +83,17 @@ class _InfusionsState extends State<Infusions> {
                             SizedBox(height: 10),
                             Text(
                               "Adicionar infusão",
+                              textScaleFactor: 1,
                               style: GoogleFonts.raleway(
-                                  fontSize: 40, fontWeight: FontWeight.bold),
+                                  fontSize: 32, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 10),
                             Center(
                               child: Text(
-                                "Registre rapidamente sua \ninfusão para análises futuras",
+                                "Registre rapidamente sua infusão para análises futuras",
+                                textScaleFactor: 1,
                                 style: GoogleFonts.raleway(
-                                  fontSize: 28,
+                                  fontSize: 24,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -173,6 +175,7 @@ class _InfusionsState extends State<Infusions> {
                             children: <Widget>[
                               Text(
                                 "Essa queixa é recorrente?",
+                                textScaleFactor: 1,
                                 style: GoogleFonts.raleway(fontSize: 18),
                               ),
                               Switch.adaptive(

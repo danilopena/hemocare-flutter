@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/main.dart';
 import 'package:hemocare/pages/logged/new-infusion.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/pdf_generator.dart';
@@ -39,7 +40,10 @@ class _ReportsState extends State<Reports> {
             color: Colors.white,
             tooltip: "Deslogar",
             onPressed: () {
-              FirebaseAuth.instance.signOut();
+              FirebaseAuth.instance.signOut().then((end) =>
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Initial())));
             },
           )
         ],
@@ -283,7 +287,8 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
                 Text(
                   "${description != null ? description : "Não informada pelo paciente"}",
                   textScaleFactor: 1,
-                  style: GoogleFonts.raleway(fontSize: 16),
+                  style: GoogleFonts.raleway(
+                      fontSize: 16, textBaseline: TextBaseline.alphabetic),
                   textAlign: TextAlign.start,
                 )
               ],
