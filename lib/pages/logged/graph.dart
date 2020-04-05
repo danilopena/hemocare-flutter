@@ -158,10 +158,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                       children: <Widget>[
                                                         Center(
                                                           child: Text(
-                                                            "Você já usou ${documentSnapshot
-                                                                .data
-                                                                .data["percentageUsed"]
-                                                                .truncate()}% do seu estoque",
+                                                            "Você já usou ${documentSnapshot.data.data["percentageUsed"].truncate()}% do seu estoque",
                                                             textScaleFactor: 1,
                                                             textAlign: TextAlign
                                                                 .center,
@@ -299,8 +296,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                             SizedBox(
                               height: 10,
                             ),
-                            Utils.gradientPatternButton(
-                                "Entrega/Busca de Fator", () {}, context),
                             SizedBox(
                               height: 10,
                             ),
