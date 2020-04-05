@@ -281,7 +281,7 @@ class _InitialState extends State<Initial> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            createSocialMediaButtons(),
+                            //createSocialMediaButtons(),
                             SizedBox(height: 20),
                             Align(
                               alignment: Alignment.bottomCenter,

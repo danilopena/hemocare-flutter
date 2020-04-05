@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/my-dropdown.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -331,17 +332,22 @@ void createInfusion(
     "recurring": recurring,
     "description": description,
     "dateTime": datetime,
-  }).then((success) => AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      animType: AnimType.BOTTOMSLIDE,
-      tittle: 'Sucesso',
-      desc: 'Novo registro adicionado com sucesso',
-      btnOkOnPress: () {
-        _switchVisibility();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => TabBarController()));
-      }).show());
+  }).then((success) {
+    StockHandler sh = new StockHandler();
+    sh.removeStock(dosage.toDouble()).then((success) {
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: 'Sucesso',
+          desc: 'Novo registro adicionado com sucesso',
+          btnOkOnPress: () {
+            _switchVisibility();
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => TabBarController()));
+          }).show();
+    });
+  });
 }
 
 String validateInfusionType(String _infusionType) {

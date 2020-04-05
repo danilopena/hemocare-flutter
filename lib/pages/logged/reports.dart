@@ -33,17 +33,18 @@ class _ReportsState extends State<Reports> {
     String userId = ls.retrieve("logged_id");
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
             icon: Icon(FontAwesomeIcons.powerOff),
             iconSize: 18,
-            color: Colors.white,
+            color: ColorTheme.lightPurple,
             tooltip: "Deslogar",
             onPressed: () {
               FirebaseAuth.instance.signOut().then((end) =>
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Initial())));
+                      context, MaterialPageRoute(builder: (context) =>
+                      Initial())));
             },
           )
         ],
