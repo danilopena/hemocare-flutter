@@ -104,12 +104,14 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                             padding: EdgeInsets.all(16),
                             child: Column(
                               children: <Widget>[
-                                Text(
-                                  "Seu Estoque",
-                                  style: GoogleFonts.raleway(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      "Seu Estoque",
+                                      style: GoogleFonts.raleway(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold),
+                                    )),
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -190,30 +192,33 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
 
                                                           footer: Column(
                                                             children: <Widget>[
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Text(
-                                                                    "Seu estoque atual:",
-                                                                    style: GoogleFonts
-                                                                        .raleway(
-                                                                      fontSize:
-                                                                          24,
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    " ${double.parse(documentSnapshot.data.data["initialStock"].toString()).truncate()} UI",
-                                                                    style: GoogleFonts.raleway(
-                                                                        fontSize:
-                                                                            28,
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  )
-                                                                ],
-                                                              ),
+                                                              FittedBox(
+                                                                  fit: BoxFit
+                                                                      .fitWidth,
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Text(
+                                                                        "Seu estoque atual:",
+                                                                        style: GoogleFonts
+                                                                            .raleway(
+                                                                          fontSize:
+                                                                              24,
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        " ${double.parse(documentSnapshot.data.data["initialStock"].toString()).truncate()} UI",
+                                                                        style: GoogleFonts.raleway(
+                                                                            fontSize:
+                                                                                28,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      )
+                                                                    ],
+                                                                  )),
                                                             ],
                                                           ),
 //blur
@@ -252,16 +257,19 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Gatilhos para te ajudar",
-                              style: GoogleFonts.raleway(
-                                  fontSize: 28, fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
+                        FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "Gatilhos para te ajudar",
+                                  style: GoogleFonts.raleway(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            )),
                         SizedBox(
                           height: 10,
                         ),
