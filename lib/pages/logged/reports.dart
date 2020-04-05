@@ -43,8 +43,8 @@ class _ReportsState extends State<Reports> {
             onPressed: () {
               FirebaseAuth.instance.signOut().then((end) =>
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Initial())));
+                      context, MaterialPageRoute(builder: (context) =>
+                      Initial())));
             },
           )
         ],
