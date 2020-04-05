@@ -72,30 +72,34 @@ class _InfusionsState extends State<Infusions> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Adicionar infusão",
-                          style: GoogleFonts.raleway(
-                              fontSize: 40, fontWeight: FontWeight.bold),
-                        ),
-                        Center(
-                          child: Text(
-                            "Registre rapidamente sua infusão para análises futuras",
-                            style: GoogleFonts.raleway(
-                              fontSize: 28,
+                FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            SizedBox(height: 10),
+                            Text(
+                              "Adicionar infusão",
+                              style: GoogleFonts.raleway(
+                                  fontSize: 40, fontWeight: FontWeight.bold),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
+                            SizedBox(height: 10),
+                            Center(
+                              child: Text(
+                                "Registre rapidamente sua \ninfusão para análises futuras",
+                                style: GoogleFonts.raleway(
+                                  fontSize: 28,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
+                    )),
                 // container de tipo de infusao
                 Form(
                   key: _formKey,

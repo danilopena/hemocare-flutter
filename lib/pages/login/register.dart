@@ -167,21 +167,22 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Concordar com os termos de uso?",
-                          style: GoogleFonts.raleway(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Switch.adaptive(
-                          value: _agreeToTerms,
-                          onChanged: (newValue) =>
-                              setState(() => _agreeToTerms = newValue),
-                        )
-                      ],
-                    ),
+                    FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Concordar com os termos de uso?",
+                                style: GoogleFonts.raleway(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Switch.adaptive(
+                                value: _agreeToTerms,
+                                onChanged: (newValue) =>
+                                    setState(() => _agreeToTerms = newValue),
+                              )
+                            ])),
                     SizedBox(
                       height: 20,
                     ),
