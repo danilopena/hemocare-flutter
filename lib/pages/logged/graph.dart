@@ -318,7 +318,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
 Alert _showCalendar(BuildContext context) {
   DateTime dateTime;
   List<days> selectedDays;
-  final format = DateFormat("dd HH:mm");
   final anotherFormat = DateFormat("HH:mm");
   var alertStyle = AlertStyle(
       animationType: AnimationType.fromBottom,
@@ -332,7 +331,6 @@ Alert _showCalendar(BuildContext context) {
             color: ColorTheme.darkGray,
           )),
       titleStyle: TextStyle(color: ColorTheme.lightPurple));
-  final values = List.filled(7, true);
   return Alert(
       title: "PROFILAXIA",
       context: context,
@@ -388,7 +386,6 @@ Alert _showCalendar(BuildContext context) {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () async {
-            String formattedDate = new DateFormat.Hm().format(dateTime);
             await LocalStorage("hemocare")
                 .setItem("notification_days", selectedDays.toList().toString());
             await LocalStorage("hemocare")
@@ -545,7 +542,6 @@ String validateQuantity(String value) {
 
 Alert _showDialog(BuildContext context, TextEditingController controller,
     String quantity, Function _switchVisibility) {
-  bool add;
   controller.clear();
   var alertStyle = AlertStyle(
       animationType: AnimationType.fromBottom,
@@ -582,7 +578,6 @@ Alert _showDialog(BuildContext context, TextEditingController controller,
             children: <Widget>[
               InkWell(
                   onTap: () {
-                    add = true;
                     addStock(double.parse(quantity), context).then((success) {
                       DocumentSnapshot ds = success;
                       if (ds.data.length != null) {

@@ -30,13 +30,13 @@ class _InfusionsState extends State<Infusions> {
   FocusNode _dosageFocus = new FocusNode();
   TextEditingController _dosageController = new TextEditingController();
   //recorrente
-  bool _recurring = false;
+  bool _recurring;
   //descricao
   String description;
   FocusNode _descriptionFocus = new FocusNode();
   TextEditingController _descriptionController = new TextEditingController();
   //calendar
-  final format = DateFormat("yyyy-MM-dd HH:mm");
+  final format = DateFormat("dd/MM/yyy 'às' HH:mm");
   DateTime dateTime;
   bool _isLoading;
 
@@ -53,6 +53,7 @@ class _InfusionsState extends State<Infusions> {
     // TODO: implement initState
     super.initState();
     _isLoading = false;
+    _recurring = false;
   }
 
   @override
@@ -224,7 +225,8 @@ class _InfusionsState extends State<Infusions> {
                         DateTimeField(
                           format: format,
                           decoration: InputDecoration(
-                            hintText: "Escolha a hora que você aplicou o fator",
+                            hintText:
+                            "Escolha o dia e a hora que você aplicou o fator",
                             fillColor: Colors.white,
                             prefixIcon: Icon(Icons.perm_contact_calendar),
                             border: OutlineInputBorder(
@@ -298,7 +300,6 @@ void _submit(
   }
   if (infusionType == null ||
       dosage == null ||
-      recurring == null ||
       description == null ||
       datetime == null) {
     AwesomeDialog(
@@ -306,7 +307,7 @@ void _submit(
             dialogType: DialogType.WARNING,
             animType: AnimType.BOTTOMSLIDE,
             tittle: "AVISO!",
-            desc: 'POR FAVOR INFORME TODOS OS CAMPOS',
+        desc: 'Por favor, informe todos os campos obrigatórios',
             btnOkOnPress: () {})
         .show();
   } else {
