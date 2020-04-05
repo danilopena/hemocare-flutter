@@ -296,9 +296,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                             SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
                             Utils.gradientPatternButton(
                                 "Retirada Automática", () {}, context),
                           ],
@@ -322,6 +319,7 @@ Alert _showCalendar(BuildContext context) {
   DateTime dateTime;
   List<days> selectedDays;
   final format = DateFormat("dd HH:mm");
+  final anotherFormat = DateFormat("HH:mm");
   var alertStyle = AlertStyle(
       animationType: AnimationType.fromBottom,
       isCloseButton: false,
@@ -360,7 +358,7 @@ Alert _showCalendar(BuildContext context) {
             height: 20,
           ),
           DateTimeField(
-            format: format,
+            format: anotherFormat,
             decoration: InputDecoration(
               hintText: "Escolha o horário",
               fillColor: Colors.white,
@@ -376,6 +374,7 @@ Alert _showCalendar(BuildContext context) {
               );
               if (time != null) {
                 dateTime = DateTimeField.convert(time);
+                return dateTime;
               }
               return currentValue;
             },
@@ -400,6 +399,17 @@ Alert _showCalendar(BuildContext context) {
           },
           gradient:
               LinearGradient(colors: [ColorTheme.lightPurple, ColorTheme.blue]),
+        ),
+        DialogButton(
+          child: Text(
+            "CANCELAR",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+          gradient:
+          LinearGradient(colors: [ColorTheme.lightPurple, ColorTheme.blue]),
         )
       ]);
 }
