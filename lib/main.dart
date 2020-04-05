@@ -141,7 +141,7 @@ class _InitialState extends State<Initial> {
       await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
           0,
           "Profilaxia",
-          "Hoje e dia de realizar a sua profilaxia ",
+          "Hoje é dia de realizar a sua profilaxia ",
           new Day(firstDay),
           new Time(hour, minute),
           platformChannelSpecifics);
@@ -169,12 +169,16 @@ class _InitialState extends State<Initial> {
     super.initState();
     initializationSettingsAndroid =
         new AndroidInitializationSettings('app_icon');
+
     initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+
     initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
+
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+
     if (_flutterLocalNotificationsPlugin.pendingNotificationRequests != null) {
       _showNotification();
     }

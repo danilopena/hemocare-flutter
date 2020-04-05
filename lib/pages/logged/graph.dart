@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
@@ -382,12 +383,137 @@ Alert _showCalendar(BuildContext context) {
                 .setItem("notification_days", selectedDays.toList().toString());
             await LocalStorage("hemocare")
                 .setItem("notification_hour", dateTime.toString());
+
+            _showNotification();
             Navigator.pop(context);
           },
           gradient:
               LinearGradient(colors: [ColorTheme.lightPurple, ColorTheme.blue]),
         )
       ]);
+}
+
+void _showNotification() async {
+  String days;
+  String hour;
+  int firstDay;
+  int secondDay;
+  await LocalStorage("hemocare").ready.then((ready) {
+    days = LocalStorage("hemocare").getItem("notification_days");
+    hour = LocalStorage("hemocare").getItem("notification_hour");
+    print("D $days");
+    print("H $hour");
+  });
+  print("Dias e hora: ${days} ]] $hour");
+  var day1 = days.split(",")[0].replaceAll("[", "").replaceAll(" ", "");
+  var day2 = days.split(",")[1].replaceAll("]", "").replaceAll(" ", "");
+  //hour  0001-01-01 11:30:00.000
+  var parsedDate = DateTime.parse(hour);
+
+  /*
+       static const Sunday = Day(1);
+  static const Monday = Day(2);
+  static const Tuesday = Day(3);
+  static const Wednesday = Day(4);
+  static const Thursday = Day(5);
+  static const Friday = Day(6);
+  static const Saturday = Day(7);
+
+     */
+  switch (day1) {
+    case "days.monday":
+      firstDay = 2;
+      break;
+
+    case "days.tuesday":
+      firstDay = 3;
+      break;
+    case "days.wednesday":
+      firstDay = 4;
+      break;
+    case "days.thursday":
+      firstDay = 5;
+      break;
+    case "days.friday":
+      firstDay = 6;
+      break;
+    case "days.saturday":
+      firstDay = 7;
+      break;
+    case "days.sunday":
+      firstDay = 1;
+      break;
+  }
+  switch (day2) {
+    case "days.monday":
+      secondDay = 2;
+      break;
+    case "days.tuesday":
+      secondDay = 3;
+      break;
+    case "days.wednesday":
+      secondDay = 4;
+      break;
+    case "days.thursday":
+      secondDay = 5;
+      break;
+    case "days.friday":
+      secondDay = 6;
+      break;
+    case "days.saturday":
+      secondDay = 7;
+      break;
+    case "days.sunday":
+      secondDay = 1;
+      break;
+  }
+  // mesmo dia e mesmo horario - notifica once
+  if (secondDay == null) {
+    print("First ${new Day(firstDay)}");
+
+    await _notificate(firstDay, parsedDate.hour, parsedDate.minute);
+  } else {
+    print("First ${new Day(firstDay)} && second: ${new Day(secondDay)}");
+    await _notificate(firstDay, parsedDate.hour, parsedDate.minute, secondDay);
+  }
+}
+
+Future<void> _notificate(int firstDay, int hour, int minute,
+    [int secondDay]) async {
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails("Hemocare",
+      "Profilaxia", "Notificar os usuarios sobre profilaxias agendadas",
+      importance: Importance.Max,
+      priority: Priority.High,
+      ticker: 'Profilaxia');
+  var iosChannelSpecifics = new IOSNotificationDetails();
+  var platformChannelSpecifics =
+      NotificationDetails(androidPlatformChannelSpecifics, iosChannelSpecifics);
+  if (secondDay != null) {
+    await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+        0,
+        "Profilaxia",
+        "Hoje é dia de realizar a sua profilaxia ",
+        new Day(firstDay),
+        new Time(hour, minute),
+        platformChannelSpecifics);
+    await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+        0,
+        "Profilaxia",
+        "Hoje é dia de realizar a sua profilaxia! Vamos lá?",
+        new Day(secondDay),
+        new Time(hour, minute),
+        platformChannelSpecifics);
+  } else {
+    await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+        0,
+        "Profilaxia",
+        "Hoje é dia de realizar a sua profilaxia! Vamos lá?",
+        new Day(firstDay),
+        new Time(hour, minute),
+        platformChannelSpecifics);
+  }
 }
 
 String validateQuantity(String value) {
