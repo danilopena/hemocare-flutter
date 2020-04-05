@@ -295,9 +295,6 @@ void _submit(
     Function _switchVisibility) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
-    _switchVisibility();
-    createInfusion(infusionType, dosage, recurring, description, datetime,
-        context, _switchVisibility);
   }
   if (infusionType == null ||
       dosage == null ||
@@ -312,7 +309,17 @@ void _submit(
             desc: 'POR FAVOR INFORME TODOS OS CAMPOS',
             btnOkOnPress: () {})
         .show();
-  } else {}
+  } else {
+    _switchVisibility();
+    createInfusion(
+        infusionType,
+        dosage,
+        recurring,
+        description,
+        datetime,
+        context,
+        _switchVisibility);
+  }
 }
 
 void createInfusion(
