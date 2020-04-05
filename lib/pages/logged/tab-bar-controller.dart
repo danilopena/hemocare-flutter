@@ -28,10 +28,10 @@ class _TabBarControllerState extends State<TabBarController> {
   @override
   Widget build(BuildContext context) {
     List<TabItem> tabItems = List.of([
-      TabItem(FontAwesomeIcons.home, "Inicio", ColorTheme.lightPurple),
-      TabItem(FontAwesomeIcons.syringe, "Infusoes", ColorTheme.lightPurple),
+      TabItem(FontAwesomeIcons.home, "Início", ColorTheme.lightPurple),
+      TabItem(FontAwesomeIcons.syringe, "Infusões", ColorTheme.lightPurple),
       TabItem(
-          FontAwesomeIcons.fileMedicalAlt, "Relatorio", ColorTheme.lightPurple),
+          FontAwesomeIcons.fileMedicalAlt, "Relatório", ColorTheme.lightPurple),
     ]);
 
     return Scaffold(

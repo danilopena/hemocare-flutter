@@ -166,22 +166,25 @@ class _InfusionsState extends State<Infusions> {
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              "Essa queixa é recorrente?",
-                              style: GoogleFonts.raleway(fontSize: 18),
-                            ),
-                            Switch.adaptive(
-                              value: _recurring,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _recurring = newValue;
-                                });
-                              },
-                            )
-                          ],
+                        FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Essa queixa é recorrente?",
+                                style: GoogleFonts.raleway(fontSize: 18),
+                              ),
+                              Switch.adaptive(
+                                value: _recurring,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _recurring = newValue;
+                                  });
+                                },
+                              )
+                            ],
+                          ),
                         ),
                         Visibility(
                           visible: _recurring,

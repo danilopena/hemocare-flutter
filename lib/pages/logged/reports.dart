@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/main.dart';
 import 'package:hemocare/pages/logged/new-infusion.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/pdf_generator.dart';
@@ -36,12 +35,11 @@ class _ReportsState extends State<Reports> {
         actions: <Widget>[
           IconButton(
             icon: Icon(FontAwesomeIcons.powerOff),
+            iconSize: 18,
             color: Colors.white,
             tooltip: "Deslogar",
             onPressed: () {
-              FirebaseAuth.instance.signOut().then((onLogoff) {
-                MaterialPageRoute(builder: (context) => Initial());
-              });
+              FirebaseAuth.instance.signOut();
             },
           )
         ],
@@ -49,7 +47,7 @@ class _ReportsState extends State<Reports> {
       body: SafeArea(
         child: Column(children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,6 +55,7 @@ class _ReportsState extends State<Reports> {
                 Center(
                     child: Text(
                   "Relatório",
+                      textScaleFactor: 1,
                   style: GoogleFonts.raleway(
                       fontSize: 36, fontWeight: FontWeight.bold),
                 )),
@@ -85,7 +84,7 @@ class _ReportsState extends State<Reports> {
               if (!snapshot.hasData) {
                 return Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -128,21 +127,22 @@ class _ReportsState extends State<Reports> {
               }
               return Expanded(
                 child: ListView.builder(
+                    padding: EdgeInsets.all(8),
                     itemExtent: 200,
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
                       String infusionType =
-                          snapshot.data.documents[index]["infusionType"];
+                      snapshot.data.documents[index]["infusionType"];
                       int dosage = snapshot.data.documents[index]["dosage"];
                       Timestamp date =
-                          snapshot.data.documents[index]["dateTime"];
+                      snapshot.data.documents[index]["dateTime"];
                       bool recurring =
-                          snapshot.data.documents[index]["recurring"];
+                      snapshot.data.documents[index]["recurring"];
                       String description =
-                          snapshot.data.documents[index]["description"];
+                      snapshot.data.documents[index]["description"];
                       var dateFormatted =
-                          new DateTime.fromMillisecondsSinceEpoch(
-                              date.millisecondsSinceEpoch);
+                      new DateTime.fromMillisecondsSinceEpoch(
+                          date.millisecondsSinceEpoch);
 
                       return Column(
                         children: <Widget>[
@@ -180,7 +180,7 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
   var date = new DateTime.fromMillisecondsSinceEpoch(
       dateFormatted.millisecondsSinceEpoch);
   return Container(
-      height: 180,
+      height: 190,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -194,30 +194,38 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                "Procedimento: ",
-                style: GoogleFonts.raleway(
-                    fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "$infusionType",
-                style: GoogleFonts.raleway(fontSize: 18),
-              )
-            ],
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Procedimento: ",
+                  textScaleFactor: 1,
+                  style: GoogleFonts.raleway(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "$infusionType",
+                  textScaleFactor: 1,
+                  maxLines: 2,
+                  style: GoogleFonts.raleway(fontSize: 18),
+                )
+              ],
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
                 "Dosagem: ",
+                textScaleFactor: 1,
                 style: GoogleFonts.raleway(
                     fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 "$dosage",
+                textScaleFactor: 1,
                 style: GoogleFonts.raleway(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -230,11 +238,13 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
             children: <Widget>[
               Text(
                 "Data: ",
+                textScaleFactor: 1,
                 style: GoogleFonts.raleway(
                     fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 "${format.format(date)}",
+                textScaleFactor: 1,
                 style: GoogleFonts.raleway(fontSize: 18),
               )
             ],
@@ -244,11 +254,13 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
             children: <Widget>[
               Text(
                 "Recorrência: ",
+                textScaleFactor: 1,
                 style: GoogleFonts.raleway(
                     fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 "${recurring ? "SIM" : "NÃO"}",
+                textScaleFactor: 1,
                 style: GoogleFonts.raleway(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -257,22 +269,25 @@ Widget _buildHistoryCard(BuildContext context, String infusionType, int dosage,
               )
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                "Descrição: ",
-                style: GoogleFonts.raleway(
-                    fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Flexible(
-                child: Text(
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Descrição: ",
+                  textScaleFactor: 1,
+                  style: GoogleFonts.raleway(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
                   "${description != null ? description : "Não informada pelo paciente"}",
+                  textScaleFactor: 1,
                   style: GoogleFonts.raleway(fontSize: 16),
                   textAlign: TextAlign.start,
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ],
       ));

@@ -108,6 +108,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                     fit: BoxFit.fitWidth,
                                     child: Text(
                                       "Seu Estoque",
+                                      textScaleFactor: 1,
                                       style: GoogleFonts.raleway(
                                           fontSize: 32,
                                           fontWeight: FontWeight.bold),
@@ -157,7 +158,13 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                       children: <Widget>[
                                                         Center(
                                                           child: Text(
-                                                            "Você já usou ${documentSnapshot.data.data["percentageUsed"]}% do seu estoque",
+                                                            "Você já usou ${documentSnapshot
+                                                                .data
+                                                                .data["percentageUsed"]
+                                                                .truncate()}% do seu estoque",
+                                                            textScaleFactor: 1,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: GoogleFonts
                                                                 .raleway(
                                                                     fontSize:
@@ -264,6 +271,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                               children: <Widget>[
                                 Text(
                                   "Gatilhos para te ajudar",
+                                  textScaleFactor: 1,
                                   style: GoogleFonts.raleway(
                                       fontSize: 28,
                                       fontWeight: FontWeight.bold),
