@@ -20,6 +20,7 @@ class Utils {
                 colors: <Color>[ColorTheme.blue, ColorTheme.lightPurple])),
         child: Text(
           title,
+          textScaleFactor: 1,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
