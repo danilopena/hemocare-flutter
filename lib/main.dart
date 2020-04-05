@@ -1,8 +1,8 @@
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
@@ -242,45 +242,41 @@ class _InitialState extends State<Initial> {
                 return SafeArea(
                   child: Scaffold(
                     resizeToAvoidBottomInset: false,
-                    appBar: null,
-                    body: Stack(
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage("assets/doctor.jpg"))),
+                        ),
+                        Text(
+                          "Bem vindo ao Hemocare",
+                          textAlign: TextAlign.center,
+                          textScaleFactor: 1,
+                          softWrap: true,
+                          style: GoogleFonts.raleway(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
                         Column(
                           children: <Widget>[
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.40,
-                              child: PageView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 3,
-                                  onPageChanged: (index) {
-                                    setState(() => currentPage = index);
-                                  },
-                                  itemBuilder: (context, position) {
-                                    return createTopScrollableElement(
-                                        context,
-                                        imgs[position],
-                                        titles[position],
-                                        subtitles[position]);
-                                  }),
-                            ),
-                            DotsIndicator(
-                              dotsCount: 3,
-                              position: currentPage.roundToDouble(),
-                              decorator: DotsDecorator(
-                                color: Colors.black87,
-                                activeColor: Colors.blueAccent,
-                              ),
-                            ),
                             SizedBox(height: 26),
                             Utils.gradientPatternButton('Criar conta', () {
                               Navigator.of(context).push(CupertinoPageRoute(
                                   fullscreenDialog: true,
                                   builder: (context) => Register()));
                             }, context),
-                            SizedBox(height: 10),
+                            SizedBox(
+                              height: 10,
+                            ),
                             createButtonLogin(),
-                            SizedBox(height: 40),
                           ],
+                        ),
+                        SizedBox(
+                          height: 8,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -335,6 +331,7 @@ class _InitialState extends State<Initial> {
         child: Text(
           'Já possuo login',
           textAlign: TextAlign.center,
+          textScaleFactor: 1,
           style: TextStyle(fontSize: 20, color: ColorTheme.lightPurple),
         ),
       ),
