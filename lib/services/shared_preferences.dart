@@ -5,12 +5,10 @@ class SharedPreferencesWrapper {
 
   initialize() async {
     this.preferences = await SharedPreferences.getInstance();
-    print("La preferencia la respuesta: ${this.preferences}");
   }
 
   save(String key, String value) async {
     await this.preferences.setString(key, value);
-    print("Item ${this.preferences.getString(key)} saved");
   }
 
   String retrieve(String key) {

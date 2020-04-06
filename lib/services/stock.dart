@@ -44,8 +44,6 @@ class StockHandler {
       previousStock = ds.data["initialStock"];
     });
     if (previousStock != null) {
-      print("PS" + previousStock.toString());
-      print("Value" + value.toString());
       var sum = previousStock + value;
       await databaseReference
           .collection("users")
@@ -74,8 +72,6 @@ class StockHandler {
     if (currentStock != 0) {
       percentageUsed = (value / currentStock) * 100;
       remainingStock = currentStock - value;
-      print(percentageUsed);
-      print(remainingStock);
       await databaseReference.collection("users").document(id).updateData({
         'percentageUsed': percentageUsed,
         'initialStock': remainingStock,

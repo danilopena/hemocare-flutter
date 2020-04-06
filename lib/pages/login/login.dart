@@ -193,7 +193,6 @@ void login(String email, String password, BuildContext context,
           context, MaterialPageRoute(builder: (context) => TabBarController()));
     });
   } on PlatformException catch (e) {
-    print(e.code);
     AwesomeDialog(
         context: context,
         dialogType: DialogType.WARNING,

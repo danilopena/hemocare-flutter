@@ -37,7 +37,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    print("Iniciado ou reattached");
     _isLoading = false;
   }
 
@@ -124,8 +123,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                     switch (futureSnapshot.connectionState) {
                                       case ConnectionState.done:
                                         if (futureSnapshot.data != null) {
-                                          print(
-                                              "FirebaseUser ${futureSnapshot.data.uid}");
                                           stream = Firestore.instance
                                               .collection("users")
                                               .document(futureSnapshot.data.uid)
@@ -142,13 +139,13 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                   .connectionState) {
                                                 case ConnectionState.none:
                                                   return Text(
-                                                      "Sem conexao de rede ativa");
+                                                      "Sem conexão de rede ativa");
                                                   break;
                                                 case ConnectionState.waiting:
                                                   return CircularProgressIndicator();
                                                   break;
                                                 case ConnectionState.active:
-                                                  return Text("Conexao ativa");
+                                                  return Text("Conexão ativa");
                                                   break;
                                                 case ConnectionState.done:
                                                   if (documentSnapshot
@@ -234,12 +231,13 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                   }
                                                   break;
                                               }
-                                              return Text("Loading");
+                                              return Text("Carregando");
                                             },
                                           );
                                         } else {
-                                          print("Snapshot error");
-                                          return Text("Erro na bagaca");
+                                          return Center(
+                                              child: Text(
+                                                  "Erro durante o processamento. Per gentileza, tentar novamente."));
                                         }
                                         break;
                                       case ConnectionState.waiting:
@@ -247,10 +245,10 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                         break;
                                       case ConnectionState.none:
                                         return Text(
-                                            "Nenhuma conexao de rede ativa");
+                                            "Nenhuma conexão de rede ativa");
                                         break;
                                       case ConnectionState.active:
-                                        return Text("Conexao ativa");
+                                        return Text("Conexão ativa");
                                         break;
                                     }
                                     return Text("My wai");

@@ -64,11 +64,11 @@ class _RegisterState extends State<Register> {
         color: ColorTheme.lightPurple,
       ),
       color: Colors.white,
-      child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          appBar: MyAppBarTheme(title: "Faça seu cadastro"),
-          body: SafeArea(
-            child: Padding(
+      child: SafeArea(
+        child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            appBar: MyAppBarTheme(title: "Faça seu cadastro"),
+            body: Padding(
               padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
               child: Form(
                 key: _formKey,
@@ -213,8 +213,8 @@ class _RegisterState extends State<Register> {
                   ],
                 ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 

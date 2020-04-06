@@ -226,7 +226,7 @@ class _InfusionsState extends State<Infusions> {
                           format: format,
                           decoration: InputDecoration(
                             hintText:
-                            "Escolha o dia e a hora que você aplicou o fator",
+                                "Escolha o dia e a hora que você aplicou o fator",
                             fillColor: Colors.white,
                             prefixIcon: Icon(Icons.perm_contact_calendar),
                             border: OutlineInputBorder(
@@ -298,28 +298,35 @@ void _submit(
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
   }
-  if (infusionType == null ||
-      dosage == null ||
-      description == null ||
-      datetime == null) {
-    AwesomeDialog(
-            context: context,
-            dialogType: DialogType.WARNING,
-            animType: AnimType.BOTTOMSLIDE,
-            tittle: "AVISO!",
-        desc: 'Por favor, informe todos os campos obrigatórios',
-            btnOkOnPress: () {})
-        .show();
-  } else {
-    _switchVisibility();
-    createInfusion(
-        infusionType,
-        dosage,
-        recurring,
-        description,
-        datetime,
-        context,
-        _switchVisibility);
+  if (recurring) {
+    if (infusionType == null ||
+        dosage == null ||
+        description == null ||
+        datetime == null) {
+      AwesomeDialog(
+              context: context,
+              dialogType: DialogType.WARNING,
+              animType: AnimType.BOTTOMSLIDE,
+              tittle: "AVISO!",
+              desc: 'Por favor, informe todos os campos obrigatórios',
+              btnOkOnPress: () {})
+          .show();
+    } else {
+      if (infusionType == null || dosage == null || datetime == null) {
+        AwesomeDialog(
+                context: context,
+                dialogType: DialogType.WARNING,
+                animType: AnimType.BOTTOMSLIDE,
+                tittle: "AVISO!",
+                desc: 'Por favor, informe todos os campos obrigatórios',
+                btnOkOnPress: () {})
+            .show();
+      } else {
+        _switchVisibility();
+        createInfusion(infusionType, dosage, recurring, description, datetime,
+            context, _switchVisibility);
+      }
+    }
   }
 }
 

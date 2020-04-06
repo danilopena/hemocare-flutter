@@ -49,7 +49,6 @@ class _TabBarControllerState extends State<TabBarController> {
             selectedCallback: (int selected) {
               setState(() {
                 selectedPos = selected;
-                print(_navigationController.value);
               });
             },
           ),
