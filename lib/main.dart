@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
-import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/register.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
-import 'package:hemocare/services/local_storage.dart';
-import 'package:hemocare/services/social-authentication.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:localstorage/localstorage.dart';
@@ -35,7 +32,7 @@ class _InitialState extends State<Initial> {
 
   //notifications
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
   var initializationSettingsAndroid;
   var initializationSettingsIOS;
   var initializationSettings;
@@ -51,7 +48,7 @@ class _InitialState extends State<Initial> {
       print("D $days");
       print("H $hour");
     });
-    print("Dias e hora: ${days} ]] $hour");
+    print("Dias e hora: $days || $hour");
     var day1 = days.split(",")[0].replaceAll("[", "");
     var day2 = days.split(",")[1].replaceAll("]", "");
     //hour  0001-01-01 11:30:00.000
@@ -117,11 +114,10 @@ class _InitialState extends State<Initial> {
     }
     // mesmo dia e mesmo horario - notifica once
     if (secondDay == null) {
-      print("First ${new Day(firstDay)}");
+
 
       await _notificate(firstDay, parsedDate.hour, parsedDate.minute);
     } else {
-      print("First ${new Day(firstDay)} && second: ${new Day(secondDay)}");
       await _notificate(
           firstDay, parsedDate.hour, parsedDate.minute, secondDay);
     }
@@ -168,7 +164,7 @@ class _InitialState extends State<Initial> {
     currentPage = 0;
     super.initState();
     initializationSettingsAndroid =
-        new AndroidInitializationSettings('app_icon');
+    new AndroidInitializationSettings('app_icon');
 
     initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
@@ -190,11 +186,12 @@ class _InitialState extends State<Initial> {
     }
   }
 
-  Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) async {
+  Future onDidReceiveLocalNotification(int id, String title, String body,
+      String payload) async {
     await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) =>
+            AlertDialog(
               title: Text(title),
               content: Text(body),
               actions: <Widget>[
@@ -246,8 +243,14 @@ class _InitialState extends State<Initial> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.4,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.4,
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   fit: BoxFit.cover,
@@ -293,10 +296,11 @@ class _InitialState extends State<Initial> {
                                       fontWeight: FontWeight.bold,
                                       color: ColorTheme.lightPurple),
                                 ),
-                                onTap: () => Navigator.of(context).push(
-                                    CupertinoPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (context) => UseTerms())),
+                                onTap: () =>
+                                    Navigator.of(context).push(
+                                        CupertinoPageRoute(
+                                            fullscreenDialog: true,
+                                            builder: (context) => UseTerms())),
                               ),
                             ),
                             SizedBox(height: 30),
@@ -322,7 +326,10 @@ class _InitialState extends State<Initial> {
       padding: const EdgeInsets.all(0.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width * 0.8,
         height: 50,
         padding: const EdgeInsets.fromLTRB(12.5, 12.5, 12.5, 12.5),
         decoration: BoxDecoration(
@@ -358,8 +365,7 @@ class _InitialState extends State<Initial> {
               color: Colors.white,
               onPressed: () {
                 try {
-                  new SocialAuth().loginWithGoogle();
-                  _redirect();
+                  //implement social login
                 } catch (e) {
                   print("e $e");
                 }
@@ -394,8 +400,14 @@ class _InitialState extends State<Initial> {
     return Column(
       children: <Widget>[
         Container(
-          height: MediaQuery.of(context).size.height * 0.25,
-          width: MediaQuery.of(context).size.width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.25,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/" + imgTitle + ".jpg"),
@@ -414,7 +426,10 @@ class _InitialState extends State<Initial> {
         ),
         Container(
           constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
+          BoxConstraints(maxWidth: MediaQuery
+              .of(context)
+              .size
+              .width - 32),
           child: Text(subtitle,
               maxLines: 2,
               textAlign: TextAlign.center,
@@ -425,25 +440,4 @@ class _InitialState extends State<Initial> {
     );
   }
 
-  Widget _redirect() {
-    print("Has been called! ");
-    return StreamBuilder(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
-      builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-        print("Snapshot ${snapshot.data}");
-        if (snapshot.connectionState == ConnectionState.done) {
-          print("Snapshot in redirect done> ${snapshot.data}");
-
-          if (!snapshot.hasData) return CircularProgressIndicator();
-          if (snapshot.hasData) {
-            print("Snapshot in redirect> ${snapshot.data}");
-            LocalStorageWrapper ls = new LocalStorageWrapper();
-            ls.save("logged_id", snapshot.data.uid);
-            return InitialStockRegister();
-          }
-        }
-        return Login();
-      },
-    );
-  }
 }

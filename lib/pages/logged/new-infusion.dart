@@ -74,36 +74,7 @@ class _InfusionsState extends State<Infusions> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            SizedBox(height: 10),
-                            Text(
-                              "Adicionar infusão",
-                              textScaleFactor: 1,
-                              style: GoogleFonts.raleway(
-                                  fontSize: 32, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 10),
-                            Center(
-                              child: Text(
-                                "Registre rapidamente sua infusão para análises futuras",
-                                textScaleFactor: 1,
-                                style: GoogleFonts.raleway(
-                                  fontSize: 24,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )),
+                FittedHeader(),
                 // container de tipo de infusao
                 Form(
                   key: _formKey,
@@ -274,6 +245,46 @@ class _InfusionsState extends State<Infusions> {
     setState(() {
       _isLoading = !_isLoading;
     });
+  }
+}
+
+class FittedHeader extends StatelessWidget {
+  const FittedHeader({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+        fit: BoxFit.fitWidth,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(height: 10),
+                Text(
+                  "Adicionar infusão",
+                  textScaleFactor: 1,
+                  style: GoogleFonts.raleway(
+                      fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    "Registre rapidamente sua infusão para análises futuras",
+                    textScaleFactor: 1,
+                    style: GoogleFonts.raleway(
+                      fontSize: 24,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
 

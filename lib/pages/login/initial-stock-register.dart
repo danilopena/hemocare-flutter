@@ -138,6 +138,7 @@ String stockValidator(String value) {
   } else if (stockValue == null) {
     return "Não é possível submeter o campo vazio";
   }
+  return null;
 }
 
 String dosageValidator(String value) {
@@ -153,6 +154,7 @@ String dosageValidator(String value) {
   } else if (dosageValue == null) {
     return "Não é possível submeter o campo vazio";
   }
+  return null;
 }
 
 void _submit(GlobalKey<FormState> _formKey, String _initialStock,
