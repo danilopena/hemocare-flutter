@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/pages/logged/graph.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/register.dart';
@@ -183,6 +184,10 @@ class _InitialState extends State<Initial> {
     if (payload != null) {
       debugPrint("Notification payload $payload");
     }
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Graph()),
+    );
   }
 
   Future onDidReceiveLocalNotification(

@@ -48,14 +48,9 @@ dependencies:
   circular_bottom_navigation:
   loading:
   loading_overlay:
-  shared_preferences:
-  sleek_circular_slider:
-  mobx:
-  flutter_mobx:
   weekday_selector_formfield:
   flutter_local_notifications:
   permission_handler:
-  add_to_calendar:
 dev_dependencies:
   flutter_test:
     sdk: flutter

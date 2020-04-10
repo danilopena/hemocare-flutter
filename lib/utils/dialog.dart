@@ -46,7 +46,7 @@ class CustomDialog {
               ),
             ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 InkWell(
                     onTap: () {
@@ -58,11 +58,23 @@ class CustomDialog {
                       });
                       controller.clear();
                     },
-                    child: Text(
-                      "+",
-                      style: GoogleFonts.raleway(
-                          fontSize: 48, color: Colors.black),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: ColorTheme.lightPurple,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Text(
+                          "+",
+                          style: GoogleFonts.raleway(
+                              fontSize: 32, color: Colors.white),
+                        ),
+                      ),
                     )),
+                SizedBox(
+                  height: 10,
+                ),
                 InkWell(
                     onTap: () {
                       removeStock(double.parse(quantity), context)
@@ -74,10 +86,19 @@ class CustomDialog {
                       });
                       controller.clear();
                     },
-                    child: Text(
-                      "-",
-                      style: GoogleFonts.raleway(
-                          fontSize: 48, color: Colors.black),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: ColorTheme.blue,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Text(
+                          "-",
+                          style: GoogleFonts.raleway(
+                              fontSize: 40, color: Colors.white),
+                        ),
+                      ),
                     )),
               ],
             )
