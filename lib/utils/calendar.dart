@@ -1,3 +1,4 @@
+import 'package:add_to_calendar/add_to_calendar.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -85,8 +86,41 @@ class CustomCalendar {
                   "notification_days", selectedDays.toList().toString());
               await LocalStorage("hemocare")
                   .setItem("notification_hour", dateTime.toString());
-
-              showNotification();
+              // pegar o dia 1
+              var day1 = selectedDays
+                  .toString()
+                  .split(",")[0]
+                  .replaceAll("[", "")
+                  .replaceAll(" ", "");
+              var day2 = selectedDays
+                  .toString()
+                  .split(",")[1]
+                  .replaceAll("]", "")
+                  .replaceAll(" ", "");
+              print("$day1 && $day2");
+              DateTime now = new DateTime.now();
+              /**
+               * Passos a seguir:
+               *
+               * 1) Pegar os dias que o user escolheu (até 2 ocorrências de 1 a 7)
+               * 2) Criar uma ocorrência para repetir a cada 7 dias,
+               * 3) Os dias no calendario vão de 1 a 31
+               * 4) A questão é: como fazer os dias do calendário
+               * conversarem com os dias que o cara escolheu.
+               *
+               * Ex: Escolho terça e quinta: (dias 2 e 4)
+               * Hoje, 07/04 é terça
+               *
+               *
+               */
+              return;
+              AddToCalendar.addToCalendar(
+                title: "Profilaxia",
+                startTime: new DateTime.now(),
+                description: "Realizar Profilaxia",
+                isAllDay: true,
+                frequencyType: FrequencyType.WEEKLY,
+              );
               Navigator.pop(context);
             },
             gradient: LinearGradient(
@@ -225,5 +259,31 @@ Future<void> _notificate(int firstDay, int hour, int minute,
         new Day(firstDay),
         new Time(hour, minute),
         platformChannelSpecifics);
+  }
+}
+
+int getDay(String value) {
+  switch (value) {
+    case "days.monday":
+      return 1;
+      break;
+    case "days.tuesday":
+      return 2;
+      break;
+    case "days.wednesday":
+      return 3;
+      break;
+    case "days.thursday":
+      return 4;
+      break;
+    case "days.friday":
+      return 5;
+      break;
+    case "days.saturday":
+      return 6;
+      break;
+    case "days.sunday":
+      return 7;
+      break;
   }
 }

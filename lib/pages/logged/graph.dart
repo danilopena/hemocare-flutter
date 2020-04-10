@@ -123,11 +123,11 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                               .document(futureSnapshot.data.uid)
                                               .get()
                                               .asStream();
-                                          return StreamBuilder<
-                                              DocumentSnapshot>(
+                                          return StreamBuilder(
                                             stream: stream,
+                                            initialData: [],
                                             builder: (context,
-                                                AsyncSnapshot<DocumentSnapshot>
+                                                AsyncSnapshot
                                                     documentSnapshot) {
                                               switch (documentSnapshot
                                                   .connectionState) {
@@ -149,7 +149,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                       children: <Widget>[
                                                         Center(
                                                           child: Text(
-                                                            "Você já usou ${documentSnapshot.data.data["percentageUsed"].truncate()}% do seu estoque",
+                                                            "Você já usou ${documentSnapshot.data["percentageUsed"].truncate()}% do seu estoque",
                                                             textScaleFactor: 1,
                                                             textAlign: TextAlign
                                                                 .center,
@@ -166,7 +166,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                               2000,
                                                           lineWidth: 40.0,
                                                           percent: documentSnapshot
-                                                                      .data
                                                                       .data[
                                                                   "percentageUsed"] /
                                                               100,
@@ -205,7 +204,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                                         ),
                                                                       ),
                                                                       Text(
-                                                                        " ${double.parse(documentSnapshot.data.data["initialStock"].toString()).truncate()} UI",
+                                                                        " ${double.parse(documentSnapshot.data["initialStock"].toString()).truncate()} UI",
                                                                         style: GoogleFonts.raleway(
                                                                             fontSize:
                                                                                 28,
@@ -245,7 +244,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                         return Text("Conexão ativa");
                                         break;
                                     }
-                                    return Text("My wai");
+                                    return Text("Something went really wrong");
                                   },
                                 )
                               ],

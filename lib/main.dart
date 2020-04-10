@@ -32,7 +32,7 @@ class _InitialState extends State<Initial> {
 
   //notifications
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   var initializationSettingsAndroid;
   var initializationSettingsIOS;
   var initializationSettings;
@@ -114,8 +114,6 @@ class _InitialState extends State<Initial> {
     }
     // mesmo dia e mesmo horario - notifica once
     if (secondDay == null) {
-
-
       await _notificate(firstDay, parsedDate.hour, parsedDate.minute);
     } else {
       await _notificate(
@@ -164,7 +162,7 @@ class _InitialState extends State<Initial> {
     currentPage = 0;
     super.initState();
     initializationSettingsAndroid =
-    new AndroidInitializationSettings('app_icon');
+        new AndroidInitializationSettings('app_icon');
 
     initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
@@ -175,7 +173,8 @@ class _InitialState extends State<Initial> {
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
 
-    if (_flutterLocalNotificationsPlugin.pendingNotificationRequests != null) {
+    if (_flutterLocalNotificationsPlugin.pendingNotificationRequests() !=
+        null) {
       _showNotification();
     }
   }
@@ -186,12 +185,11 @@ class _InitialState extends State<Initial> {
     }
   }
 
-  Future onDidReceiveLocalNotification(int id, String title, String body,
-      String payload) async {
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
     await showDialog(
         context: context,
-        builder: (context) =>
-            AlertDialog(
+        builder: (context) => AlertDialog(
               title: Text(title),
               content: Text(body),
               actions: <Widget>[
@@ -243,14 +241,8 @@ class _InitialState extends State<Initial> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.4,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.4,
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   fit: BoxFit.cover,
@@ -296,11 +288,10 @@ class _InitialState extends State<Initial> {
                                       fontWeight: FontWeight.bold,
                                       color: ColorTheme.lightPurple),
                                 ),
-                                onTap: () =>
-                                    Navigator.of(context).push(
-                                        CupertinoPageRoute(
-                                            fullscreenDialog: true,
-                                            builder: (context) => UseTerms())),
+                                onTap: () => Navigator.of(context).push(
+                                    CupertinoPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) => UseTerms())),
                               ),
                             ),
                             SizedBox(height: 30),
@@ -326,10 +317,7 @@ class _InitialState extends State<Initial> {
       padding: const EdgeInsets.all(0.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       child: Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.8,
+        width: MediaQuery.of(context).size.width * 0.8,
         height: 50,
         padding: const EdgeInsets.fromLTRB(12.5, 12.5, 12.5, 12.5),
         decoration: BoxDecoration(
@@ -400,14 +388,8 @@ class _InitialState extends State<Initial> {
     return Column(
       children: <Widget>[
         Container(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height * 0.25,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+          height: MediaQuery.of(context).size.height * 0.25,
+          width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/" + imgTitle + ".jpg"),
@@ -426,10 +408,7 @@ class _InitialState extends State<Initial> {
         ),
         Container(
           constraints:
-          BoxConstraints(maxWidth: MediaQuery
-              .of(context)
-              .size
-              .width - 32),
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
           child: Text(subtitle,
               maxLines: 2,
               textAlign: TextAlign.center,
@@ -439,5 +418,4 @@ class _InitialState extends State<Initial> {
       ],
     );
   }
-
 }
