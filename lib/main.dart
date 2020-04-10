@@ -1,16 +1,15 @@
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
-import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/register.dart';
 import 'package:hemocare/pages/login/use-terms.dart';
-import 'package:hemocare/services/local_storage.dart';
-import 'package:hemocare/services/social-authentication.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
+import 'package:localstorage/localstorage.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,24 +30,175 @@ class _InitialState extends State<Initial> {
   var currentPage = 0;
   var loggedUser;
 
+  //notifications
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  var initializationSettingsAndroid;
+  var initializationSettingsIOS;
+  var initializationSettings;
+
+  void _showNotification() async {
+    String days;
+    String hour;
+    int firstDay;
+    int secondDay;
+    await LocalStorage("hemocare").ready.then((ready) {
+      days = LocalStorage("hemocare").getItem("notification_days");
+      hour = LocalStorage("hemocare").getItem("notification_hour");
+      print("D $days");
+      print("H $hour");
+    });
+    print("Dias e hora: $days || $hour");
+    var day1 = days.split(",")[0].replaceAll("[", "");
+    var day2 = days.split(",")[1].replaceAll("]", "");
+    //hour  0001-01-01 11:30:00.000
+    var parsedDate = DateTime.parse(hour);
+
+    /*
+       static const Sunday = Day(1);
+  static const Monday = Day(2);
+  static const Tuesday = Day(3);
+  static const Wednesday = Day(4);
+  static const Thursday = Day(5);
+  static const Friday = Day(6);
+  static const Saturday = Day(7);
+
+     */
+    switch (day1) {
+      case "days.monday":
+        firstDay = 2;
+        break;
+
+      case "days.tuesday":
+        firstDay = 3;
+        break;
+      case "days.wednesday":
+        firstDay = 4;
+        break;
+      case "days.thursday":
+        firstDay = 5;
+        break;
+      case "days.friday":
+        firstDay = 6;
+        break;
+      case "days.saturday":
+        firstDay = 7;
+        break;
+      case "days.sunday":
+        firstDay = 1;
+        break;
+    }
+    switch (day2) {
+      case "days.monday":
+        secondDay = 2;
+        break;
+
+      case "days.tuesday":
+        secondDay = 3;
+        break;
+      case "days.wednesday":
+        secondDay = 4;
+        break;
+      case "days.thursday":
+        secondDay = 5;
+        break;
+      case "days.friday":
+        secondDay = 6;
+        break;
+      case "days.saturday":
+        secondDay = 7;
+        break;
+      case "days.sunday":
+        secondDay = 1;
+        break;
+    }
+    // mesmo dia e mesmo horario - notifica once
+    if (secondDay == null) {
+      await _notificate(firstDay, parsedDate.hour, parsedDate.minute);
+    } else {
+      await _notificate(
+          firstDay, parsedDate.hour, parsedDate.minute, secondDay);
+    }
+  }
+
+  Future<void> _notificate(int firstDay, int hour, int minute,
+      [int secondDay]) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails("Hemocare",
+        "Profilaxia", "Notificar os usuarios sobre profilaxias agendadas",
+        importance: Importance.Max,
+        priority: Priority.High,
+        ticker: 'Profilaxia');
+    var iosChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iosChannelSpecifics);
+    if (secondDay != null) {
+      await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          0,
+          "Profilaxia",
+          "Hoje é dia de realizar a sua profilaxia ",
+          new Day(firstDay),
+          new Time(hour, minute),
+          platformChannelSpecifics);
+      await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          0,
+          "Profilaxia",
+          "Hoje é dia de realizar a sua profilaxia! Vamos lá?",
+          new Day(secondDay),
+          new Time(hour, minute),
+          platformChannelSpecifics);
+    } else {
+      await _flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          0,
+          "Profilaxia",
+          "Hoje é dia de realizar a sua profilaxia! Vamos lá?",
+          new Day(firstDay),
+          new Time(hour, minute),
+          platformChannelSpecifics);
+    }
+  }
+
   @override
   void initState() {
     currentPage = 0;
     super.initState();
-    try {
-      LocalStorageWrapper ls = new LocalStorageWrapper();
-      loggedUser = ls.retrieve("logged_id");
-      print(
-          "Logged user no init state: ${loggedUser ? loggedUser : 'Deu ruim'}");
-      if (loggedUser != null) {
-        Navigator.of(context).push(CupertinoPageRoute(
-            fullscreenDialog: true, builder: (context) => TabBarController()));
-      } else {
-        return;
-      }
-    } catch (e) {
-      print(e);
+    initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+
+    initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+
+    initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+
+    _flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+
+    if (_flutterLocalNotificationsPlugin.pendingNotificationRequests() !=
+        null) {
+      _showNotification();
     }
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint("Notification payload $payload");
+    }
+  }
+
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
+    await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(title),
+              content: Text(body),
+              actions: <Widget>[
+                RaisedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("OK"),
+                )
+              ],
+            ));
   }
 
   final imgs = ['doctor', 'doctor-man', 'hemophilia'];
@@ -69,76 +219,92 @@ class _InitialState extends State<Initial> {
 //    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
 //      statusBarColor: Colors.blue, //or set color with: Color(0xFF0000FF)
 //    ));
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomPadding: true,
-        appBar: null,
-        body: Stack(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.40,
-                  child: PageView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      onPageChanged: (index) {
-                        setState(() => currentPage = index);
-                      },
-                      itemBuilder: (context, position) {
-                        return createTopScrollableElement(
-                            context,
-                            imgs[position],
-                            titles[position],
-                            subtitles[position]);
-                      }),
-                ),
-                DotsIndicator(
-                  dotsCount: 3,
-                  position: currentPage.roundToDouble(),
-                  decorator: DotsDecorator(
-                    color: Colors.black87,
-                    activeColor: Colors.blueAccent,
-                  ),
-                ),
-                SizedBox(height: 26),
-                Utils.gradientPatternButton('Criar conta', () {
-                  Navigator.of(context).push(CupertinoPageRoute(
-                      fullscreenDialog: true,
-                      builder: (context) => Register()));
-                }, context),
-                SizedBox(height: 10),
-                createButtonLogin(),
-                SizedBox(height: 40),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                createSocialMediaButtons(),
-                SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: InkWell(
-                    child: Text(
-                      'Termos de uso',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: ColorTheme.lightPurple),
+
+    return StreamBuilder<FirebaseUser>(
+        stream: FirebaseAuth.instance.onAuthStateChanged,
+        builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Center(
+                  child: Text("Nao foi possivel conectar ao banco de dados"));
+            case ConnectionState.waiting:
+              return CircularProgressIndicator();
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (snapshot.hasData) {
+                return TabBarController();
+              } else {
+                return SafeArea(
+                  child: Scaffold(
+                    resizeToAvoidBottomInset: false,
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage("assets/doctor.jpg"))),
+                        ),
+                        Text(
+                          "Bem vindo ao Hemocare",
+                          textAlign: TextAlign.center,
+                          textScaleFactor: 1,
+                          softWrap: true,
+                          style: GoogleFonts.raleway(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            SizedBox(height: 26),
+                            Utils.gradientPatternButton('Criar conta', () {
+                              Navigator.of(context).push(CupertinoPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (context) => Register()));
+                            }, context),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            createButtonLogin(),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            //createSocialMediaButtons(),
+                            SizedBox(height: 20),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: InkWell(
+                                child: Text(
+                                  'Termos de uso',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorTheme.lightPurple),
+                                ),
+                                onTap: () => Navigator.of(context).push(
+                                    CupertinoPageRoute(
+                                        fullscreenDialog: true,
+                                        builder: (context) => UseTerms())),
+                              ),
+                            ),
+                            SizedBox(height: 30),
+                          ],
+                        )
+                      ],
                     ),
-                    onTap: () => Navigator.of(context).push(CupertinoPageRoute(
-                        fullscreenDialog: true,
-                        builder: (context) => UseTerms())),
                   ),
-                ),
-                SizedBox(height: 30),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+                );
+              }
+          }
+          return null;
+        });
   }
 
   Widget createButtonLogin() {
@@ -160,6 +326,7 @@ class _InitialState extends State<Initial> {
         child: Text(
           'Já possuo login',
           textAlign: TextAlign.center,
+          textScaleFactor: 1,
           style: TextStyle(fontSize: 20, color: ColorTheme.lightPurple),
         ),
       ),
@@ -185,10 +352,8 @@ class _InitialState extends State<Initial> {
                   side: BorderSide(color: ColorTheme.lightPurple)),
               color: Colors.white,
               onPressed: () {
-                AuthResult authResult;
                 try {
-                  new SocialAuth().loginWithGoogle();
-                  _redirect();
+                  //implement social login
                 } catch (e) {
                   print("e $e");
                 }
@@ -253,26 +418,4 @@ class _InitialState extends State<Initial> {
       ],
     );
   }
-}
-
-Widget _redirect() {
-  print("Has been called! ");
-  return StreamBuilder(
-    stream: FirebaseAuth.instance.onAuthStateChanged,
-    builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-      print("Snapshot ${snapshot.data}");
-      if (snapshot.connectionState == ConnectionState.done) {
-        print("Snapshot in redirect done> ${snapshot.data}");
-
-        if (!snapshot.hasData) return CircularProgressIndicator();
-        if (snapshot.hasData) {
-          print("Snapshot in redirect> ${snapshot.data}");
-          LocalStorageWrapper ls = new LocalStorageWrapper();
-          ls.save("logged_id", snapshot.data.uid);
-          return InitialStockRegister();
-        }
-      }
-      return Login();
-    },
-  );
 }

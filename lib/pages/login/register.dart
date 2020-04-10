@@ -64,11 +64,11 @@ class _RegisterState extends State<Register> {
         color: ColorTheme.lightPurple,
       ),
       color: Colors.white,
-      child: Scaffold(
-          resizeToAvoidBottomPadding: false,
-          appBar: MyAppBarTheme(title: "Faça seu cadastro"),
-          body: SafeArea(
-            child: Padding(
+      child: SafeArea(
+        child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            appBar: MyAppBarTheme(title: "Faça seu cadastro"),
+            body: Padding(
               padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
               child: Form(
                 key: _formKey,
@@ -167,21 +167,22 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Concordar com os termos de uso?",
-                          style: GoogleFonts.raleway(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Switch.adaptive(
-                          value: _agreeToTerms,
-                          onChanged: (newValue) =>
-                              setState(() => _agreeToTerms = newValue),
-                        )
-                      ],
-                    ),
+                    FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Concordar com os termos de uso?",
+                                style: GoogleFonts.raleway(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Switch.adaptive(
+                                value: _agreeToTerms,
+                                onChanged: (newValue) =>
+                                    setState(() => _agreeToTerms = newValue),
+                              )
+                            ])),
                     SizedBox(
                       height: 20,
                     ),
@@ -212,8 +213,8 @@ class _RegisterState extends State<Register> {
                   ],
                 ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 

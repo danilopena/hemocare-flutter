@@ -49,6 +49,7 @@ class MyDropDown extends FormField<dynamic> {
                       child: DropdownButton<dynamic>(
                         hint: Text(
                           hintText,
+                          textScaleFactor: 1,
                           style: TextStyle(color: Colors.grey.shade500),
                         ),
                         value: value == '' ? null : value,

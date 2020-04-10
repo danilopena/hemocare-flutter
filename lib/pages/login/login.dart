@@ -55,6 +55,7 @@ class _LoginState extends State<Login> {
         color: ColorTheme.lightPurple,
       ),
       child: Scaffold(
+          resizeToAvoidBottomInset: true,
           appBar: MyAppBarTheme(title: "Faça seu login"),
           body: SafeArea(
             child: Padding(
@@ -192,7 +193,6 @@ void login(String email, String password, BuildContext context,
           context, MaterialPageRoute(builder: (context) => TabBarController()));
     });
   } on PlatformException catch (e) {
-    print(e.code);
     AwesomeDialog(
         context: context,
         dialogType: DialogType.WARNING,

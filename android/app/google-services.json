@@ -8,25 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:583637459650:android:998ea81cc1e12b0e5fd15b",
+        "mobilesdk_app_id": "1:583637459650:android:e63a6cd02b71dc115fd15b",
         "android_client_info": {
-          "package_name": "com.example.hemocare"
+          "package_name": "br.com.hemocare"
         }
       },
       "oauth_client": [
         {
-          "client_id": "583637459650-cqa7s569oi9t4idp5r461at92l6mn5v6.apps.googleusercontent.com",
+          "client_id": "583637459650-i35pn52luni7849sl5uoua5cchmdbmgs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.hemocare",
-            "certificate_hash": "c63c46fd78eaa3e189548632a31f65554c1d7f73"
-          }
-        },
-        {
-          "client_id": "583637459650-bkshrd2psu52dlk008aiutpf0e6gcvcl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.hemocare",
+            "package_name": "br.com.hemocare",
             "certificate_hash": "0affa9655467290055e0ff6ce90574e2f3b183ea"
           }
         },

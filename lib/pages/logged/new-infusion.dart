@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/services/local_storage.dart';
+import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/my-dropdown.dart';
 import 'package:hemocare/utils/utils.dart';
@@ -29,13 +30,13 @@ class _InfusionsState extends State<Infusions> {
   FocusNode _dosageFocus = new FocusNode();
   TextEditingController _dosageController = new TextEditingController();
   //recorrente
-  bool _recurring = false;
+  bool _recurring;
   //descricao
   String description;
   FocusNode _descriptionFocus = new FocusNode();
   TextEditingController _descriptionController = new TextEditingController();
   //calendar
-  final format = DateFormat("yyyy-MM-dd HH:mm");
+  final format = DateFormat("dd/MM/yyy 'às' HH:mm");
   DateTime dateTime;
   bool _isLoading;
 
@@ -52,6 +53,7 @@ class _InfusionsState extends State<Infusions> {
     // TODO: implement initState
     super.initState();
     _isLoading = false;
+    _recurring = false;
   }
 
   @override
@@ -72,30 +74,7 @@ class _InfusionsState extends State<Infusions> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Adicionar infusão",
-                          style: GoogleFonts.raleway(
-                              fontSize: 40, fontWeight: FontWeight.bold),
-                        ),
-                        Center(
-                          child: Text(
-                            "Registre rapidamente sua infusão para análises futuras",
-                            style: GoogleFonts.raleway(
-                              fontSize: 28,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                FittedHeader(),
                 // container de tipo de infusao
                 Form(
                   key: _formKey,
@@ -162,22 +141,26 @@ class _InfusionsState extends State<Infusions> {
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              "Essa queixa é recorrente?",
-                              style: GoogleFonts.raleway(fontSize: 18),
-                            ),
-                            Switch.adaptive(
-                              value: _recurring,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _recurring = newValue;
-                                });
-                              },
-                            )
-                          ],
+                        FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Essa queixa é recorrente?",
+                                textScaleFactor: 1,
+                                style: GoogleFonts.raleway(fontSize: 18),
+                              ),
+                              Switch.adaptive(
+                                value: _recurring,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _recurring = newValue;
+                                  });
+                                },
+                              )
+                            ],
+                          ),
                         ),
                         Visibility(
                           visible: _recurring,
@@ -213,7 +196,8 @@ class _InfusionsState extends State<Infusions> {
                         DateTimeField(
                           format: format,
                           decoration: InputDecoration(
-                            hintText: "Escolha a hora que você aplicou o fator",
+                            hintText:
+                                "Escolha o dia e a hora que você aplicou o fator",
                             fillColor: Colors.white,
                             prefixIcon: Icon(Icons.perm_contact_calendar),
                             border: OutlineInputBorder(
@@ -264,6 +248,46 @@ class _InfusionsState extends State<Infusions> {
   }
 }
 
+class FittedHeader extends StatelessWidget {
+  const FittedHeader({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+        fit: BoxFit.fitWidth,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(height: 10),
+                Text(
+                  "Adicionar infusão",
+                  textScaleFactor: 1,
+                  style: GoogleFonts.raleway(
+                      fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Center(
+                  child: Text(
+                    "Registre rapidamente sua infusão para análises futuras",
+                    textScaleFactor: 1,
+                    style: GoogleFonts.raleway(
+                      fontSize: 24,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+}
+
 String validateDosage(String value) {
   print("Dosage on validator: $value");
   if (int.parse(value) <= 0)
@@ -284,24 +308,37 @@ void _submit(
     Function _switchVisibility) {
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
-    _switchVisibility();
-    createInfusion(infusionType, dosage, recurring, description, datetime,
-        context, _switchVisibility);
   }
-  if (infusionType == null ||
-      dosage == null ||
-      recurring == null ||
-      description == null ||
-      datetime == null) {
-    AwesomeDialog(
-            context: context,
-            dialogType: DialogType.WARNING,
-            animType: AnimType.BOTTOMSLIDE,
-            tittle: "AVISO!",
-            desc: 'POR FAVOR INFORME TODOS OS CAMPOS',
-            btnOkOnPress: () {})
-        .show();
-  } else {}
+  if (recurring) {
+    if (infusionType == null ||
+        dosage == null ||
+        description == null ||
+        datetime == null) {
+      AwesomeDialog(
+              context: context,
+              dialogType: DialogType.WARNING,
+              animType: AnimType.BOTTOMSLIDE,
+              tittle: "AVISO!",
+              desc: 'Por favor, informe todos os campos obrigatórios',
+              btnOkOnPress: () {})
+          .show();
+    } else {
+      if (infusionType == null || dosage == null || datetime == null) {
+        AwesomeDialog(
+                context: context,
+                dialogType: DialogType.WARNING,
+                animType: AnimType.BOTTOMSLIDE,
+                tittle: "AVISO!",
+                desc: 'Por favor, informe todos os campos obrigatórios',
+                btnOkOnPress: () {})
+            .show();
+      } else {
+        _switchVisibility();
+        createInfusion(infusionType, dosage, recurring, description, datetime,
+            context, _switchVisibility);
+      }
+    }
+  }
 }
 
 void createInfusion(
@@ -321,17 +358,22 @@ void createInfusion(
     "recurring": recurring,
     "description": description,
     "dateTime": datetime,
-  }).then((success) => AwesomeDialog(
-      context: context,
-      dialogType: DialogType.SUCCES,
-      animType: AnimType.BOTTOMSLIDE,
-      tittle: 'Sucesso',
-      desc: 'Novo registro adicionado com sucesso',
-      btnOkOnPress: () {
-        _switchVisibility();
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => TabBarController()));
-      }).show());
+  }).then((success) {
+    StockHandler sh = new StockHandler();
+    sh.removeStock(dosage.toDouble()).then((success) {
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.SUCCES,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: 'Sucesso',
+          desc: 'Novo registro adicionado com sucesso',
+          btnOkOnPress: () {
+            _switchVisibility();
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => TabBarController()));
+          }).show();
+    });
+  });
 }
 
 String validateInfusionType(String _infusionType) {

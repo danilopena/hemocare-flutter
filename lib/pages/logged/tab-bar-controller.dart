@@ -29,9 +29,9 @@ class _TabBarControllerState extends State<TabBarController> {
   Widget build(BuildContext context) {
     List<TabItem> tabItems = List.of([
       TabItem(FontAwesomeIcons.home, "Início", ColorTheme.lightPurple),
-      TabItem(FontAwesomeIcons.syringe, "Infusoes", ColorTheme.lightPurple),
+      TabItem(FontAwesomeIcons.syringe, "Infusões", ColorTheme.lightPurple),
       TabItem(
-          FontAwesomeIcons.fileMedicalAlt, "Relatorio", ColorTheme.lightPurple),
+          FontAwesomeIcons.fileMedicalAlt, "Relatório", ColorTheme.lightPurple),
     ]);
 
     return Scaffold(
@@ -49,7 +49,6 @@ class _TabBarControllerState extends State<TabBarController> {
             selectedCallback: (int selected) {
               setState(() {
                 selectedPos = selected;
-                print(_navigationController.value);
               });
             },
           ),

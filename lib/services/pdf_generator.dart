@@ -22,7 +22,7 @@ class PDFGenerator {
               }))
         });
     await Printing.sharePdf(
-        bytes: pdf.save(), filename: "Relatorio Infusoes.pdf");
+        bytes: pdf.save(), filename: "Relatório de Infusões.pdf");
   }
 
   Widget _buildHistoryCard(DocumentSnapshot history) {
