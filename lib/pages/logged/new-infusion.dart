@@ -263,17 +263,17 @@ class FittedHeader extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 Text(
                   "Adicionar infusão",
                   textScaleFactor: 1,
                   style: GoogleFonts.raleway(
                       fontSize: 32, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 16),
                 Center(
                   child: Text(
-                    "Registre rapidamente sua infusão para análises futuras",
+                    "Registre rapidamente sua infusão\n para análises futuras",
                     textScaleFactor: 1,
                     style: GoogleFonts.raleway(
                       fontSize: 24,

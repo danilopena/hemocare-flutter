@@ -120,7 +120,6 @@ class _LoginState extends State<Login> {
                         ),
                         onTap: () => Navigator.of(context).push(
                             CupertinoPageRoute(
-                                fullscreenDialog: true,
                                 builder: (context) => ForgotPassword())),
                       ),
                     ),

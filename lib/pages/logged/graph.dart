@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/calendar.dart';
@@ -25,14 +29,25 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   var _quantityController = TextEditingController();
   String uid;
   bool _isLoading;
+  bool _withoutStock;
   Stream stream;
+  Future future;
+
   final LocalStorage localStorage = new LocalStorage('hemocare');
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _isLoading = false;
+    _withoutStock = false;
+    future = FirebaseAuth.instance.currentUser();
+  }
+
+  void listenWithoutStock() {
+    if (_withoutStock) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => InitialStockRegister()));
+    }
   }
 
   void getUserId() async {
@@ -53,6 +68,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
+  void myCallback(Function callback) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      callback();
+    });
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
@@ -69,6 +90,105 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
           .collection("users")
           .where("userId", isEqualTo: uid)
           .snapshots();
+    }
+  }
+
+  Widget doneConnectionFuture(AsyncSnapshot<FirebaseUser> futureSnapshot) {
+    if (futureSnapshot.data != null) {
+      stream = Firestore.instance
+          .collection("users")
+          .document(futureSnapshot.data.uid)
+          .get()
+          .asStream();
+      return StreamBuilder(
+        stream: stream,
+        initialData: [],
+        builder: (context, AsyncSnapshot documentSnapshot) {
+          switch (documentSnapshot.connectionState) {
+            case ConnectionState.none:
+              return Text("Sem conexão de rede ativa");
+              break;
+            case ConnectionState.waiting:
+              return CircularProgressIndicator();
+              break;
+            case ConnectionState.active:
+              return Text("Conexão ativa");
+              break;
+            case ConnectionState.done:
+              if (documentSnapshot.data != null) {
+                if (documentSnapshot.data.data["percentageUsed"] == null) {
+                  myCallback(() {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InitialStockRegister()));
+                  });
+                } else {
+                  return Column(
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                          "Você já usou ${documentSnapshot.data["percentageUsed"].truncate()}% do seu estoque",
+                          textScaleFactor: 1,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.raleway(fontSize: 20),
+                        ),
+                      ),
+                      CircularPercentIndicator(
+                        radius: 270.0,
+                        animation: true,
+                        animationDuration: 2000,
+                        lineWidth: 40.0,
+                        percent: documentSnapshot.data["percentageUsed"] / 100,
+                        arcBackgroundColor: ColorTheme.lightPurple,
+                        arcType: ArcType.FULL,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        animateFromLastPercent: true,
+                        backgroundColor: Colors.transparent,
+                        progressColor: ColorTheme.blue,
+
+                        footer: Column(
+                          children: <Widget>[
+                            FittedBox(
+                                fit: BoxFit.fitWidth,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Seu estoque atual:",
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                    Text(
+                                      " ${double.parse(documentSnapshot.data["initialStock"].toString()).truncate()} UI",
+                                      style: GoogleFonts.raleway(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                )),
+                          ],
+                        ),
+//blur
+                      ),
+                    ],
+                  );
+                }
+              } else {
+                return CircularProgressIndicator();
+              }
+
+              break;
+          }
+          return Text("Carregando");
+        },
+      );
+    } else {
+      return Center(
+          child: Text(
+              "Erro durante o processamento. Per gentileza, tentar novamente."));
     }
   }
 
@@ -111,127 +231,14 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                   height: 10,
                                 ),
                                 FutureBuilder<FirebaseUser>(
-                                  future: FirebaseAuth.instance.currentUser(),
+                                  future: future,
                                   builder: (context,
                                       AsyncSnapshot<FirebaseUser>
                                           futureSnapshot) {
                                     switch (futureSnapshot.connectionState) {
                                       case ConnectionState.done:
-                                        if (futureSnapshot.data != null) {
-                                          stream = Firestore.instance
-                                              .collection("users")
-                                              .document(futureSnapshot.data.uid)
-                                              .get()
-                                              .asStream();
-                                          return StreamBuilder(
-                                            stream: stream,
-                                            initialData: [],
-                                            builder: (context,
-                                                AsyncSnapshot
-                                                    documentSnapshot) {
-                                              switch (documentSnapshot
-                                                  .connectionState) {
-                                                case ConnectionState.none:
-                                                  return Text(
-                                                      "Sem conexão de rede ativa");
-                                                  break;
-                                                case ConnectionState.waiting:
-                                                  return CircularProgressIndicator();
-                                                  break;
-                                                case ConnectionState.active:
-                                                  return Text("Conexão ativa");
-                                                  break;
-                                                case ConnectionState.done:
-                                                  if (documentSnapshot
-                                                          .data.data !=
-                                                      null) {
-                                                    return Column(
-                                                      children: <Widget>[
-                                                        Center(
-                                                          child: Text(
-                                                            "Você já usou ${documentSnapshot.data["percentageUsed"].truncate()}% do seu estoque",
-                                                            textScaleFactor: 1,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: GoogleFonts
-                                                                .raleway(
-                                                                    fontSize:
-                                                                        20),
-                                                          ),
-                                                        ),
-                                                        CircularPercentIndicator(
-                                                          radius: 270.0,
-                                                          animation: true,
-                                                          animationDuration:
-                                                              2000,
-                                                          lineWidth: 40.0,
-                                                          percent: documentSnapshot
-                                                                      .data[
-                                                                  "percentageUsed"] /
-                                                              100,
-                                                          arcBackgroundColor:
-                                                              ColorTheme
-                                                                  .lightPurple,
-                                                          arcType: ArcType.FULL,
-                                                          circularStrokeCap:
-                                                              CircularStrokeCap
-                                                                  .round,
-                                                          animateFromLastPercent:
-                                                              true,
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          progressColor:
-                                                              ColorTheme.blue,
-
-                                                          footer: Column(
-                                                            children: <Widget>[
-                                                              FittedBox(
-                                                                  fit: BoxFit
-                                                                      .fitWidth,
-                                                                  child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Text(
-                                                                        "Seu estoque atual:",
-                                                                        style: GoogleFonts
-                                                                            .raleway(
-                                                                          fontSize:
-                                                                              24,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        " ${double.parse(documentSnapshot.data["initialStock"].toString()).truncate()} UI",
-                                                                        style: GoogleFonts.raleway(
-                                                                            fontSize:
-                                                                                28,
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      )
-                                                                    ],
-                                                                  )),
-                                                            ],
-                                                          ),
-//blur
-                                                        ),
-                                                      ],
-                                                    );
-                                                  } else {
-                                                    return CircularProgressIndicator();
-                                                  }
-                                                  break;
-                                              }
-                                              return Text("Carregando");
-                                            },
-                                          );
-                                        } else {
-                                          return Center(
-                                              child: Text(
-                                                  "Erro durante o processamento. Per gentileza, tentar novamente."));
-                                        }
+                                        return doneConnectionFuture(
+                                            futureSnapshot);
                                         break;
                                       case ConnectionState.waiting:
                                         return CircularProgressIndicator();

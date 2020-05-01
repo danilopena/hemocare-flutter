@@ -298,7 +298,7 @@ void register(String email, String name, String password, String pathology,
       'email': email,
       'name': name,
       'pathology': pathology,
-      'userId': loggedUser
+      'userId': loggedUser,
     }).catchError((error) => _switchVisibility);
     ls.save("logged_id", loggedUser);
     Navigator.push(context,
