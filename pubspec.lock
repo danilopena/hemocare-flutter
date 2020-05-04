@@ -342,6 +342,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  flutter_mobx:
+    dependency: "direct main"
+    description:
+      name: flutter_mobx
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   flutter_native_html_view:
     dependency: "direct main"
     description:
@@ -528,7 +535,7 @@ packages:
     source: hosted
     version: "0.9.6+3"
   mobx:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mobx
       url: "https://pub.dartlang.org"

@@ -8,6 +8,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/services/stock.dart';
+import 'package:hemocare/stores/stock_store.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/calendar.dart';
 import 'package:hemocare/utils/dialog.dart';
@@ -32,18 +33,16 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   bool _withoutStock;
   Stream stream;
   Future future;
+  StockStore store;
 
   final LocalStorage localStorage = new LocalStorage('hemocare');
 
   @override
   void initState() {
     super.initState();
-    _isLoading = false;
-    _withoutStock = false;
-    future = FirebaseAuth.instance.currentUser();
   }
 
-  void listenWithoutStock() {
+  void listenWithoutStock() async {
     if (_withoutStock) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => InitialStockRegister()));
@@ -72,6 +71,11 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       callback();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -116,13 +120,8 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
               break;
             case ConnectionState.done:
               if (documentSnapshot.data != null) {
-                if (documentSnapshot.data.data["percentageUsed"] == null) {
-                  myCallback(() {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => InitialStockRegister()));
-                  });
+                if (documentSnapshot.data["percentageUsed"] == null) {
+                  listenWithoutStock();
                 } else {
                   return Column(
                     children: <Widget>[
@@ -182,7 +181,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
 
               break;
           }
-          return Text("Carregando");
+          return Text("Carregando dados");
         },
       );
     } else {
@@ -195,6 +194,26 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     getUserId();
+
+    store = StockStore();
+    store.retrieveUid();
+    store.retrieveStockData();
+    print("Store");
+    print("Store uid ${store.uid}");
+
+    print("Data");
+    DocumentSnapshot documentSnapshot;
+    Stream<DocumentSnapshot> data;
+    try {
+      data = Firestore.instance
+          .collection("users")
+          .document(store.uid)
+          .get()
+          .asStream();
+      data.first.then((endResult) => documentSnapshot = endResult);
+    } catch (e) {
+      print(e);
+    }
 
     return LoadingOverlay(
       isLoading: _isLoading,
@@ -230,30 +249,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                FutureBuilder<FirebaseUser>(
-                                  future: future,
-                                  builder: (context,
-                                      AsyncSnapshot<FirebaseUser>
-                                          futureSnapshot) {
-                                    switch (futureSnapshot.connectionState) {
-                                      case ConnectionState.done:
-                                        return doneConnectionFuture(
-                                            futureSnapshot);
-                                        break;
-                                      case ConnectionState.waiting:
-                                        return CircularProgressIndicator();
-                                        break;
-                                      case ConnectionState.none:
-                                        return Text(
-                                            "Nenhuma conexão de rede ativa");
-                                        break;
-                                      case ConnectionState.active:
-                                        return Text("Conexão ativa");
-                                        break;
-                                    }
-                                    return Text("Something went really wrong");
-                                  },
-                                )
+                                Text("${documentSnapshot}")
                               ],
                             )),
                         SizedBox(
