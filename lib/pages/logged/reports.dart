@@ -41,10 +41,8 @@ class _ReportsState extends State<Reports> {
             color: ColorTheme.lightPurple,
             tooltip: "Deslogar",
             onPressed: () {
-              FirebaseAuth.instance.signOut().then((end) =>
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Initial())));
+              FirebaseAuth.instance.signOut().then((end) => Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Initial())));
             },
           )
         ],
@@ -60,7 +58,7 @@ class _ReportsState extends State<Reports> {
                 Center(
                     child: Text(
                   "Relatório",
-                      textScaleFactor: 1,
+                  textScaleFactor: 1,
                   style: GoogleFonts.raleway(
                       fontSize: 36, fontWeight: FontWeight.bold),
                 )),
@@ -87,6 +85,7 @@ class _ReportsState extends State<Reports> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
+                print("Vazio00000");
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -137,17 +136,17 @@ class _ReportsState extends State<Reports> {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
                       String infusionType =
-                      snapshot.data.documents[index]["infusionType"];
+                          snapshot.data.documents[index]["infusionType"];
                       int dosage = snapshot.data.documents[index]["dosage"];
                       Timestamp date =
-                      snapshot.data.documents[index]["dateTime"];
+                          snapshot.data.documents[index]["dateTime"];
                       bool recurring =
-                      snapshot.data.documents[index]["recurring"];
+                          snapshot.data.documents[index]["recurring"];
                       String description =
-                      snapshot.data.documents[index]["description"];
+                          snapshot.data.documents[index]["description"];
                       var dateFormatted =
-                      new DateTime.fromMillisecondsSinceEpoch(
-                          date.millisecondsSinceEpoch);
+                          new DateTime.fromMillisecondsSinceEpoch(
+                              date.millisecondsSinceEpoch);
 
                       return Column(
                         children: <Widget>[

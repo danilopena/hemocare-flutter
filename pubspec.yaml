@@ -51,6 +51,8 @@ dependencies:
   weekday_selector_formfield:
   flutter_local_notifications:
   permission_handler:
+  mobx:
+  flutter_mobx:
 dev_dependencies:
   flutter_test:
     sdk: flutter
