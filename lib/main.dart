@@ -50,8 +50,8 @@ class _InitialState extends State<Initial> {
       print("H $hour");
     });
     print("Dias e hora: $days || $hour");
-    var day1 = days.split(",")[0].replaceAll("[", "");
-    var day2 = days.split(",")[1].replaceAll("]", "");
+    var day1 = days?.split(",")[0]?.replaceAll("[", "");
+    var day2 = days?.split(",")[1]?.replaceAll("]", "");
     //hour  0001-01-01 11:30:00.000
     var parsedDate = DateTime.parse(hour);
 

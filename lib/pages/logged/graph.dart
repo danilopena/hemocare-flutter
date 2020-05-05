@@ -11,6 +11,7 @@ import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:mobx/mobx.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Graph extends StatefulWidget {
   @override
@@ -27,6 +28,8 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     // TODO: implement initState
     super.initState();
     store = StockStore();
+    store.setUid();
+    store.setStockData();
   }
 
   @override
@@ -78,15 +81,74 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 ),
                                 Observer(
                                   builder: (_) {
-                                    return Text("${store.uid}");
+                                    return store.stockData.data != null
+                                        ? Column(
+                                            children: <Widget>[
+                                              Center(
+                                                child: Text(
+                                                  "Você já usou ${store?.stockData?.data["percentageUsed"].truncate()}% do seu estoque",
+                                                  textScaleFactor: 1,
+                                                  textAlign: TextAlign.center,
+                                                  style: GoogleFonts.raleway(
+                                                      fontSize: 20),
+                                                ),
+                                              ),
+                                              CircularPercentIndicator(
+                                                radius: 270.0,
+                                                animation: true,
+                                                animationDuration: 2000,
+                                                lineWidth: 40.0,
+                                                percent: store?.stockData?.data[
+                                                        "percentageUsed"] /
+                                                    100,
+                                                arcBackgroundColor:
+                                                    ColorTheme.lightPurple,
+                                                arcType: ArcType.FULL,
+                                                circularStrokeCap:
+                                                    CircularStrokeCap.round,
+                                                animateFromLastPercent: true,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                progressColor: ColorTheme.blue,
+
+                                                footer: Column(
+                                                  children: <Widget>[
+                                                    FittedBox(
+                                                        fit: BoxFit.fitWidth,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: <Widget>[
+                                                            Text(
+                                                              "Seu estoque atual:",
+                                                              style: GoogleFonts
+                                                                  .raleway(
+                                                                fontSize: 24,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              " ${double.parse(store?.stockData?.data["initialStock"].toString()).truncate()} UI",
+                                                              style: GoogleFonts.raleway(
+                                                                  fontSize: 28,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )
+                                                          ],
+                                                        )),
+                                                  ],
+                                                ),
+//blur
+                                              ),
+                                            ],
+                                          )
+                                        : CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.deepOrange));
                                   },
                                 ),
-                                Observer(
-                                  builder: (_) {
-                                    return Text(
-                                        "${store.modelFromSnapshot != null ? store.modelFromSnapshot.percentageUsed : store.stockData.data["percentageUsed"]}");
-                                  },
-                                )
                               ],
                             )),
                         SizedBox(

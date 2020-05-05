@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/services/stock.dart';
+import 'package:hemocare/stores/stock_store.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'ColorTheme.dart';
@@ -15,6 +16,7 @@ class CustomDialog {
       String quantity,
       Function _switchVisibility) {
     controller.clear();
+    StockStore store = StockStore();
     var alertStyle = AlertStyle(
         animationType: AnimationType.fromBottom,
         isCloseButton: false,
@@ -53,6 +55,7 @@ class CustomDialog {
                       addStock(double.parse(quantity), context).then((success) {
                         DocumentSnapshot ds = success;
                         if (ds.data.length != null) {
+                          store.setStockData();
                           Navigator.of(context).pop();
                         }
                       });
@@ -81,6 +84,7 @@ class CustomDialog {
                           .then((success) {
                         DocumentSnapshot ds = success;
                         if (ds.data.length != null) {
+                          store.setStockData();
                           Navigator.of(context).pop();
                         }
                       });

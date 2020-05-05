@@ -9,11 +9,11 @@ class StockStore = _StockStore with _$StockStore;
 
 abstract class _StockStore with Store {
   @observable
-  String uid;
+  String uid = "";
   @observable
   DocumentSnapshot stockData;
   @observable
-  StockModel modelFromSnapshot;
+  StockModel modelFromSnapshot = StockModel();
 
   @action
   void setModel(StockModel model) => modelFromSnapshot = model;
@@ -34,7 +34,9 @@ abstract class _StockStore with Store {
     StockModel model;
     Firestore.instance.collection("users").document(uid).get().then((snapshot) {
       print(snapshot.data);
-      setSnapshot(snapshot);
+      if (snapshot.data != null) {
+        setSnapshot(snapshot);
+      }
     }).whenComplete(() {
       model = StockModel.fromDocument(stockData.data);
       print("model");
@@ -42,4 +44,7 @@ abstract class _StockStore with Store {
       setModel(model);
     });
   }
+
+  @computed
+  bool get isOkToRender => stockData.data != null && uid != null;
 }
