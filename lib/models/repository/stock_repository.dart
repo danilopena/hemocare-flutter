@@ -12,10 +12,7 @@ class StockRepository implements IStockRepository {
         .collection("users")
         .document(userId)
         .snapshots()
-        .map((query) {
-      StockModel model = StockModel.fromDocument(query);
-
-      return model;
-    });
+        // ignore: missing_return
+        .map((query) {});
   }
 }

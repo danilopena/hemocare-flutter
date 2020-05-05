@@ -9,12 +9,6 @@ part of 'stock_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StockStore on _StockStore, Store {
-  Computed<bool> _$isAlrightComputed;
-
-  @override
-  bool get isAlright =>
-      (_$isAlrightComputed ??= Computed<bool>(() => super.isAlright)).value;
-
   final _$uidAtom = Atom(name: '_StockStore.uid');
 
   @override
@@ -32,58 +26,45 @@ mixin _$StockStore on _StockStore, Store {
     }, _$uidAtom, name: '${_$uidAtom.name}_set');
   }
 
-  final _$userAtom = Atom(name: '_StockStore.user');
-
-  @override
-  ObservableFuture<FirebaseUser> get user {
-    _$userAtom.context.enforceReadPolicy(_$userAtom);
-    _$userAtom.reportObserved();
-    return super.user;
-  }
-
-  @override
-  set user(ObservableFuture<FirebaseUser> value) {
-    _$userAtom.context.conditionallyRunInAction(() {
-      super.user = value;
-      _$userAtom.reportChanged();
-    }, _$userAtom, name: '${_$userAtom.name}_set');
-  }
-
   final _$stockDataAtom = Atom(name: '_StockStore.stockData');
 
   @override
-  ObservableFuture<DocumentSnapshot> get stockData {
+  DocumentSnapshot get stockData {
     _$stockDataAtom.context.enforceReadPolicy(_$stockDataAtom);
     _$stockDataAtom.reportObserved();
     return super.stockData;
   }
 
   @override
-  set stockData(ObservableFuture<DocumentSnapshot> value) {
+  set stockData(DocumentSnapshot value) {
     _$stockDataAtom.context.conditionallyRunInAction(() {
       super.stockData = value;
       _$stockDataAtom.reportChanged();
     }, _$stockDataAtom, name: '${_$stockDataAtom.name}_set');
   }
 
-  final _$retrieveUidAsyncAction = AsyncAction('retrieveUid');
+  final _$setUidAsyncAction = AsyncAction('setUid');
 
   @override
-  Future<void> retrieveUid() {
-    return _$retrieveUidAsyncAction.run(() => super.retrieveUid());
+  Future<void> setUid() {
+    return _$setUidAsyncAction.run(() => super.setUid());
   }
 
-  final _$retrieveStockDataAsyncAction = AsyncAction('retrieveStockData');
+  final _$_StockStoreActionController = ActionController(name: '_StockStore');
 
   @override
-  Future<void> retrieveStockData() {
-    return _$retrieveStockDataAsyncAction.run(() => super.retrieveStockData());
+  void setStockData() {
+    final _$actionInfo = _$_StockStoreActionController.startAction();
+    try {
+      return super.setStockData();
+    } finally {
+      _$_StockStoreActionController.endAction(_$actionInfo);
+    }
   }
 
   @override
   String toString() {
-    final string =
-        'uid: ${uid.toString()},user: ${user.toString()},stockData: ${stockData.toString()},isAlright: ${isAlright.toString()}';
+    final string = 'uid: ${uid.toString()},stockData: ${stockData.toString()}';
     return '{$string}';
   }
 }

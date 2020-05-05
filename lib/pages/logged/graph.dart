@@ -1,13 +1,7 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hemocare/pages/login/initial-stock-register.dart';
-import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/stores/stock_store.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/calendar.dart';
@@ -16,8 +10,7 @@ import 'package:hemocare/utils/utils.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:localstorage/localstorage.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:mobx/mobx.dart';
 
 class Graph extends StatefulWidget {
   @override
@@ -25,196 +18,30 @@ class Graph extends StatefulWidget {
 }
 
 class _GraphState extends State<Graph> with WidgetsBindingObserver {
-  StockHandler stockHandler = new StockHandler();
-  String _quantity = "0";
-  var _quantityController = TextEditingController();
-  String uid;
-  bool _isLoading;
-  bool _withoutStock;
-  Stream stream;
-  Future future;
+  bool _isLoading = false;
   StockStore store;
-
-  final LocalStorage localStorage = new LocalStorage('hemocare');
-
+  TextEditingController _quantityController = new TextEditingController();
+  int _quantity = 0;
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-  }
-
-  void listenWithoutStock() async {
-    if (_withoutStock) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => InitialStockRegister()));
-    }
-  }
-
-  void getUserId() async {
-    _isLoading = false;
-
-    await localStorage.ready;
-
-    uid = localStorage.getItem("logged_id");
-
-    stream =
-        Firestore.instance.collection("users").document(uid).get().asStream();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-  }
-
-  void myCallback(Function callback) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      callback();
-    });
+    store = StockStore();
   }
 
   @override
   void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // TODO: implement didChangeAppLifecycleState
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      stream = Firestore.instance
-          .collection("users")
-          .where("userId", isEqualTo: uid)
-          .snapshots();
-    }
-    if (state == AppLifecycleState.detached) {
-      stream = Firestore.instance
-          .collection("users")
-          .where("userId", isEqualTo: uid)
-          .snapshots();
-    }
-  }
-
-  Widget doneConnectionFuture(AsyncSnapshot<FirebaseUser> futureSnapshot) {
-    if (futureSnapshot.data != null) {
-      stream = Firestore.instance
-          .collection("users")
-          .document(futureSnapshot.data.uid)
-          .get()
-          .asStream();
-      return StreamBuilder(
-        stream: stream,
-        initialData: [],
-        builder: (context, AsyncSnapshot documentSnapshot) {
-          switch (documentSnapshot.connectionState) {
-            case ConnectionState.none:
-              return Text("Sem conexão de rede ativa");
-              break;
-            case ConnectionState.waiting:
-              return CircularProgressIndicator();
-              break;
-            case ConnectionState.active:
-              return Text("Conexão ativa");
-              break;
-            case ConnectionState.done:
-              if (documentSnapshot.data != null) {
-                if (documentSnapshot.data["percentageUsed"] == null) {
-                  listenWithoutStock();
-                } else {
-                  return Column(
-                    children: <Widget>[
-                      Center(
-                        child: Text(
-                          "Você já usou ${documentSnapshot.data["percentageUsed"].truncate()}% do seu estoque",
-                          textScaleFactor: 1,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.raleway(fontSize: 20),
-                        ),
-                      ),
-                      CircularPercentIndicator(
-                        radius: 270.0,
-                        animation: true,
-                        animationDuration: 2000,
-                        lineWidth: 40.0,
-                        percent: documentSnapshot.data["percentageUsed"] / 100,
-                        arcBackgroundColor: ColorTheme.lightPurple,
-                        arcType: ArcType.FULL,
-                        circularStrokeCap: CircularStrokeCap.round,
-                        animateFromLastPercent: true,
-                        backgroundColor: Colors.transparent,
-                        progressColor: ColorTheme.blue,
-
-                        footer: Column(
-                          children: <Widget>[
-                            FittedBox(
-                                fit: BoxFit.fitWidth,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Seu estoque atual:",
-                                      style: GoogleFonts.raleway(
-                                        fontSize: 24,
-                                      ),
-                                    ),
-                                    Text(
-                                      " ${double.parse(documentSnapshot.data["initialStock"].toString()).truncate()} UI",
-                                      style: GoogleFonts.raleway(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                )),
-                          ],
-                        ),
-//blur
-                      ),
-                    ],
-                  );
-                }
-              } else {
-                return CircularProgressIndicator();
-              }
-
-              break;
-          }
-          return Text("Carregando dados");
-        },
-      );
-    } else {
-      return Center(
-          child: Text(
-              "Erro durante o processamento. Per gentileza, tentar novamente."));
-    }
+    autorun((_) {
+      store = StockStore();
+      store.setUid();
+      store.setStockData();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    getUserId();
-
-    store = StockStore();
-    store.retrieveUid();
-    store.retrieveStockData();
-    print("Store");
-    print("Store uid ${store.uid}");
-
-    print("Data");
-    DocumentSnapshot documentSnapshot;
-    Stream<DocumentSnapshot> data;
-    try {
-      data = Firestore.instance
-          .collection("users")
-          .document(store.uid)
-          .get()
-          .asStream();
-      data.first.then((endResult) => documentSnapshot = endResult);
-    } catch (e) {
-      print(e);
-    }
-
     return LoadingOverlay(
       isLoading: _isLoading,
       color: Colors.white,
@@ -249,7 +76,17 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Text("${documentSnapshot}")
+                                Observer(
+                                  builder: (_) {
+                                    return Text("${store.uid}");
+                                  },
+                                ),
+                                Observer(
+                                  builder: (_) {
+                                    return Text(
+                                        "${store.modelFromSnapshot != null ? store.modelFromSnapshot.percentageUsed : store.stockData.data["percentageUsed"]}");
+                                  },
+                                )
                               ],
                             )),
                         SizedBox(
@@ -280,7 +117,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                               CustomDialog.showDialog(
                                       context,
                                       _quantityController,
-                                      _quantity,
+                                      _quantity.toString(),
                                       _switchVisibility)
                                   .show();
                             }, context),

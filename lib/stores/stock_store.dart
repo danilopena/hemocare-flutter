@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hemocare/models/stock_model.dart';
+import 'package:hemocare/services/local_storage.dart';
 import 'package:mobx/mobx.dart';
 
 part 'stock_store.g.dart';
@@ -8,30 +9,37 @@ class StockStore = _StockStore with _$StockStore;
 
 abstract class _StockStore with Store {
   @observable
-  String uid = "";
+  String uid;
   @observable
-  ObservableFuture<FirebaseUser> user;
-
-  void setUid(String value) => uid = value;
-
+  DocumentSnapshot stockData;
   @observable
-  ObservableFuture<DocumentSnapshot> stockData;
+  StockModel modelFromSnapshot;
 
   @action
-  Future<void> retrieveUid() async {
-    user = FirebaseAuth.instance.currentUser().asStream().first.asObservable();
-    setUid(user.value.uid);
+  void setModel(StockModel model) => modelFromSnapshot = model;
+
+  @action
+  void setSnapshot(DocumentSnapshot snapshot) => stockData = snapshot;
+
+  @action
+  Future<void> setUid() async {
+    String preUid;
+    LocalStorageWrapper ls = new LocalStorageWrapper();
+    preUid = ls.retrieve("logged_id");
+    uid = preUid;
   }
 
   @action
-  Future<void> retrieveStockData() async {
-    stockData = Firestore.instance
-        .collection("users")
-        .document(uid)
-        .get()
-        .asObservable();
+  void setStockData() {
+    StockModel model;
+    Firestore.instance.collection("users").document(uid).get().then((snapshot) {
+      print(snapshot.data);
+      setSnapshot(snapshot);
+    }).whenComplete(() {
+      model = StockModel.fromDocument(stockData.data);
+      print("model");
+      print(model);
+      setModel(model);
+    });
   }
-
-  @computed
-  bool get isAlright => stockData.value.data != null && user.value.uid != null;
 }
