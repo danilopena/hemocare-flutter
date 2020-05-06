@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/stores/stock_store.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/calendar.dart';
@@ -30,6 +31,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     store = StockStore();
     store.setUid();
     store.setStockData();
+
+//    if (store?.stockData?.data["name"] == "testebug") {
+//      print(store?.stockData?.data["name"]);
+//      Navigator.of(context).push(
+//          MaterialPageRoute(builder: (context) => InitialStockRegister()));
+//    }
   }
 
   @override
@@ -80,12 +87,21 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 ),
                                 Observer(
                                   builder: (_) {
-                                    return store?.stockData?.data != null
+                                    return Text(
+                                      "${store.isOkToRender}",
+                                      style:
+                                          GoogleFonts.montserrat(fontSize: 32),
+                                    );
+                                  },
+                                ),
+                                Observer(
+                                  builder: (_) {
+                                    return store?.isOkToRender
                                         ? Column(
                                             children: <Widget>[
                                               Center(
                                                 child: Text(
-                                                  "Você já usou ${store?.stockData?.data["percentageUsed"].truncate()}% do seu estoque",
+                                                  "Você já usou ${store?.stockData?.data["percentageUsed"]?.truncate()}% do seu estoque",
                                                   textScaleFactor: 1,
                                                   textAlign: TextAlign.center,
                                                   style: GoogleFonts.raleway(
@@ -142,10 +158,22 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                               ),
                                             ],
                                           )
-                                        : CircularProgressIndicator(
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                    Colors.deepOrange));
+                                        : AlertDialog(
+                                            title: Text("Erro"),
+                                            content: Text(
+                                                "Dados de estoque invalidos"),
+                                            actions: <Widget>[
+                                              IconButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              InitialStockRegister()));
+                                                },
+                                                icon: Icon(Icons.home),
+                                              )
+                                            ],
+                                          );
                                   },
                                 ),
                               ],

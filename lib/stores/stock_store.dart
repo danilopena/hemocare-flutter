@@ -46,5 +46,6 @@ abstract class _StockStore with Store {
   }
 
   @computed
-  bool get isOkToRender => stockData.data != null && uid != null;
+  bool get isOkToRender =>
+      stockData.data["initialStock"] != null && uid != null;
 }

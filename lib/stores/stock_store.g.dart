@@ -9,6 +9,13 @@ part of 'stock_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StockStore on _StockStore, Store {
+  Computed<bool> _$isOkToRenderComputed;
+
+  @override
+  bool get isOkToRender =>
+      (_$isOkToRenderComputed ??= Computed<bool>(() => super.isOkToRender))
+          .value;
+
   final _$uidAtom = Atom(name: '_StockStore.uid');
 
   @override
@@ -43,6 +50,23 @@ mixin _$StockStore on _StockStore, Store {
     }, _$stockDataAtom, name: '${_$stockDataAtom.name}_set');
   }
 
+  final _$modelFromSnapshotAtom = Atom(name: '_StockStore.modelFromSnapshot');
+
+  @override
+  StockModel get modelFromSnapshot {
+    _$modelFromSnapshotAtom.context.enforceReadPolicy(_$modelFromSnapshotAtom);
+    _$modelFromSnapshotAtom.reportObserved();
+    return super.modelFromSnapshot;
+  }
+
+  @override
+  set modelFromSnapshot(StockModel value) {
+    _$modelFromSnapshotAtom.context.conditionallyRunInAction(() {
+      super.modelFromSnapshot = value;
+      _$modelFromSnapshotAtom.reportChanged();
+    }, _$modelFromSnapshotAtom, name: '${_$modelFromSnapshotAtom.name}_set');
+  }
+
   final _$setUidAsyncAction = AsyncAction('setUid');
 
   @override
@@ -51,6 +75,26 @@ mixin _$StockStore on _StockStore, Store {
   }
 
   final _$_StockStoreActionController = ActionController(name: '_StockStore');
+
+  @override
+  void setModel(StockModel model) {
+    final _$actionInfo = _$_StockStoreActionController.startAction();
+    try {
+      return super.setModel(model);
+    } finally {
+      _$_StockStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setSnapshot(DocumentSnapshot snapshot) {
+    final _$actionInfo = _$_StockStoreActionController.startAction();
+    try {
+      return super.setSnapshot(snapshot);
+    } finally {
+      _$_StockStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setStockData() {
@@ -64,7 +108,8 @@ mixin _$StockStore on _StockStore, Store {
 
   @override
   String toString() {
-    final string = 'uid: ${uid.toString()},stockData: ${stockData.toString()}';
+    final string =
+        'uid: ${uid.toString()},stockData: ${stockData.toString()},modelFromSnapshot: ${modelFromSnapshot.toString()},isOkToRender: ${isOkToRender.toString()}';
     return '{$string}';
   }
 }
