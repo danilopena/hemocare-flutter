@@ -37,7 +37,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     autorun((_) {
-      store = StockStore();
       store.setUid();
       store.setStockData();
     });
@@ -81,7 +80,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 ),
                                 Observer(
                                   builder: (_) {
-                                    return store.stockData.data != null
+                                    return store?.stockData?.data != null
                                         ? Column(
                                             children: <Widget>[
                                               Center(
