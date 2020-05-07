@@ -155,6 +155,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                             children: <Widget>[
                                               Text(
                                                 "Seu cadastro apresenta algumas inconsistências...",
+                                                textAlign: TextAlign.center,
                                                 style: GoogleFonts.raleway(
                                                     fontSize: 18),
                                               ),
@@ -162,7 +163,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                 height: 10,
                                               ),
                                               Utils.gradientPatternButton(
-                                                  "CORRIGIR", () {
+                                                  "Clique aqui para resolver", () {
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) =>
@@ -192,12 +193,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                               ],
                             )),
                         SizedBox(
-                          height: 10,
+                          height: 16,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Utils.gradientPatternButton("Manter Estoque", () {
+                            Utils.gradientPatternButton("Atualizar estoque", () {
                               //abrir novo alert
                               CustomDialog.showDialog(
                                       context,
@@ -216,7 +217,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                               height: 10,
                             ),
                             Utils.gradientPatternButton(
-                                "Retirada Automática", () {}, context),
+                                "Retirada automática", () {}, context),
                           ],
                         )
                       ]),
