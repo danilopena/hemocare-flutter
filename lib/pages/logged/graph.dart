@@ -87,21 +87,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 ),
                                 Observer(
                                   builder: (_) {
-                                    return Text(
-                                      "${store.isOkToRender}",
-                                      style:
-                                          GoogleFonts.montserrat(fontSize: 32),
-                                    );
-                                  },
-                                ),
-                                Observer(
-                                  builder: (_) {
-                                    return store?.isOkToRender
+                                    return store.isOkToRender
                                         ? Column(
                                             children: <Widget>[
                                               Center(
                                                 child: Text(
-                                                  "Você já usou ${store?.stockData?.data["percentageUsed"]?.truncate()}% do seu estoque",
+                                                  "Você já usou ${store?.modelFromSnapshot?.percentageUsed}% do seu estoque",
                                                   textScaleFactor: 1,
                                                   textAlign: TextAlign.center,
                                                   style: GoogleFonts.raleway(
@@ -113,8 +104,10 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                 animation: true,
                                                 animationDuration: 2000,
                                                 lineWidth: 40.0,
-                                                percent: store?.stockData?.data[
-                                                        "percentageUsed"] /
+                                                // ignore: null_aware_before_operator
+                                                percent: store
+                                                        ?.modelFromSnapshot
+                                                        ?.percentageUsed /
                                                     100,
                                                 arcBackgroundColor:
                                                     ColorTheme.lightPurple,
@@ -143,7 +136,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                               ),
                                                             ),
                                                             Text(
-                                                              " ${double.parse(store?.stockData?.data["initialStock"].toString()).truncate()} UI",
+                                                              " ${store?.modelFromSnapshot?.initialStock} UI",
                                                               style: GoogleFonts.raleway(
                                                                   fontSize: 28,
                                                                   fontWeight:
@@ -158,20 +151,23 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                               ),
                                             ],
                                           )
-                                        : AlertDialog(
-                                            title: Text("Erro"),
-                                            content: Text(
-                                                "Dados de estoque invalidos"),
-                                            actions: <Widget>[
-                                              IconButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              InitialStockRegister()));
-                                                },
-                                                icon: Icon(Icons.home),
-                                              )
+                                        : Column(
+                                            children: <Widget>[
+                                              Text(
+                                                "Seu cadastro apresenta algumas inconsistências...",
+                                                style: GoogleFonts.raleway(
+                                                    fontSize: 18),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Utils.gradientPatternButton(
+                                                  "CORRIGIR", () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            InitialStockRegister()));
+                                              }, context),
                                             ],
                                           );
                                   },
@@ -243,4 +239,9 @@ String validateQuantity(String value) {
     return "Por favor, informe valores maior que 0";
   }
   return null;
+}
+
+void pushReplacement(BuildContext context) {
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => InitialStockRegister()));
 }
