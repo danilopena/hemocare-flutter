@@ -178,8 +178,8 @@ Future removeStock(double quantityInt, BuildContext context) async {
             context: context,
             dialogType: DialogType.ERROR,
             animType: AnimType.BOTTOMSLIDE,
-            tittle: "Erro!",
-            desc: 'Erro em ${e.code}',
+            tittle: "${e.code}",
+            desc: '${e.message}',
             btnOkOnPress: () {})
         .show();
     return;

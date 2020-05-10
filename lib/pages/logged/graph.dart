@@ -29,8 +29,10 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     // TODO: implement initState
     super.initState();
     store = StockStore();
-    store.setUid();
-    store.setStockData();
+    autorun((_) {
+      store.setUid();
+      store.setStockData();
+    });
 
 //    if (store?.stockData?.data["name"] == "testebug") {
 //      print(store?.stockData?.data["name"]);
@@ -163,7 +165,8 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                                 height: 10,
                                               ),
                                               Utils.gradientPatternButton(
-                                                  "Clique aqui para resolver", () {
+                                                  "Clique aqui para resolver",
+                                                  () {
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) =>
@@ -198,7 +201,8 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Utils.gradientPatternButton("Atualizar estoque", () {
+                            Utils.gradientPatternButton("Atualizar estoque",
+                                () {
                               //abrir novo alert
                               CustomDialog.showDialog(
                                       context,

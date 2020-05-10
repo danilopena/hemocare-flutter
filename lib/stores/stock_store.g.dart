@@ -74,6 +74,13 @@ mixin _$StockStore on _StockStore, Store {
     return _$setUidAsyncAction.run(() => super.setUid());
   }
 
+  final _$setStockDataAsyncAction = AsyncAction('setStockData');
+
+  @override
+  Future<void> setStockData() {
+    return _$setStockDataAsyncAction.run(() => super.setStockData());
+  }
+
   final _$_StockStoreActionController = ActionController(name: '_StockStore');
 
   @override
@@ -91,16 +98,6 @@ mixin _$StockStore on _StockStore, Store {
     final _$actionInfo = _$_StockStoreActionController.startAction();
     try {
       return super.setSnapshot(snapshot);
-    } finally {
-      _$_StockStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setStockData() {
-    final _$actionInfo = _$_StockStoreActionController.startAction();
-    try {
-      return super.setStockData();
     } finally {
       _$_StockStoreActionController.endAction(_$actionInfo);
     }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:hemocare/services/local_storage.dart';
 
 class StockHandler {
@@ -20,11 +21,11 @@ class StockHandler {
 
   Future createStock(String initialStock, String commonDosage) async {
     String userKey = localStorage.retrieve("logged_id");
-    final databaseReference = Firestore.instance;
+    var databaseReference = Firestore.instance;
     await databaseReference.collection("users").document(userKey).updateData({
       "initialStock": int.parse(initialStock),
       "dosage": int.parse(commonDosage),
-      "percentageUsed": 0,
+      "percentageUsed": 0.0,
     });
   }
 
@@ -60,7 +61,7 @@ class StockHandler {
     DocumentSnapshot documentSnapshot;
     var currentStock;
     double percentageUsed = 0.0;
-    double remainingStock = 0;
+    double remainingStock = 0.0;
     await databaseReference
         .collection("users")
         .document(id)
@@ -72,6 +73,12 @@ class StockHandler {
     if (currentStock != 0) {
       percentageUsed = (value / currentStock) * 100;
       remainingStock = currentStock - value;
+      if (remainingStock < 0) {
+        throw PlatformException(
+            code: "Erro na retirada do estoque",
+            message:
+                "Não é possível retirar essa quantidade do estoque. Reveja os valores");
+      }
       await databaseReference.collection("users").document(id).updateData({
         'percentageUsed': percentageUsed,
         'initialStock': remainingStock,

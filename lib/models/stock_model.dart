@@ -1,10 +1,10 @@
 class StockModel {
   int dosage;
   String email;
-  int initialStock;
+  double initialStock;
   String name;
   String pathology;
-  int percentageUsed;
+  double percentageUsed;
   String userId;
 
   StockModel({
@@ -25,7 +25,8 @@ class StockModel {
   StockModel.fromDocument(Map<String, dynamic> documentSnapshot) {
     dosage = documentSnapshot["dosage"];
     email = documentSnapshot["email"];
-    initialStock = documentSnapshot["initialStock"];
+    initialStock =documentSnapshot["initialStock"];
+
     name = documentSnapshot["name"];
     pathology = documentSnapshot["pathology"];
     percentageUsed = documentSnapshot["percentageUsed"];

@@ -30,22 +30,25 @@ abstract class _StockStore with Store {
   }
 
   @action
-  void setStockData() {
+  Future<void> setStockData() async {
     StockModel model;
-    Firestore.instance.collection("users").document(uid).get().then((snapshot) {
+    await Firestore.instance
+        .collection("users")
+        .document(uid)
+        .get()
+        .then((snapshot) {
+      print("snap store");
       print(snapshot.data);
       if (snapshot.data != null) {
         setSnapshot(snapshot);
       }
     }).whenComplete(() {
       model = StockModel.fromDocument(stockData.data);
-      print("model");
-      print(model);
       setModel(model);
     });
   }
 
   @computed
   bool get isOkToRender =>
-      modelFromSnapshot.initialStock != null && uid != null;
+      modelFromSnapshot?.initialStock != null && uid != null;
 }
