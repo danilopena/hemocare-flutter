@@ -25,11 +25,12 @@ class StockModel {
   StockModel.fromDocument(Map<String, dynamic> documentSnapshot) {
     dosage = documentSnapshot["dosage"];
     email = documentSnapshot["email"];
-    initialStock =documentSnapshot["initialStock"];
+    initialStock = documentSnapshot["initialStock"];
 
     name = documentSnapshot["name"];
     pathology = documentSnapshot["pathology"];
-    percentageUsed = documentSnapshot["percentageUsed"];
+    percentageUsed =
+        double.parse(documentSnapshot["percentageUsed"].toString());
     userId = documentSnapshot["userId"];
   }
 }
