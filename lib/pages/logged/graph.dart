@@ -33,12 +33,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
       store.setUid();
       store.setStockData();
     });
-
-//    if (store?.stockData?.data["name"] == "testebug") {
-//      print(store?.stockData?.data["name"]);
-//      Navigator.of(context).push(
-//          MaterialPageRoute(builder: (context) => InitialStockRegister()));
-//    }
   }
 
   @override
@@ -49,6 +43,95 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
       store.setUid();
       store.setStockData();
     });
+  }
+
+  Widget makeCircularGraph() {
+    return Column(
+      children: <Widget>[
+        Center(
+          child: Text(
+            "Você já usou ${store?.modelFromSnapshot?.percentageUsed}% do seu estoque",
+            textScaleFactor: 1,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.raleway(
+                fontSize: 20),
+          ),
+        ),
+        CircularPercentIndicator(
+          radius: 270.0,
+          animation: true,
+          animationDuration: 2000,
+          lineWidth: 40.0,
+          // ignore: null_aware_before_operator
+          percent: store
+              ?.modelFromSnapshot
+              ?.percentageUsed /
+              100,
+          arcBackgroundColor:
+          ColorTheme.lightPurple,
+          arcType: ArcType.FULL,
+          circularStrokeCap:
+          CircularStrokeCap.round,
+          animateFromLastPercent: true,
+          backgroundColor:
+          Colors.transparent,
+          progressColor: ColorTheme.blue,
+
+          footer: Column(
+            children: <Widget>[
+              FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Row(
+                    mainAxisAlignment:
+                    MainAxisAlignment
+                        .spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Seu estoque atual:",
+                        style: GoogleFonts
+                            .raleway(
+                          fontSize: 24,
+                        ),
+                      ),
+                      Text(
+                        " ${store?.modelFromSnapshot?.initialStock} UI",
+                        style: GoogleFonts.raleway(
+                            fontSize: 28,
+                            fontWeight:
+                            FontWeight
+                                .bold),
+                      )
+                    ],
+                  )),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget makeFinishRegister() {
+    return Column(
+      children: <Widget>[
+        Text(
+          "Seu cadastro apresenta algumas inconsistências...",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.raleway(
+              fontSize: 18),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Utils.gradientPatternButton(
+            "Clique aqui para resolver",
+                () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          InitialStockRegister()));
+            }, context),
+      ],
+    );
   }
 
   @override
@@ -90,90 +173,8 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 Observer(
                                   builder: (_) {
                                     return store.isOkToRender
-                                        ? Column(
-                                            children: <Widget>[
-                                              Center(
-                                                child: Text(
-                                                  "Você já usou ${store?.modelFromSnapshot?.percentageUsed}% do seu estoque",
-                                                  textScaleFactor: 1,
-                                                  textAlign: TextAlign.center,
-                                                  style: GoogleFonts.raleway(
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                              CircularPercentIndicator(
-                                                radius: 270.0,
-                                                animation: true,
-                                                animationDuration: 2000,
-                                                lineWidth: 40.0,
-                                                // ignore: null_aware_before_operator
-                                                percent: store
-                                                        ?.modelFromSnapshot
-                                                        ?.percentageUsed /
-                                                    100,
-                                                arcBackgroundColor:
-                                                    ColorTheme.lightPurple,
-                                                arcType: ArcType.FULL,
-                                                circularStrokeCap:
-                                                    CircularStrokeCap.round,
-                                                animateFromLastPercent: true,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                progressColor: ColorTheme.blue,
-
-                                                footer: Column(
-                                                  children: <Widget>[
-                                                    FittedBox(
-                                                        fit: BoxFit.fitWidth,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: <Widget>[
-                                                            Text(
-                                                              "Seu estoque atual:",
-                                                              style: GoogleFonts
-                                                                  .raleway(
-                                                                fontSize: 24,
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              " ${store?.modelFromSnapshot?.initialStock} UI",
-                                                              style: GoogleFonts.raleway(
-                                                                  fontSize: 28,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            )
-                                                          ],
-                                                        )),
-                                                  ],
-                                                ),
-//blur
-                                              ),
-                                            ],
-                                          )
-                                        : Column(
-                                            children: <Widget>[
-                                              Text(
-                                                "Seu cadastro apresenta algumas inconsistências...",
-                                                textAlign: TextAlign.center,
-                                                style: GoogleFonts.raleway(
-                                                    fontSize: 18),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Utils.gradientPatternButton(
-                                                  "Clique aqui para resolver",
-                                                  () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            InitialStockRegister()));
-                                              }, context),
-                                            ],
-                                          );
+                                        ? makeCircularGraph()
+                                        : makeFinishRegister();
                                   },
                                 ),
                               ],

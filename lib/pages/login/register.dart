@@ -269,6 +269,8 @@ void _submit(
           }).show();
       return;
     } else {
+      String valueWithoutTab = _email.replaceAll("\t", "");
+      _email = valueWithoutTab;
       register(_email, _name, _password, _pathology, _agreeToTerms, context,
           _switchVisibility);
     }
