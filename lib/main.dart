@@ -50,6 +50,7 @@ class _InitialState extends State<Initial> {
       print("H $hour");
     });
     print("Dias e hora: $days || $hour");
+    //todo null safety check
     var day1 = days?.split(",")[0]?.replaceAll("[", "");
     var day2 = days?.split(",")[1]?.replaceAll("]", "");
     //hour  0001-01-01 11:30:00.000

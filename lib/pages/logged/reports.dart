@@ -6,12 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/main.dart';
-import 'package:hemocare/pages/logged/new-infusion.dart';
 import 'package:hemocare/services/local_storage.dart';
 import 'package:hemocare/services/pdf_generator.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+
+import 'new-infusion.dart';
 
 class Reports extends StatefulWidget {
   @override
@@ -23,8 +24,7 @@ class _ReportsState extends State<Reports> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    initializeDateFormatting("pt_BR", null)
-        .then((_) => print("Data inicializada no Report"));
+    initializeDateFormatting("pt_BR", null);
   }
 
   @override
@@ -84,78 +84,114 @@ class _ReportsState extends State<Reports> {
                     isGreaterThan: DateTime.now().subtract(Duration(days: 30)))
                 .snapshots(),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                print("Vazio00000");
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          height: MediaQuery.of(context).size.height / 2,
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: SvgPicture.asset("assets/empty.svg"),
-                        ),
-                        FittedBox(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Você ainda não tem infusões cadastradas! Que tal registrar a ",
-                                style: GoogleFonts.raleway(fontSize: 24),
-                                textAlign: TextAlign.center,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(CupertinoPageRoute(
-                                      fullscreenDialog: true,
-                                      builder: (context) => Infusions()));
-                                },
-                                child: Text(
-                                  "primeira?",
-                                  style: GoogleFonts.raleway(
-                                      color: ColorTheme.lightPurple,
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }
-              return Expanded(
-                child: ListView.builder(
-                    padding: EdgeInsets.all(8),
-                    itemExtent: 200,
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) {
-                      String infusionType =
-                          snapshot.data.documents[index]["infusionType"];
-                      int dosage = snapshot.data.documents[index]["dosage"];
-                      Timestamp date =
-                          snapshot.data.documents[index]["dateTime"];
-                      bool recurring =
-                          snapshot.data.documents[index]["recurring"];
-                      String description =
-                          snapshot.data.documents[index]["description"];
-                      var dateFormatted =
-                          new DateTime.fromMillisecondsSinceEpoch(
-                              date.millisecondsSinceEpoch);
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(Colors.orange),
+                  );
+                  break;
+                case ConnectionState.none:
+                  return Text(
+                    "Sem conexão ativa",
+                    style: GoogleFonts.raleway(fontSize: 18),
+                  );
+                  break;
+                case ConnectionState.active:
+                  print("ACTIVE");
 
-                      return Column(
-                        children: <Widget>[
-                          _buildHistoryCard(context, infusionType, dosage,
-                              dateFormatted, recurring, description),
-                        ],
-                      );
-                    }),
-              );
+                  if (snapshot.data.documents.length == 0) {
+                    print(
+                        "${snapshot.hasData} Empty snapshot should display image");
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              height: MediaQuery.of(context).size.height / 2,
+                              width: MediaQuery.of(context).size.width - 50,
+                              child: SvgPicture.asset('assets/empty.svg'),
+                            ),
+                            FittedBox(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Você ainda não tem infusões cadastradas! Que tal registrar a ",
+                                    style: GoogleFonts.raleway(fontSize: 24),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          CupertinoPageRoute(
+                                              fullscreenDialog: true,
+                                              builder: (context) =>
+                                                  Infusions()));
+                                    },
+                                    child: Text(
+                                      "primeira?",
+                                      style: GoogleFonts.raleway(
+                                          color: ColorTheme.lightPurple,
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasData && snapshot.data != null) {
+                    print("ELSE IF ${snapshot.data.documents.length}");
+                    return Expanded(
+                      child: ListView.builder(
+                          padding: EdgeInsets.all(8),
+                          itemExtent: 200,
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (context, index) {
+                            String infusionType =
+                                snapshot.data.documents[index]["infusionType"];
+                            int dosage =
+                                snapshot.data.documents[index]["dosage"];
+                            Timestamp date =
+                                snapshot.data.documents[index]["dateTime"];
+                            bool recurring =
+                                snapshot.data.documents[index]["recurring"];
+                            String description =
+                                snapshot.data.documents[index]["description"];
+                            var dateFormatted =
+                                new DateTime.fromMillisecondsSinceEpoch(
+                                    date.millisecondsSinceEpoch);
+
+                            return Column(
+                              children: <Widget>[
+                                _buildHistoryCard(context, infusionType, dosage,
+                                    dateFormatted, recurring, description),
+                              ],
+                            );
+                          }),
+                    );
+                  }
+                  break;
+
+                case ConnectionState.done:
+                  print("DONE");
+                  return Column(
+                    children: <Widget>[
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.green),
+                      ),
+                      Text(snapshot.data.documents.toList().length.toString())
+                    ],
+                  );
+                  break;
+              }
+              return Text("End of line");
             },
           ),
         ]),

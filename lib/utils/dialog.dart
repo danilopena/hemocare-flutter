@@ -80,8 +80,7 @@ class CustomDialog {
                 ),
                 InkWell(
                     onTap: () {
-                      removeStock(double.parse(quantity), context)
-                          .then((success) {
+                      removeStock(int.parse(quantity), context).then((success) {
                         DocumentSnapshot ds = success;
                         if (ds.data.length != null) {
                           store.setStockData();
@@ -111,11 +110,13 @@ class CustomDialog {
         buttons: [
           DialogButton(
             child: Text(
-              "CANCELAR",
+              "Cancelar",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(
+                context,
+              );
             },
             gradient: LinearGradient(
                 colors: [ColorTheme.lightPurple, ColorTheme.blue]),
@@ -157,7 +158,7 @@ Future addStock(double quantityInt, BuildContext context) async {
   return response;
 }
 
-Future removeStock(double quantityInt, BuildContext context) async {
+Future removeStock(int quantityInt, BuildContext context) async {
   StockHandler sh = new StockHandler();
   DocumentSnapshot response;
   if (quantityInt == null || quantityInt <= 0) {

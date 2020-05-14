@@ -55,13 +55,15 @@ class StockHandler {
     return documentSnapshot;
   }
 
-  Future removeStock(double value) async {
+  Future removeStock(int value) async {
     String id = localStorage.retrieve("logged_id");
     final databaseReference = Firestore.instance;
     DocumentSnapshot documentSnapshot;
-    var currentStock;
+    int currentStock;
+    double doubleValue = value.toDouble();
+
     double percentageUsed = 0.0;
-    double remainingStock = 0.0;
+    int remainingStock = 0;
     await databaseReference
         .collection("users")
         .document(id)
@@ -71,7 +73,7 @@ class StockHandler {
       documentSnapshot = ds;
     });
     if (currentStock != 0) {
-      percentageUsed = (value / currentStock) * 100;
+      percentageUsed = (doubleValue / currentStock) * 100;
       remainingStock = currentStock - value;
       if (remainingStock < 0) {
         throw PlatformException(

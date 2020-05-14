@@ -50,11 +50,10 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
       children: <Widget>[
         Center(
           child: Text(
-            "Você já usou ${store?.modelFromSnapshot?.percentageUsed}% do seu estoque",
+            "Você já usou ${store?.modelFromSnapshot?.percentageUsed?.ceil()}% do seu estoque",
             textScaleFactor: 1,
             textAlign: TextAlign.center,
-            style: GoogleFonts.raleway(
-                fontSize: 20),
+            style: GoogleFonts.raleway(fontSize: 20),
           ),
         ),
         CircularPercentIndicator(
@@ -63,18 +62,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
           animationDuration: 2000,
           lineWidth: 40.0,
           // ignore: null_aware_before_operator
-          percent: store
-              ?.modelFromSnapshot
-              ?.percentageUsed /
-              100,
-          arcBackgroundColor:
-          ColorTheme.lightPurple,
+          percent: store?.modelFromSnapshot?.percentageUsed / 100,
+          arcBackgroundColor: ColorTheme.lightPurple,
           arcType: ArcType.FULL,
-          circularStrokeCap:
-          CircularStrokeCap.round,
+          circularStrokeCap: CircularStrokeCap.round,
           animateFromLastPercent: true,
-          backgroundColor:
-          Colors.transparent,
+          backgroundColor: Colors.transparent,
           progressColor: ColorTheme.blue,
 
           footer: Column(
@@ -82,24 +75,18 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
               FittedBox(
                   fit: BoxFit.fitWidth,
                   child: Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment
-                        .spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
                         "Seu estoque atual:",
-                        style: GoogleFonts
-                            .raleway(
+                        style: GoogleFonts.raleway(
                           fontSize: 24,
                         ),
                       ),
                       Text(
                         " ${store?.modelFromSnapshot?.initialStock} UI",
                         style: GoogleFonts.raleway(
-                            fontSize: 28,
-                            fontWeight:
-                            FontWeight
-                                .bold),
+                            fontSize: 28, fontWeight: FontWeight.bold),
                       )
                     ],
                   )),
@@ -116,20 +103,15 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
         Text(
           "Seu cadastro apresenta algumas inconsistências...",
           textAlign: TextAlign.center,
-          style: GoogleFonts.raleway(
-              fontSize: 18),
+          style: GoogleFonts.raleway(fontSize: 18),
         ),
         SizedBox(
           height: 10,
         ),
-        Utils.gradientPatternButton(
-            "Clique aqui para resolver",
-                () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          InitialStockRegister()));
-            }, context),
+        Utils.gradientPatternButton("Clique aqui para resolver", () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => InitialStockRegister()));
+        }, context),
       ],
     );
   }
@@ -210,7 +192,12 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                       _quantityController,
                                       _quantity.toString(),
                                       _switchVisibility)
-                                  .show();
+                                  .show()
+                                  .then((value) {
+                                autorun((_) {
+                                  store.setStockData();
+                                });
+                              });
                             }, context),
                             SizedBox(
                               height: 10,

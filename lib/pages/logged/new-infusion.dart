@@ -361,7 +361,7 @@ void createInfusion(
   }).then((success) {
     print("Will remove");
     StockHandler sh = new StockHandler();
-    sh.removeStock(dosage.toDouble()).then((success) {
+    sh.removeStock(dosage).then((success) {
       AwesomeDialog(
           context: context,
           dialogType: DialogType.SUCCES,

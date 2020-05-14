@@ -1,7 +1,8 @@
 class StockModel {
   int dosage;
   String email;
-  double initialStock;
+  //todo turn into int
+  int initialStock;
   String name;
   String pathology;
   double percentageUsed;
@@ -25,12 +26,12 @@ class StockModel {
   StockModel.fromDocument(Map<String, dynamic> documentSnapshot) {
     dosage = documentSnapshot["dosage"];
     email = documentSnapshot["email"];
+    // Unhandled Exception: type 'int' is not a subtype of type 'double'\
+    //  Unhandled Exception: type 'double' is not a subtype of type 'int'
     initialStock = documentSnapshot["initialStock"];
-
     name = documentSnapshot["name"];
     pathology = documentSnapshot["pathology"];
-    percentageUsed =
-        double.parse(documentSnapshot["percentageUsed"].toString());
+    percentageUsed = documentSnapshot["percentageUsed"];
     userId = documentSnapshot["userId"];
   }
 }
