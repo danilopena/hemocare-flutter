@@ -109,18 +109,19 @@ class _ReportsState extends State<Reports> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Container(
-                              height: MediaQuery.of(context).size.height / 2,
-                              width: MediaQuery.of(context).size.width - 50,
+                              height: 200,
+                              width: 200,
                               child: SvgPicture.asset('assets/empty.svg'),
                             ),
-                            FittedBox(
-                              child: Column(
+                            Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
                                     "Você ainda não tem infusões cadastradas! Que tal registrar a ",
                                     style: GoogleFonts.raleway(fontSize: 24),
                                     textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.visible,
                                   ),
                                   GestureDetector(
                                     onTap: () {
@@ -134,14 +135,13 @@ class _ReportsState extends State<Reports> {
                                       "primeira?",
                                       style: GoogleFonts.raleway(
                                           color: ColorTheme.lightPurple,
-                                          fontSize: 32,
+                                          fontSize: 30,
                                           fontWeight: FontWeight.bold),
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ],
                               ),
-                            )
                           ],
                         ),
                       ),

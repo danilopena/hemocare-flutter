@@ -32,7 +32,7 @@ class _InfusionsState extends State<Infusions> {
   //recorrente
   bool _recurring;
   //descricao
-  String description;
+  String description = "";
   FocusNode _descriptionFocus = new FocusNode();
   TextEditingController _descriptionController = new TextEditingController();
   //calendar
@@ -309,34 +309,45 @@ void _submit(
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
   }
+
   if (recurring) {
     if (infusionType == null ||
         dosage == null ||
         description == null ||
         datetime == null) {
       AwesomeDialog(
-              context: context,
-              dialogType: DialogType.WARNING,
-              animType: AnimType.BOTTOMSLIDE,
-              tittle: "AVISO!",
-              desc: 'Por favor, informe todos os campos obrigatórios',
-              btnOkOnPress: () {})
+          context: context,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: "AVISO!",
+          desc: 'Por favor, informe todos os campos obrigatórios',
+          btnOkOnPress: () {})
           .show();
     } else {
-      if (infusionType == null || dosage == null || datetime == null) {
-        AwesomeDialog(
-                context: context,
-                dialogType: DialogType.WARNING,
-                animType: AnimType.BOTTOMSLIDE,
-                tittle: "AVISO!",
-                desc: 'Por favor, informe todos os campos obrigatórios',
-                btnOkOnPress: () {})
-            .show();
-      } else {
         _switchVisibility();
         createInfusion(infusionType, dosage, recurring, description, datetime,
             context, _switchVisibility);
-      }
+    }
+  } else {
+    if (infusionType == null || dosage == null || datetime == null) {
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: "AVISO!",
+          desc: 'Por favor, informe todos os campos obrigatórios',
+          btnOkOnPress: () {})
+          .show();
+    } else {
+      _switchVisibility();
+      createInfusion(
+          infusionType,
+          dosage,
+          recurring,
+          description,
+          datetime,
+          context,
+          _switchVisibility);
     }
   }
 }
