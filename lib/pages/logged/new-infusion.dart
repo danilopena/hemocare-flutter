@@ -32,7 +32,7 @@ class _InfusionsState extends State<Infusions> {
   //recorrente
   bool _recurring;
   //descricao
-  String description;
+  String description = "";
   FocusNode _descriptionFocus = new FocusNode();
   TextEditingController _descriptionController = new TextEditingController();
   //calendar
@@ -263,17 +263,17 @@ class FittedHeader extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 Text(
                   "Adicionar infusão",
                   textScaleFactor: 1,
                   style: GoogleFonts.raleway(
                       fontSize: 32, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 16),
                 Center(
                   child: Text(
-                    "Registre rapidamente sua infusão para análises futuras",
+                    "Registre rapidamente sua infusão\n para análises futuras",
                     textScaleFactor: 1,
                     style: GoogleFonts.raleway(
                       fontSize: 24,
@@ -309,34 +309,45 @@ void _submit(
   if (_formKey.currentState.validate()) {
     _formKey.currentState.save();
   }
+
   if (recurring) {
     if (infusionType == null ||
         dosage == null ||
         description == null ||
         datetime == null) {
       AwesomeDialog(
-              context: context,
-              dialogType: DialogType.WARNING,
-              animType: AnimType.BOTTOMSLIDE,
-              tittle: "AVISO!",
-              desc: 'Por favor, informe todos os campos obrigatórios',
-              btnOkOnPress: () {})
+          context: context,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: "AVISO!",
+          desc: 'Por favor, informe todos os campos obrigatórios',
+          btnOkOnPress: () {})
           .show();
     } else {
-      if (infusionType == null || dosage == null || datetime == null) {
-        AwesomeDialog(
-                context: context,
-                dialogType: DialogType.WARNING,
-                animType: AnimType.BOTTOMSLIDE,
-                tittle: "AVISO!",
-                desc: 'Por favor, informe todos os campos obrigatórios',
-                btnOkOnPress: () {})
-            .show();
-      } else {
         _switchVisibility();
         createInfusion(infusionType, dosage, recurring, description, datetime,
             context, _switchVisibility);
-      }
+    }
+  } else {
+    if (infusionType == null || dosage == null || datetime == null) {
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.WARNING,
+          animType: AnimType.BOTTOMSLIDE,
+          tittle: "AVISO!",
+          desc: 'Por favor, informe todos os campos obrigatórios',
+          btnOkOnPress: () {})
+          .show();
+    } else {
+      _switchVisibility();
+      createInfusion(
+          infusionType,
+          dosage,
+          recurring,
+          description,
+          datetime,
+          context,
+          _switchVisibility);
     }
   }
 }
@@ -359,8 +370,9 @@ void createInfusion(
     "description": description,
     "dateTime": datetime,
   }).then((success) {
+    print("Will remove");
     StockHandler sh = new StockHandler();
-    sh.removeStock(dosage.toDouble()).then((success) {
+    sh.removeStock(dosage).then((success) {
       AwesomeDialog(
           context: context,
           dialogType: DialogType.SUCCES,

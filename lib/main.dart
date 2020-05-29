@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/pages/logged/graph.dart';
 import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/pages/login/login.dart';
 import 'package:hemocare/pages/login/register.dart';
@@ -49,21 +50,12 @@ class _InitialState extends State<Initial> {
       print("H $hour");
     });
     print("Dias e hora: $days || $hour");
-    var day1 = days.split(",")[0].replaceAll("[", "");
-    var day2 = days.split(",")[1].replaceAll("]", "");
+    //todo null safety check
+    var day1 = days?.split(",")[0]?.replaceAll("[", "");
+    var day2 = days?.split(",")[1]?.replaceAll("]", "");
     //hour  0001-01-01 11:30:00.000
     var parsedDate = DateTime.parse(hour);
 
-    /*
-       static const Sunday = Day(1);
-  static const Monday = Day(2);
-  static const Tuesday = Day(3);
-  static const Wednesday = Day(4);
-  static const Thursday = Day(5);
-  static const Friday = Day(6);
-  static const Saturday = Day(7);
-
-     */
     switch (day1) {
       case "days.monday":
         firstDay = 2;
@@ -183,6 +175,10 @@ class _InitialState extends State<Initial> {
     if (payload != null) {
       debugPrint("Notification payload $payload");
     }
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Graph()),
+    );
   }
 
   Future onDidReceiveLocalNotification(

@@ -1,5 +1,4 @@
-import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
-import 'package:circular_bottom_navigation/tab_item.dart';
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hemocare/pages/logged/graph.dart';
@@ -16,24 +15,20 @@ class _TabBarControllerState extends State<TabBarController> {
   int currentPage = 0;
   int selectedPos;
   GlobalKey bottomNavigationKey = GlobalKey();
-  CircularBottomNavigationController _navigationController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     selectedPos = 0;
-    _navigationController = new CircularBottomNavigationController(selectedPos);
   }
 
   @override
   Widget build(BuildContext context) {
-    List<TabItem> tabItems = List.of([
-      TabItem(FontAwesomeIcons.home, "Início", ColorTheme.lightPurple),
-      TabItem(FontAwesomeIcons.syringe, "Infusões", ColorTheme.lightPurple),
-      TabItem(
-          FontAwesomeIcons.fileMedicalAlt, "Relatório", ColorTheme.lightPurple),
-    ]);
-
+    List<TabData> fancyTabItems = [
+      TabData(iconData: FontAwesomeIcons.home, title: "Início"),
+      TabData(iconData: FontAwesomeIcons.syringe, title: "Infusões"),
+      TabData(iconData: FontAwesomeIcons.fileMedicalAlt, title: "Relatório"),
+    ];
     return Scaffold(
       body: Container(
         child: Center(
@@ -42,17 +37,18 @@ class _TabBarControllerState extends State<TabBarController> {
       ),
       bottomNavigationBar: Container(
         child: SafeArea(
-          child: CircularBottomNavigation(
-            tabItems,
-            iconsSize: 24,
-            controller: _navigationController,
-            selectedCallback: (int selected) {
-              setState(() {
-                selectedPos = selected;
-              });
-            },
-          ),
-        ),
+            child: FancyBottomNavigation(
+          tabs: fancyTabItems,
+          circleColor: ColorTheme.lightPurple,
+          activeIconColor: Colors.white,
+          inactiveIconColor: Colors.grey,
+          textColor: Colors.black,
+          onTabChangedListener: (position) {
+            setState(() {
+              selectedPos = position;
+            });
+          },
+        )),
       ),
     );
   }

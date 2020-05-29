@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 
 class MyAppBarTheme extends AppBar {
-  MyAppBarTheme({Key key, String title})
+  MyAppBarTheme({Key key, String title, bool automaticallyImplyLeading = true })
       : super(
+            automaticallyImplyLeading: automaticallyImplyLeading,
             key: key,
             elevation: 0.0,
             bottom: PreferredSize(

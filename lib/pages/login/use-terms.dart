@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hemocare/utils/app-bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class UseTerms extends StatefulWidget {
@@ -23,7 +24,7 @@ class _UseTermsState extends State<UseTerms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Termos de uso')),
+      appBar: MyAppBarTheme(title: 'Termos de uso'),
       body: WebView(
         initialUrl: '',
         javascriptMode: JavascriptMode.unrestricted,

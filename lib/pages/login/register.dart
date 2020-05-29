@@ -269,6 +269,8 @@ void _submit(
           }).show();
       return;
     } else {
+      String valueWithoutTab = _email.replaceAll("\t", "");
+      _email = valueWithoutTab;
       register(_email, _name, _password, _pathology, _agreeToTerms, context,
           _switchVisibility);
     }
@@ -298,7 +300,7 @@ void register(String email, String name, String password, String pathology,
       'email': email,
       'name': name,
       'pathology': pathology,
-      'userId': loggedUser
+      'userId': loggedUser,
     }).catchError((error) => _switchVisibility);
     ls.save("logged_id", loggedUser);
     Navigator.push(context,

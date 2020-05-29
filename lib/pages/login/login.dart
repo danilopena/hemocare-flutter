@@ -120,7 +120,6 @@ class _LoginState extends State<Login> {
                         ),
                         onTap: () => Navigator.of(context).push(
                             CupertinoPageRoute(
-                                fullscreenDialog: true,
                                 builder: (context) => ForgotPassword())),
                       ),
                     ),
@@ -166,6 +165,8 @@ void _submit(GlobalKey<FormState> _formKey, String _email, String _password,
           .show();
       return;
     } else {
+      String valueWithoutTab = _email.replaceAll("\t", "");
+      _email = valueWithoutTab;
       login(_email, _password, context, _switchVisibility);
     }
   }
@@ -207,10 +208,11 @@ void login(String email, String password, BuildContext context,
 }
 
 String validateMail(String value) {
+  String valueWithoutTab = value.replaceAll("\t", "");
   Pattern pattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   RegExp regex = new RegExp(pattern);
-  if (!regex.hasMatch(value))
+  if (!regex.hasMatch(valueWithoutTab))
     return 'Por favor insira um email válido';
   else
     return null;

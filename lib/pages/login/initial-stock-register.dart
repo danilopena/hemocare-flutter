@@ -7,6 +7,7 @@ import 'package:hemocare/pages/logged/tab-bar-controller.dart';
 import 'package:hemocare/services/stock.dart';
 import 'package:hemocare/utils/AuthErrors.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
+import 'package:hemocare/utils/app-bar.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
@@ -47,12 +48,10 @@ class _InitialStockRegisterState extends State<InitialStockRegister> {
         indicator: BallSpinFadeLoaderIndicator(),
       ),
       child: Scaffold(
-          appBar: AppBar(
+          appBar: MyAppBarTheme(
             automaticallyImplyLeading: false,
-            title: Text(
-              "Informações iniciais",
-              style: GoogleFonts.raleway(fontSize: 24),
-            ),
+            title:
+              "Informações iniciais"
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
