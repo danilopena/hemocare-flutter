@@ -16,13 +16,13 @@ class CustomDialog {
       String quantity,
       Function _switchVisibility) {
     controller.clear();
-    StockStore store = StockStore();
-    var alertStyle = AlertStyle(
+    final StockStore store = StockStore();
+    final alertStyle = AlertStyle(
         animationType: AnimationType.fromBottom,
         isCloseButton: false,
         isOverlayTapDismiss: false,
         descStyle: TextStyle(fontWeight: FontWeight.bold),
-        animationDuration: Duration(milliseconds: 400),
+        animationDuration: const Duration(milliseconds: 400),
         alertBorder: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
             side: BorderSide(
@@ -30,7 +30,7 @@ class CustomDialog {
             )),
         titleStyle: TextStyle(color: ColorTheme.lightPurple));
     return Alert(
-        title: "Nova infusão",
+        title: 'Nova infusão',
         context: context,
         style: alertStyle,
         content: Row(
@@ -40,7 +40,7 @@ class CustomDialog {
               width: (MediaQuery.of(context).size.width) / 4,
               child: TextField(
                 decoration: InputDecoration(
-                    border: InputBorder.none, hintText: "Quantidade"),
+                    border: InputBorder.none, hintText: 'Quantidade'),
                 controller: controller,
                 onChanged: (value) => quantity = value,
                 onSubmitted: (value) => quantity = value,
@@ -52,7 +52,8 @@ class CustomDialog {
               children: <Widget>[
                 InkWell(
                     onTap: () {
-                      addStock(double.parse(quantity), context).then((success) {
+                      addStock(double.parse(quantity), context)
+                          .then((success) async {
                         DocumentSnapshot ds = success;
                         if (ds.data.length != null) {
                           store.setStockData();
@@ -75,7 +76,7 @@ class CustomDialog {
                         ),
                       ),
                     )),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 InkWell(
@@ -97,7 +98,7 @@ class CustomDialog {
                           borderRadius: BorderRadius.circular(20)),
                       child: Center(
                         child: Text(
-                          "-",
+                          '-',
                           style: GoogleFonts.raleway(
                               fontSize: 40, color: Colors.white),
                         ),
@@ -110,7 +111,7 @@ class CustomDialog {
         buttons: [
           DialogButton(
             child: Text(
-              "Cancelar",
+              'Cancelar',
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
             onPressed: () {
@@ -148,7 +149,7 @@ Future addStock(double quantityInt, BuildContext context) async {
             context: context,
             dialogType: DialogType.ERROR,
             animType: AnimType.BOTTOMSLIDE,
-            tittle: "Erro!",
+            tittle: 'Erro!',
             desc: 'Erro em ${e.code}',
             btnOkOnPress: () {})
         .show();
@@ -166,7 +167,7 @@ Future removeStock(int quantityInt, BuildContext context) async {
             context: context,
             dialogType: DialogType.WARNING,
             animType: AnimType.BOTTOMSLIDE,
-            tittle: "Erro!",
+            tittle: 'Erro!',
             desc: 'Informe um valor positivo e maior que zero para a dosagem',
             btnOkOnPress: () {})
         .show();
