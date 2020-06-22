@@ -22,7 +22,7 @@ class Graph extends StatefulWidget {
 class _GraphState extends State<Graph> with WidgetsBindingObserver {
   bool _isLoading = false;
   StockStore store;
-  TextEditingController _quantityController = new TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
   int _quantity = 0;
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
       children: <Widget>[
         Center(
           child: Text(
-            "Você já usou ${store?.modelFromSnapshot?.percentageUsed?.ceil()}% do seu estoque",
+            'Você já usou ${store?.modelFromSnapshot?.percentageUsed?.ceil()}% do seu estoque',
             textScaleFactor: 1,
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(fontSize: 20),
@@ -78,15 +78,17 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "Seu estoque atual:",
+                        'Seu estoque atual:',
                         style: GoogleFonts.raleway(
-                          fontSize: 24,
+                          fontSize: 22,
                         ),
                       ),
                       Text(
-                        " ${store?.modelFromSnapshot?.initialStock} UI",
+                        ' ${store?.modelFromSnapshot?.initialStock} UI',
                         style: GoogleFonts.raleway(
-                            fontSize: 28, fontWeight: FontWeight.bold),
+                            letterSpacing: 1.2,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold),
                       )
                     ],
                   )),
@@ -101,16 +103,16 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     return Column(
       children: <Widget>[
         Text(
-          "Seu cadastro apresenta algumas inconsistências...",
+          'Seu cadastro apresenta algumas inconsistências...',
           textAlign: TextAlign.center,
           style: GoogleFonts.raleway(fontSize: 18),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
-        Utils.gradientPatternButton("Clique aqui para resolver", () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => InitialStockRegister()));
+        Utils.gradientPatternButton('Clique aqui para resolver', () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => InitialStockRegister()));
         }, context),
       ],
     );
@@ -132,24 +134,24 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
               shrinkWrap: true,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               children: <Widget>[
                                 FittedBox(
                                     fit: BoxFit.fitWidth,
                                     child: Text(
-                                      "Seu Estoque",
+                                      'Seu Estoque',
                                       textScaleFactor: 1,
                                       style: GoogleFonts.raleway(
                                           fontSize: 32,
                                           fontWeight: FontWeight.bold),
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Observer(
@@ -161,7 +163,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 ),
                               ],
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         FittedBox(
@@ -170,7 +172,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  "Gatilhos para te ajudar",
+                                  'Gatilhos para te ajudar',
                                   textScaleFactor: 1,
                                   style: GoogleFonts.raleway(
                                       fontSize: 28,
@@ -178,15 +180,14 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 )
                               ],
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Utils.gradientPatternButton("Atualizar estoque",
+                            Utils.gradientPatternButton('Atualizar estoque',
                                 () {
-                              //abrir novo alert
                               CustomDialog.showDialog(
                                       context,
                                       _quantityController,
@@ -199,17 +200,17 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                 });
                               });
                             }, context),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            Utils.gradientPatternButton("Profilaxia", () {
+                            Utils.gradientPatternButton('Profilaxia', () {
                               CustomCalendar.showCalendar(context).show();
                             }, context),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Utils.gradientPatternButton(
-                                "Retirada automática", () {}, context),
+                                'Retirada automática', () {}, context),
                           ],
                         )
                       ]),
@@ -220,7 +221,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     );
   }
 
-  _switchVisibility() {
+  void _switchVisibility() {
     setState(() {
       _isLoading = !_isLoading;
     });

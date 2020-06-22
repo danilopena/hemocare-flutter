@@ -43,7 +43,7 @@ abstract class _StockStore with Store {
         setSnapshot(snapshot);
       }
     }).whenComplete(() {
-      model = StockModel.fromDocument(stockData.data);
+      model = StockModel.fromDocument(stockData?.data);
       setModel(model);
     });
   }

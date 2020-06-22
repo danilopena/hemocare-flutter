@@ -32,7 +32,7 @@ class MyDropDown extends FormField<dynamic> {
           builder: (FormFieldState<dynamic> state) {
             return Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   border: Border.all(width: 1, color: ColorTheme.borderField)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +41,7 @@ class MyDropDown extends FormField<dynamic> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       fillColor: Colors.transparent,
-                      contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                      contentPadding: const EdgeInsets.fromLTRB(12, 12, 8, 0),
                       labelText: titleText,
                       filled: true,
                     ),

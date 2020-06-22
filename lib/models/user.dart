@@ -1,10 +1,10 @@
 class User {
-  double dosage;
+  num dosage;
   String email;
-  double initialStock;
+  num initialStock;
   String name;
   String pathology;
-  double percentageUsed;
+  num percentageUsed;
   String userId;
 
   User(
@@ -17,24 +17,24 @@ class User {
       this.userId});
 
   User.fromJson(Map<String, dynamic> json) {
-    dosage = json['dosage'];
-    email = json['email'];
-    initialStock = double.parse(json['initialStock']);
-    name = json['name'];
-    pathology = json['pathology'];
-    percentageUsed = double.parse(json['percentageUsed']);
-    userId = json['userId'];
+    dosage = json['dosage'] as num;
+    email = json['email'] as String;
+    initialStock = json['initialStock'] as num;
+    name = json['name'] as String;
+    pathology = json['pathology'] as String;
+    percentageUsed = json['percentageUsed'] as num;
+    userId = json['userId'] as String;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dosage'] = this.dosage;
-    data['email'] = this.email;
-    data['initialStock'] = this.initialStock;
-    data['name'] = this.name;
-    data['pathology'] = this.pathology;
-    data['percentageUsed'] = this.percentageUsed;
-    data['userId'] = this.userId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['dosage'] = dosage;
+    data['email'] = email;
+    data['initialStock'] = initialStock;
+    data['name'] = name;
+    data['pathology'] = pathology;
+    data['percentageUsed'] = percentageUsed;
+    data['userId'] = userId;
     return data;
   }
 }

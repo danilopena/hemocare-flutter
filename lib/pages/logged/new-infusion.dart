@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:intl/locale.dart'
 
 class Infusions extends StatefulWidget {
   @override
@@ -21,22 +22,22 @@ class Infusions extends StatefulWidget {
 }
 
 class _InfusionsState extends State<Infusions> {
-  String _infusionType = "";
+  String _infusionType = '';
   int dosage = 0;
   //form
   bool validate = true;
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   //dosage
-  FocusNode _dosageFocus = new FocusNode();
-  TextEditingController _dosageController = new TextEditingController();
+  final FocusNode _dosageFocus = FocusNode();
+  final TextEditingController _dosageController = TextEditingController();
   //recorrente
   bool _recurring;
   //descricao
   String description = "";
-  FocusNode _descriptionFocus = new FocusNode();
-  TextEditingController _descriptionController = new TextEditingController();
+  final FocusNode _descriptionFocus = FocusNode();
+  final TextEditingController _descriptionController = TextEditingController();
   //calendar
-  final format = DateFormat("dd/MM/yyy 'às' HH:mm");
+  final DateFormat format = DateFormat("dd/MM/yyy 'às' HH:mm");
   DateTime dateTime;
   bool _isLoading;
 
@@ -74,7 +75,7 @@ class _InfusionsState extends State<Infusions> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                FittedHeader(),
+                const FittedHeader(),
                 // container de tipo de infusao
                 Form(
                   key: _formKey,
@@ -85,12 +86,12 @@ class _InfusionsState extends State<Infusions> {
                       children: <Widget>[
                         MyDropDown(
                           titleText: 'Selecione uma opção',
-                          hintText: "Selecione o tipo de infusão",
+                          hintText: 'Selecione o tipo de infusão',
                           value: _infusionType,
                           autovalidate: false,
                           validator: (value) {
                             if (value == null) {
-                              return "Escolha um tipo de infusao ";
+                              return 'Escolha um tipo de infusao ';
                             }
                             return null;
                           },
@@ -118,15 +119,15 @@ class _InfusionsState extends State<Infusions> {
                           textField: 'display',
                           valueField: 'value',
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         TextFormField(
                           focusNode: _dosageFocus,
                           controller: _dosageController,
                           decoration: InputDecoration(
-                              labelText: "Ex: 2000",
-                              hintText: "Dosagem utilizada",
+                              labelText: 'Ex: 2000',
+                              hintText: 'Dosagem utilizada',
                               fillColor: Colors.white,
                               prefixIcon: Icon(Icons.healing),
                               border: OutlineInputBorder(
@@ -138,7 +139,7 @@ class _InfusionsState extends State<Infusions> {
                           onFieldSubmitted: (value) =>
                               dosage = int.parse(value),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         FittedBox(
@@ -147,7 +148,7 @@ class _InfusionsState extends State<Infusions> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                "Essa queixa é recorrente?",
+                                'Essa queixa é recorrente?',
                                 textScaleFactor: 1,
                                 style: GoogleFonts.raleway(fontSize: 18),
                               ),
@@ -166,7 +167,7 @@ class _InfusionsState extends State<Infusions> {
                           visible: _recurring,
                           child: Column(
                             children: <Widget>[
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               TextFormField(
@@ -174,8 +175,8 @@ class _InfusionsState extends State<Infusions> {
                                 controller: _descriptionController,
                                 decoration: InputDecoration(
                                   hintText:
-                                      "Ex: Ao jogar futebol, torci o tornozelo.",
-                                  labelText: "Coloque uma descrição do fato",
+                                      'Ex: Ao jogar futebol, torci o tornozelo.',
+                                  labelText: 'Coloque uma descrição do fato',
                                   fillColor: Colors.white,
                                   prefixIcon: Icon(Icons.description),
                                   border: OutlineInputBorder(
@@ -189,7 +190,7 @@ class _InfusionsState extends State<Infusions> {
                           ),
                         ),
 
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         //datepicker
@@ -197,20 +198,20 @@ class _InfusionsState extends State<Infusions> {
                           format: format,
                           decoration: InputDecoration(
                             hintText:
-                                "Escolha o dia e a hora que você aplicou o fator",
+                                'Escolha o dia e a hora que você aplicou o fator',
                             fillColor: Colors.white,
-                            prefixIcon: Icon(Icons.perm_contact_calendar),
+                            prefixIcon: Icon(Icons.calendar_today),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           ),
                           onShowPicker: (context, currentValue) async {
-                            final date = await showDatePicker(
+                            final DateTime date = await showDatePicker(
                                 context: context,
                                 firstDate: DateTime(1900),
                                 initialDate: currentValue ?? DateTime.now(),
                                 lastDate: DateTime(2100));
                             if (date != null) {
-                              final time = await showTimePicker(
+                              final TimeOfDay time = await showTimePicker(
                                 context: context,
                                 initialTime: TimeOfDay.fromDateTime(
                                     currentValue ?? DateTime.now()),
@@ -226,7 +227,7 @@ class _InfusionsState extends State<Infusions> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Utils.gradientPatternButton("Pronto!", () {
@@ -316,38 +317,32 @@ void _submit(
         description == null ||
         datetime == null) {
       AwesomeDialog(
-          context: context,
-          dialogType: DialogType.WARNING,
-          animType: AnimType.BOTTOMSLIDE,
-          tittle: "AVISO!",
-          desc: 'Por favor, informe todos os campos obrigatórios',
-          btnOkOnPress: () {})
+              context: context,
+              dialogType: DialogType.WARNING,
+              animType: AnimType.BOTTOMSLIDE,
+              tittle: "AVISO!",
+              desc: 'Por favor, informe todos os campos obrigatórios',
+              btnOkOnPress: () {})
           .show();
     } else {
-        _switchVisibility();
-        createInfusion(infusionType, dosage, recurring, description, datetime,
-            context, _switchVisibility);
+      _switchVisibility();
+      createInfusion(infusionType, dosage, recurring, description, datetime,
+          context, _switchVisibility);
     }
   } else {
     if (infusionType == null || dosage == null || datetime == null) {
       AwesomeDialog(
-          context: context,
-          dialogType: DialogType.WARNING,
-          animType: AnimType.BOTTOMSLIDE,
-          tittle: "AVISO!",
-          desc: 'Por favor, informe todos os campos obrigatórios',
-          btnOkOnPress: () {})
+              context: context,
+              dialogType: DialogType.WARNING,
+              animType: AnimType.BOTTOMSLIDE,
+              tittle: "AVISO!",
+              desc: 'Por favor, informe todos os campos obrigatórios',
+              btnOkOnPress: () {})
           .show();
     } else {
       _switchVisibility();
-      createInfusion(
-          infusionType,
-          dosage,
-          recurring,
-          description,
-          datetime,
-          context,
-          _switchVisibility);
+      createInfusion(infusionType, dosage, recurring, description, datetime,
+          context, _switchVisibility);
     }
   }
 }

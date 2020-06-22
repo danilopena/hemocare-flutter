@@ -25,9 +25,9 @@ class _TabBarControllerState extends State<TabBarController> {
   @override
   Widget build(BuildContext context) {
     List<TabData> fancyTabItems = [
-      TabData(iconData: FontAwesomeIcons.home, title: "Início"),
-      TabData(iconData: FontAwesomeIcons.syringe, title: "Infusões"),
-      TabData(iconData: FontAwesomeIcons.fileMedicalAlt, title: "Relatório"),
+      TabData(iconData: FontAwesomeIcons.home, title: 'Início'),
+      TabData(iconData: FontAwesomeIcons.syringe, title: 'Infusões'),
+      TabData(iconData: FontAwesomeIcons.fileMedicalAlt, title: 'Relatório'),
     ];
     return Scaffold(
       body: Container(
@@ -53,7 +53,7 @@ class _TabBarControllerState extends State<TabBarController> {
     );
   }
 
-  _getPage(int page) {
+  StatefulWidget _getPage(int page) {
     switch (page) {
       case 0:
         return Graph();

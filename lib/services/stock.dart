@@ -59,27 +59,27 @@ class StockHandler {
     String id = localStorage.retrieve("logged_id");
     final databaseReference = Firestore.instance;
     DocumentSnapshot documentSnapshot;
-    int currentStock;
+    num currentStock;
     double doubleValue = value.toDouble();
 
     double percentageUsed = 0.0;
-    int remainingStock = 0;
+    num remainingStock = 0;
     await databaseReference
         .collection("users")
         .document(id)
         .get()
         .then((DocumentSnapshot ds) {
-      currentStock = ds.data["initialStock"];
+      currentStock = ds.data['initialStock'] as num;
       documentSnapshot = ds;
     });
     if (currentStock != 0) {
       percentageUsed = (doubleValue / currentStock) * 100;
-      remainingStock = currentStock - value;
+      remainingStock = (currentStock - value) as num;
       if (remainingStock < 0) {
         throw PlatformException(
-            code: "Erro na retirada do estoque",
+            code: 'Erro na retirada do estoque',
             message:
-                "Não é possível retirar essa quantidade do estoque. Reveja os valores");
+                'Não é possível retirar essa quantidade do estoque. Reveja os valores');
       }
       await databaseReference.collection("users").document(id).updateData({
         'percentageUsed': percentageUsed,

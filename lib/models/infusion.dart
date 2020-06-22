@@ -1,11 +1,4 @@
 class Infusion {
-  String dateTime;
-  String description;
-  int dosage;
-  String infusionType;
-  bool recurring;
-  String userId;
-
   Infusion(
       {this.dateTime,
       this.description,
@@ -13,24 +6,29 @@ class Infusion {
       this.infusionType,
       this.recurring,
       this.userId});
-
   Infusion.fromJson(Map<String, dynamic> json) {
-    dateTime = json['dateTime'];
-    description = json['description'];
-    dosage = json['dosage'];
-    infusionType = json['infusionType'];
-    recurring = json['recurring'];
-    userId = json['userId'];
+    dateTime = json['dateTime'] as String;
+    description = json['description'] as String;
+    dosage = json['dosage'] as num;
+    infusionType = json['infusionType'] as String;
+    recurring = json['recurring'] as bool;
+    userId = json['userId'] as String;
   }
+  String dateTime;
+  String description;
+  num dosage;
+  String infusionType;
+  bool recurring;
+  String userId;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dateTime'] = this.dateTime;
-    data['description'] = this.description;
-    data['dosage'] = this.dosage;
-    data['infusionType'] = this.infusionType;
-    data['recurring'] = this.recurring;
-    data['userId'] = this.userId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['dateTime'] = dateTime;
+    data['description'] = description;
+    data['dosage'] = dosage;
+    data['infusionType'] = infusionType;
+    data['recurring'] = recurring;
+    data['userId'] = userId;
     return data;
   }
 }

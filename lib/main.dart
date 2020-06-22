@@ -11,14 +11,14 @@ import 'package:hemocare/pages/login/use-terms.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/utils.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:intl/locale.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        debugShowCheckedModeBanner: false, home: new Initial());
+    return MaterialApp( debugShowCheckedModeBanner: false, home: new Initial());
   }
 }
 
@@ -32,7 +32,7 @@ class _InitialState extends State<Initial> {
   var loggedUser;
 
   //notifications
-  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   var initializationSettingsAndroid;
   var initializationSettingsIOS;
@@ -51,8 +51,15 @@ class _InitialState extends State<Initial> {
     });
     print("Dias e hora: $days || $hour");
     //todo null safety check
-    var day1 = days?.split(",")[0]?.replaceAll("[", "");
-    var day2 = days?.split(",")[1]?.replaceAll("]", "");
+    String day1;
+    String day2;
+    try {
+      day1 = days?.split(",")[0]?.replaceAll("[", "");
+      day2 = days?.split(",")[1]?.replaceAll("]", "");
+    } catch (err) {
+      return;
+    }
+
     //hour  0001-01-01 11:30:00.000
     var parsedDate = DateTime.parse(hour);
 
@@ -218,13 +225,13 @@ class _InitialState extends State<Initial> {
 
     return StreamBuilder<FirebaseUser>(
         stream: FirebaseAuth.instance.onAuthStateChanged,
-        builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              return Center(
-                  child: Text("Nao foi possivel conectar ao banco de dados"));
+              return const Center(
+                  child: Text('Nao foi possivel conectar ao banco de dados'));
             case ConnectionState.waiting:
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             case ConnectionState.active:
             case ConnectionState.done:
               if (snapshot.hasData) {
@@ -239,13 +246,13 @@ class _InitialState extends State<Initial> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height * 0.4,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               image: DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: AssetImage("assets/doctor.jpg"))),
+                                  image: AssetImage('assets/doctor.jpg'))),
                         ),
                         Text(
-                          "Bem vindo ao Hemocare",
+                          'Bem vindo ao Hemocare',
                           textAlign: TextAlign.center,
                           textScaleFactor: 1,
                           softWrap: true,
@@ -254,26 +261,26 @@ class _InitialState extends State<Initial> {
                         ),
                         Column(
                           children: <Widget>[
-                            SizedBox(height: 26),
+                            const SizedBox(height: 26),
                             Utils.gradientPatternButton('Criar conta', () {
                               Navigator.of(context).push(CupertinoPageRoute(
                                   fullscreenDialog: true,
                                   builder: (context) => Register()));
                             }, context),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             createButtonLogin(),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             //createSocialMediaButtons(),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: InkWell(
@@ -290,7 +297,7 @@ class _InitialState extends State<Initial> {
                                         builder: (context) => UseTerms())),
                               ),
                             ),
-                            SizedBox(height: 30),
+                            const SizedBox(height: 30),
                           ],
                         )
                       ],
@@ -317,7 +324,7 @@ class _InitialState extends State<Initial> {
         height: 50,
         padding: const EdgeInsets.fromLTRB(12.5, 12.5, 12.5, 12.5),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
             border: Border.all(width: 1, color: ColorTheme.lightPurple)),
         child: Text(
           'Já possuo login',
@@ -357,7 +364,7 @@ class _InitialState extends State<Initial> {
             ),
           ),
         ),
-        SizedBox(width: 26),
+        const SizedBox(width: 26),
         FittedBox(
           fit: BoxFit.scaleDown,
           child: SizedBox(
@@ -380,7 +387,8 @@ class _InitialState extends State<Initial> {
     );
   }
 
-  Widget createTopScrollableElement(context, imgTitle, title, subtitle) {
+  Widget createTopScrollableElement(
+      BuildContext context, String imgTitle, String title, String subtitle) {
     return Column(
       children: <Widget>[
         Container(
@@ -388,10 +396,10 @@ class _InitialState extends State<Initial> {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/" + imgTitle + ".jpg"),
+                  image: AssetImage("assets/" + imgTitle + '.jpg'),
                   fit: BoxFit.cover)),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Text(title,
@@ -399,7 +407,7 @@ class _InitialState extends State<Initial> {
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: 'Futura', color: Colors.black, fontSize: 24)),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Container(
