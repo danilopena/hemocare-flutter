@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hemocare/models/stock_model.dart';
@@ -45,10 +47,19 @@ abstract class _StockStore with Store {
   @action
   Future<void> setStockData() async {
     if (isOkToRender) {
-      final DocumentSnapshot snapshot =
-          await firestore.collection('users').document(currentUser.uid).get();
-      stockModel = StockModel.fromDocument(snapshot.data);
-      setPercentage(stockModel.percentageUsed.toDouble());
+//      final DocumentSnapshot snapshot =
+//          await firestore.collection('users').document(currentUser.uid).get();
+//      stockModel = StockModel.fromDocument(snapshot.data);
+      firestore
+          .collection('users')
+          .document(currentUser.uid)
+          .snapshots()
+          .listen((snapshot) {
+        stockModel = StockModel.fromDocument(snapshot.data);
+        setPercentage(stockModel.percentageUsed.toDouble());
+      });
+
+//      setPercentage(stockModel.percentageUsed.toDouble());
       print(stockModel);
     }
   }
