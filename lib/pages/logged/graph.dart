@@ -24,13 +24,11 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   StockStore store;
   final TextEditingController _quantityController = TextEditingController();
   int _quantity = 0;
-  double percent = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     store = StockStore();
-    percent = store.percentage / 100;
   }
 
   @override
@@ -59,7 +57,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
           animationDuration: 2000,
           lineWidth: 40.0,
           // ignore: null_aware_before_operator
-          percent: percent,
+          percent: store.percentage / 100,
           arcBackgroundColor: ColorTheme.lightPurple,
           arcType: ArcType.FULL,
           circularStrokeCap: CircularStrokeCap.round,
