@@ -14,7 +14,6 @@ import 'package:intl/intl.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:intl/locale.dart'
 
 class Infusions extends StatefulWidget {
   @override

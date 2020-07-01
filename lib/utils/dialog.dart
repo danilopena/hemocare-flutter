@@ -56,7 +56,7 @@ class CustomDialog {
                           .then((success) async {
                         DocumentSnapshot ds = success;
                         if (ds.data.length != null) {
-                          store.setStockData();
+//                          store.setStockData();
                           Navigator.of(context).pop();
                         }
                       });
@@ -84,7 +84,7 @@ class CustomDialog {
                       removeStock(int.parse(quantity), context).then((success) {
                         DocumentSnapshot ds = success;
                         if (ds.data.length != null) {
-                          store.setStockData();
+//                          store.setStockData();
                           Navigator.of(context).pop();
                         }
                       });

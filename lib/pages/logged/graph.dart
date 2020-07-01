@@ -24,15 +24,13 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
   StockStore store;
   final TextEditingController _quantityController = TextEditingController();
   int _quantity = 0;
+  double percent = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     store = StockStore();
-    autorun((_) {
-      store.setUid();
-      store.setStockData();
-    });
+    percent = store.percentage / 100;
   }
 
   @override
@@ -40,7 +38,6 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     autorun((_) {
-      store.setUid();
       store.setStockData();
     });
   }
@@ -50,7 +47,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
       children: <Widget>[
         Center(
           child: Text(
-            'Você já usou ${store?.modelFromSnapshot?.percentageUsed?.ceil()}% do seu estoque',
+            'Você já usou ${store?.stockModel?.percentageUsed?.toInt()} % do seu estoque',
             textScaleFactor: 1,
             textAlign: TextAlign.center,
             style: GoogleFonts.raleway(fontSize: 20),
@@ -62,7 +59,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
           animationDuration: 2000,
           lineWidth: 40.0,
           // ignore: null_aware_before_operator
-          percent: store?.modelFromSnapshot?.percentageUsed / 100,
+          percent: percent,
           arcBackgroundColor: ColorTheme.lightPurple,
           arcType: ArcType.FULL,
           circularStrokeCap: CircularStrokeCap.round,
@@ -84,7 +81,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                         ),
                       ),
                       Text(
-                        ' ${store?.modelFromSnapshot?.initialStock} UI',
+                        '${store.stockModel?.initialStock?.toInt()} UI',
                         style: GoogleFonts.raleway(
                             letterSpacing: 1.2,
                             fontSize: 26,
@@ -159,6 +156,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                     return store.isOkToRender
                                         ? makeCircularGraph()
                                         : makeFinishRegister();
+//
                                   },
                                 ),
                               ],
@@ -194,7 +192,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                                       _quantity.toString(),
                                       _switchVisibility)
                                   .show()
-                                  .then((value) {
+                                  .then((bool value) {
                                 autorun((_) {
                                   store.setStockData();
                                 });
@@ -230,7 +228,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
 
 String validateQuantity(String value) {
   if (double.parse(value) < 0) {
-    return "Por favor, informe valores maior que 0";
+    return 'Por favor, informe valores maior que 0';
   }
   return null;
 }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hemocare/models/stock_model.dart';
-import 'package:hemocare/services/local_storage.dart';
 import 'package:mobx/mobx.dart';
 
 part 'stock_store.g.dart';
@@ -8,47 +8,48 @@ part 'stock_store.g.dart';
 class StockStore = _StockStore with _$StockStore;
 
 abstract class _StockStore with Store {
+  _StockStore() {
+    loadCurrentUser().then((FirebaseUser user) {
+      setIsOKToRender(user);
+      setStockData();
+    });
+  }
   @observable
-  String uid = "";
+  StockModel stockModel;
+  FirebaseUser currentUser;
   @observable
-  DocumentSnapshot stockData;
+  bool isOkToRender = false;
   @observable
-  StockModel modelFromSnapshot = StockModel();
+  double percentage = 0;
 
   @action
-  void setModel(StockModel model) => modelFromSnapshot = model;
+  void setPercentage(double value) {
+    print(value);
+    percentage = value;
+  }
 
   @action
-  void setSnapshot(DocumentSnapshot snapshot) => stockData = snapshot;
+  void setIsOKToRender(FirebaseUser user) {
+    isOkToRender = user != null;
+  }
+
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final Firestore firestore = Firestore.instance;
 
   @action
-  Future<void> setUid() async {
-    String preUid;
-    LocalStorageWrapper ls = new LocalStorageWrapper();
-    preUid = ls.retrieve("logged_id");
-    uid = preUid;
+  Future<FirebaseUser> loadCurrentUser() async {
+    currentUser = await firebaseAuth.currentUser();
+    return currentUser;
   }
 
   @action
   Future<void> setStockData() async {
-    StockModel model;
-    await Firestore.instance
-        .collection("users")
-        .document(uid)
-        .get()
-        .then((snapshot) {
-      print("snap store");
-      print(snapshot.data);
-      if (snapshot.data != null) {
-        setSnapshot(snapshot);
-      }
-    }).whenComplete(() {
-      model = StockModel.fromDocument(stockData?.data);
-      setModel(model);
-    });
+    if (isOkToRender) {
+      final DocumentSnapshot snapshot =
+          await firestore.collection('users').document(currentUser.uid).get();
+      stockModel = StockModel.fromDocument(snapshot.data);
+      setPercentage(stockModel.percentageUsed.toDouble());
+      print(stockModel);
+    }
   }
-
-  @computed
-  bool get isOkToRender =>
-      modelFromSnapshot?.initialStock != null && uid != null;
 }

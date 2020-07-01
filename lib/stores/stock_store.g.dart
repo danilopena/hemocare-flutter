@@ -9,69 +9,62 @@ part of 'stock_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StockStore on _StockStore, Store {
-  Computed<bool> _$isOkToRenderComputed;
+  final _$stockModelAtom = Atom(name: '_StockStore.stockModel');
 
   @override
-  bool get isOkToRender =>
-      (_$isOkToRenderComputed ??= Computed<bool>(() => super.isOkToRender))
-          .value;
-
-  final _$uidAtom = Atom(name: '_StockStore.uid');
-
-  @override
-  String get uid {
-    _$uidAtom.context.enforceReadPolicy(_$uidAtom);
-    _$uidAtom.reportObserved();
-    return super.uid;
+  StockModel get stockModel {
+    _$stockModelAtom.context.enforceReadPolicy(_$stockModelAtom);
+    _$stockModelAtom.reportObserved();
+    return super.stockModel;
   }
 
   @override
-  set uid(String value) {
-    _$uidAtom.context.conditionallyRunInAction(() {
-      super.uid = value;
-      _$uidAtom.reportChanged();
-    }, _$uidAtom, name: '${_$uidAtom.name}_set');
+  set stockModel(StockModel value) {
+    _$stockModelAtom.context.conditionallyRunInAction(() {
+      super.stockModel = value;
+      _$stockModelAtom.reportChanged();
+    }, _$stockModelAtom, name: '${_$stockModelAtom.name}_set');
   }
 
-  final _$stockDataAtom = Atom(name: '_StockStore.stockData');
+  final _$isOkToRenderAtom = Atom(name: '_StockStore.isOkToRender');
 
   @override
-  DocumentSnapshot get stockData {
-    _$stockDataAtom.context.enforceReadPolicy(_$stockDataAtom);
-    _$stockDataAtom.reportObserved();
-    return super.stockData;
-  }
-
-  @override
-  set stockData(DocumentSnapshot value) {
-    _$stockDataAtom.context.conditionallyRunInAction(() {
-      super.stockData = value;
-      _$stockDataAtom.reportChanged();
-    }, _$stockDataAtom, name: '${_$stockDataAtom.name}_set');
-  }
-
-  final _$modelFromSnapshotAtom = Atom(name: '_StockStore.modelFromSnapshot');
-
-  @override
-  StockModel get modelFromSnapshot {
-    _$modelFromSnapshotAtom.context.enforceReadPolicy(_$modelFromSnapshotAtom);
-    _$modelFromSnapshotAtom.reportObserved();
-    return super.modelFromSnapshot;
+  bool get isOkToRender {
+    _$isOkToRenderAtom.context.enforceReadPolicy(_$isOkToRenderAtom);
+    _$isOkToRenderAtom.reportObserved();
+    return super.isOkToRender;
   }
 
   @override
-  set modelFromSnapshot(StockModel value) {
-    _$modelFromSnapshotAtom.context.conditionallyRunInAction(() {
-      super.modelFromSnapshot = value;
-      _$modelFromSnapshotAtom.reportChanged();
-    }, _$modelFromSnapshotAtom, name: '${_$modelFromSnapshotAtom.name}_set');
+  set isOkToRender(bool value) {
+    _$isOkToRenderAtom.context.conditionallyRunInAction(() {
+      super.isOkToRender = value;
+      _$isOkToRenderAtom.reportChanged();
+    }, _$isOkToRenderAtom, name: '${_$isOkToRenderAtom.name}_set');
   }
 
-  final _$setUidAsyncAction = AsyncAction('setUid');
+  final _$percentageAtom = Atom(name: '_StockStore.percentage');
 
   @override
-  Future<void> setUid() {
-    return _$setUidAsyncAction.run(() => super.setUid());
+  double get percentage {
+    _$percentageAtom.context.enforceReadPolicy(_$percentageAtom);
+    _$percentageAtom.reportObserved();
+    return super.percentage;
+  }
+
+  @override
+  set percentage(double value) {
+    _$percentageAtom.context.conditionallyRunInAction(() {
+      super.percentage = value;
+      _$percentageAtom.reportChanged();
+    }, _$percentageAtom, name: '${_$percentageAtom.name}_set');
+  }
+
+  final _$loadCurrentUserAsyncAction = AsyncAction('loadCurrentUser');
+
+  @override
+  Future<FirebaseUser> loadCurrentUser() {
+    return _$loadCurrentUserAsyncAction.run(() => super.loadCurrentUser());
   }
 
   final _$setStockDataAsyncAction = AsyncAction('setStockData');
@@ -84,20 +77,20 @@ mixin _$StockStore on _StockStore, Store {
   final _$_StockStoreActionController = ActionController(name: '_StockStore');
 
   @override
-  void setModel(StockModel model) {
+  void setPercentage(double value) {
     final _$actionInfo = _$_StockStoreActionController.startAction();
     try {
-      return super.setModel(model);
+      return super.setPercentage(value);
     } finally {
       _$_StockStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void setSnapshot(DocumentSnapshot snapshot) {
+  void setIsOKToRender(FirebaseUser user) {
     final _$actionInfo = _$_StockStoreActionController.startAction();
     try {
-      return super.setSnapshot(snapshot);
+      return super.setIsOKToRender(user);
     } finally {
       _$_StockStoreActionController.endAction(_$actionInfo);
     }
@@ -106,7 +99,7 @@ mixin _$StockStore on _StockStore, Store {
   @override
   String toString() {
     final string =
-        'uid: ${uid.toString()},stockData: ${stockData.toString()},modelFromSnapshot: ${modelFromSnapshot.toString()},isOkToRender: ${isOkToRender.toString()}';
+        'stockModel: ${stockModel.toString()},isOkToRender: ${isOkToRender.toString()},percentage: ${percentage.toString()}';
     return '{$string}';
   }
 }
