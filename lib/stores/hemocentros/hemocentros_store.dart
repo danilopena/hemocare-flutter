@@ -43,7 +43,8 @@ abstract class _HemocentrosStore with Store {
     }
     return hemocentros
         .where((Hemocentro element) =>
-            element.state.toLowerCase().contains(search.toLowerCase()))
+            element.state.toLowerCase().contains(search.toLowerCase()) ||
+            element.name.toLowerCase().contains(search.toLowerCase()))
         .toList();
   }
 }

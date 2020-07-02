@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HemocentroTileButton extends StatelessWidget {
@@ -23,6 +24,7 @@ class HemocentroTileButton extends StatelessWidget {
                       Text('Ligar'),
                       IconButton(
                         icon: Icon(Icons.phone),
+                        color: ColorTheme.green,
                         iconSize: 24,
                         onPressed: () async {
                           await launch('tel://$phone');
@@ -35,7 +37,7 @@ class HemocentroTileButton extends StatelessWidget {
 //                      const Text('Não disponível'),
                       IconButton(
                         icon: Icon(Icons.call_end),
-                        onPressed: null,
+                        onPressed: () {},
                         tooltip: 'Telefone não encontrado',
                         color: Colors.red,
                       ),
