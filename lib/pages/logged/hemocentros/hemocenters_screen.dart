@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hemocare/models/hemocentro_model.dart';
-import 'file:///C:/Users/Willian/Desktop/Projetos/hemocare-flutter/lib/pages/logged/hemocentros/components/hemocentro_tile.dart';
+import 'package:hemocare/pages/logged/hemocentros/components/hemocentro_tile.dart';
 import 'package:hemocare/stores/hemocentros/hemocentros_store.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/custom_text_field.dart';
+
+import 'file:///C:/Users/Willian/Desktop/Projetos/hemocare-flutter/lib/pages/logged/hemocentros/components/hemocentro_tile_field.dart';
 
 class HemocentrosScreen extends StatefulWidget {
   @override
