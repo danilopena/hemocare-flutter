@@ -32,6 +32,7 @@ class _HemocentrosScreenState extends State<HemocentrosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+        shrinkWrap: true,
         children: <Widget>[
           Container(
             padding: const EdgeInsets.all(16),
@@ -51,9 +52,10 @@ class _HemocentrosScreenState extends State<HemocentrosScreen> {
             builder: (BuildContext context) {
               return ListView.builder(
                   shrinkWrap: true,
+                  physics: ScrollPhysics(),
                   itemCount: hemocentrosStore.filteredHemocentros.length,
                   itemBuilder: (_, int index) {
-                    Hemocentro item =
+                    final Hemocentro item =
                         hemocentrosStore.filteredHemocentros[index];
                     return HemocentroTile(
                       hemocentro: item,
