@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hemocare/models/hemocentro_model.dart';
@@ -13,6 +14,7 @@ class HemocentroTile extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
       child: Card(
         elevation: 16,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Container(
           height: 200,
           margin: const EdgeInsets.all(8),
@@ -23,17 +25,19 @@ class HemocentroTile extends StatelessWidget {
             children: <Widget>[
               Text(
                 hemocentro.name,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.clip,
+                textAlign: TextAlign.center,
                 style: GoogleFonts.raleway(
-                    fontSize: 16, fontWeight: FontWeight.w700),
+                    fontSize: 20, fontWeight: FontWeight.w700),
               ),
               Text(
                 'Endereço: ${hemocentro.address}',
-                style: GoogleFonts.raleway(fontSize: 14),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.raleway(fontSize: 16),
               ),
               Text(
                 'Estado: ${hemocentro.state}',
-                style: GoogleFonts.raleway(fontSize: 14),
+                style: GoogleFonts.raleway(fontSize: 16),
               ),
               HemocentroTileButton(
                 coordinates: hemocentro.googleUrl,

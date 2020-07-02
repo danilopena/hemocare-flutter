@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hemocare/models/hemocentro_model.dart';
-import 'package:hemocare/pages/logged/hemocentros/hemocentro_tile.dart';
+import 'file:///C:/Users/Willian/Desktop/Projetos/hemocare-flutter/lib/pages/logged/hemocentros/components/hemocentro_tile.dart';
 import 'package:hemocare/stores/hemocentros/hemocentros_store.dart';
+import 'package:hemocare/utils/ColorTheme.dart';
 import 'package:hemocare/utils/custom_text_field.dart';
 
 class HemocentrosScreen extends StatefulWidget {
@@ -40,9 +41,12 @@ class _HemocentrosScreenState extends State<HemocentrosScreen> {
                     borderRadius: BorderRadius.circular(16)),
                 elevation: 16,
                 child: CustomTextField(
-                  hint: 'Buscar por estado',
+                  hint: 'Buscar por Estado ou nome do Hemocentro',
                   controller: controller,
-                  prefix: Icon(Icons.directions),
+                  prefix: Icon(
+                    Icons.directions,
+                    color: ColorTheme.green,
+                  ),
                   textInputType: TextInputType.text,
                   onChanged: hemocentrosStore.setSearch,
                 )),
