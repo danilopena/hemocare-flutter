@@ -22,12 +22,11 @@ abstract class _StockStore with Store {
   @observable
   bool isOkToRender = false;
   @observable
-  double percentage = 0;
-
+  double percentage;
   @action
   void setPercentage(double value) {
-    print(value);
-    percentage = value;
+    print('value is: $value');
+    percentage = value ?? 0;
   }
 
   @action
@@ -54,13 +53,15 @@ abstract class _StockStore with Store {
           .collection('users')
           .document(currentUser.uid)
           .snapshots()
-          .listen((snapshot) {
+          .listen((DocumentSnapshot snapshot) {
         stockModel = StockModel.fromDocument(snapshot.data);
         setPercentage(stockModel.percentageUsed.toDouble());
       });
 
 //      setPercentage(stockModel.percentageUsed.toDouble());
-      print(stockModel);
+
+    } else {
+      print('Hora: ${DateTime.now().toUtc()}');
     }
   }
 }

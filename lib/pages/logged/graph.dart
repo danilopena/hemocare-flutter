@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hemocare/pages/logged/hemocentros/hemocenters_screen.dart';
 import 'package:hemocare/pages/login/initial-stock-register.dart';
 import 'package:hemocare/stores/stock_store.dart';
 import 'package:hemocare/utils/ColorTheme.dart';
@@ -57,7 +58,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
           animationDuration: 2000,
           lineWidth: 40.0,
           // ignore: null_aware_before_operator
-          percent: store.percentage / 100,
+          percent: store.percentage / 100 ?? 0,
           arcBackgroundColor: ColorTheme.lightPurple,
           arcType: ArcType.FULL,
           circularStrokeCap: CircularStrokeCap.round,
@@ -205,8 +206,10 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
                             const SizedBox(
                               height: 10,
                             ),
-                            Utils.gradientPatternButton(
-                                'Retirada automática', () {}, context),
+                            Utils.gradientPatternButton('Hemocentros', () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => HemocentrosScreen()));
+                            }, context),
                           ],
                         )
                       ]),
