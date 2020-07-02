@@ -58,7 +58,7 @@ class _GraphState extends State<Graph> with WidgetsBindingObserver {
           animationDuration: 2000,
           lineWidth: 40.0,
           // ignore: null_aware_before_operator
-          percent: store.percentage / 100 ?? 0,
+          percent: store.percentageUsed,
           arcBackgroundColor: ColorTheme.lightPurple,
           arcType: ArcType.FULL,
           circularStrokeCap: CircularStrokeCap.round,
