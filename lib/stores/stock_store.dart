@@ -22,12 +22,18 @@ abstract class _StockStore with Store {
   @observable
   bool isOkToRender = false;
   @observable
-  double percentage = 0;
-
+  double percentage;
   @action
   void setPercentage(double value) {
-    print(value);
-    percentage = value;
+    percentage = value ?? 0;
+  }
+
+  @computed
+  double get percentageUsed {
+    if (percentage != null) {
+      return percentage / 100;
+    }
+    return 0;
   }
 
   @action
@@ -47,20 +53,12 @@ abstract class _StockStore with Store {
   @action
   Future<void> setStockData() async {
     if (isOkToRender) {
-//      final DocumentSnapshot snapshot =
-//          await firestore.collection('users').document(currentUser.uid).get();
-//      stockModel = StockModel.fromDocument(snapshot.data);
-      firestore
-          .collection('users')
-          .document(currentUser.uid)
-          .snapshots()
-          .listen((snapshot) {
-        stockModel = StockModel.fromDocument(snapshot.data);
-        setPercentage(stockModel.percentageUsed.toDouble());
-      });
-
-//      setPercentage(stockModel.percentageUsed.toDouble());
-      print(stockModel);
+      final DocumentSnapshot snapshot =
+          await firestore.collection('users').document(currentUser.uid).get();
+      stockModel = StockModel.fromDocument(snapshot.data);
+      setPercentage(stockModel.percentageUsed.toDouble());
+    } else {
+      print('Hora: ${DateTime.now().toUtc()}');
     }
   }
 }

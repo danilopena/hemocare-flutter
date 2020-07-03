@@ -9,6 +9,13 @@ part of 'stock_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$StockStore on _StockStore, Store {
+  Computed<double> _$percentageUsedComputed;
+
+  @override
+  double get percentageUsed => (_$percentageUsedComputed ??=
+          Computed<double>(() => super.percentageUsed))
+      .value;
+
   final _$stockModelAtom = Atom(name: '_StockStore.stockModel');
 
   @override
@@ -99,7 +106,7 @@ mixin _$StockStore on _StockStore, Store {
   @override
   String toString() {
     final string =
-        'stockModel: ${stockModel.toString()},isOkToRender: ${isOkToRender.toString()},percentage: ${percentage.toString()}';
+        'stockModel: ${stockModel.toString()},isOkToRender: ${isOkToRender.toString()},percentage: ${percentage.toString()},percentageUsed: ${percentageUsed.toString()}';
     return '{$string}';
   }
 }
